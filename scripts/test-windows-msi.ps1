@@ -20,14 +20,15 @@ $required = @('openphoto.exe', 'op-mcp.exe', 'README-zh-CN.md', 'Licenses/LICENS
 function Get-OpenPhotoRegistration {
     $installer = New-Object -ComObject WindowsInstaller.Installer
     try {
-        foreach ($product in $installer.Products) {
-            $name = $installer.ProductInfo($product, 'ProductName')
+        $products = $installer.GetType().InvokeMember('Products', [Reflection.BindingFlags]::GetProperty, $null, $installer, $null)
+        foreach ($product in $products) {
+            $name = $installer.GetType().InvokeMember('ProductInfo', [Reflection.BindingFlags]::GetProperty, $null, $installer, @($product, 'ProductName'))
             if ($name -eq 'OpenPhoto 简体中文版') {
                 [pscustomobject]@{
                     ProductCode = $product
                     DisplayName = $name
-                    DisplayVersion = $installer.ProductInfo($product, 'VersionString')
-                    AssignmentType = $installer.ProductInfo($product, 'AssignmentType')
+                    DisplayVersion = $installer.GetType().InvokeMember('ProductInfo', [Reflection.BindingFlags]::GetProperty, $null, $installer, @($product, 'VersionString'))
+                    AssignmentType = $installer.GetType().InvokeMember('ProductInfo', [Reflection.BindingFlags]::GetProperty, $null, $installer, @($product, 'AssignmentType'))
                 }
             }
         }
