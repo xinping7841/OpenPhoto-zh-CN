@@ -10,21 +10,21 @@
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsDirectory" Name="Programs">
         <Directory Id="INSTALLFOLDER" Name="OpenPhoto-zh-CN">
-          <Component Id="Application" Guid="*">
+          <Component Id="Application" Guid="8534E98C-A628-49AB-A0CB-0A2C51217F89">
             <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
             <File Id="OpenPhotoExecutable" Source="$(var.PackageSource)\openphoto.exe" />
             <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="Application" Type="integer" Value="1" KeyPath="yes" />
           </Component>
-          <Component Id="McpServer" Guid="*">
+          <Component Id="McpServer" Guid="17A96041-5825-4B90-A2C2-F98EA0337D1B">
             <File Source="$(var.PackageSource)\op-mcp.exe" />
             <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="McpServer" Type="integer" Value="1" KeyPath="yes" />
           </Component>
-          <Component Id="UsageDocument" Guid="*">
+          <Component Id="UsageDocument" Guid="D9602761-A169-4E2A-8FD5-00E6CB89D3F0">
             <File Source="$(var.PackageSource)\README-zh-CN.md" />
             <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="UsageDocument" Type="integer" Value="1" KeyPath="yes" />
           </Component>
           <Directory Id="LicensesDirectory" Name="Licenses">
-            <Component Id="LicenseTexts" Guid="*">
+            <Component Id="LicenseTexts" Guid="D9EE6593-2733-4B31-A72C-71966D501F76">
               <RemoveFolder Id="RemoveLicensesFolder" Directory="LicensesDirectory" On="uninstall" />
               <File Source="$(var.PackageSource)\Licenses\LICENSE-MIT" />
               <File Source="$(var.PackageSource)\Licenses\LICENSE-APACHE" />
