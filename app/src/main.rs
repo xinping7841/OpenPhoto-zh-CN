@@ -1,3 +1,5 @@
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
+
 use std::path::PathBuf;
 
 fn main() -> eframe::Result {
@@ -6,7 +8,11 @@ fn main() -> eframe::Result {
     let files: Vec<PathBuf> = std::env::args_os().skip(1).map(PathBuf::from).collect();
 
     let mut viewport = eframe::egui::ViewportBuilder::default()
-        .with_title("OpenPhoto")
+        .with_title(if cfg!(target_os = "windows") {
+            "OpenPhoto 简体中文版"
+        } else {
+            "OpenPhoto"
+        })
         .with_inner_size([1350.0, 800.0])
         .with_min_inner_size([960.0, 600.0])
         .with_drag_and_drop(true);

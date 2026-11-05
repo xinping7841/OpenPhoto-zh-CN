@@ -1,4 +1,18 @@
-# OpenPhoto 简体中文版
+# OpenPhoto Windows 简体中文版
+
+此分支为 `windows-zh-CN`，从已发布的 macOS 中文版提交 `082e54b` 独立开发，`main` 和 Mac 发布版本不受影响。
+
+## Windows 使用与构建
+
+- 面向 Windows x64，使用窗口内中文菜单和 Ctrl 系列快捷键；保留 PSD、中文字体后备和独立 MCP 服务。
+- 用户预设与最近文件保存至 `%APPDATA%\\OpenPhoto`，不会把 Windows 配置写到 macOS 的 Library 路径。
+- 安装 Rust 1.99.0、Visual Studio Build Tools 的“使用 C++ 的桌面开发”和 Windows SDK，然后在 PowerShell 7 运行 `./scripts/package-windows.ps1`。
+- 便携包包含 `openphoto.exe`、`op-mcp.exe`、中文说明及许可证；解压整个文件夹后运行，无需安装。它未做商业代码签名，Windows 可能显示 SmartScreen 提示，请核对来源和 SHA-256。
+- 自动构建结果见 [Windows Actions](https://github.com/xinping7841/OpenPhoto-zh-CN/actions/workflows/windows.yml)。已发布安装包见 [Releases](https://github.com/xinping7841/OpenPhoto-zh-CN/releases)。
+- Windows 原生 CI 验证编译、严格 Clippy、CPU 图像/PSD/交互测试、中文字体和打包后 MCP。交互式 GUI、真实显卡渲染、输入法和手写板仍需在实际 Windows 电脑验收，不把 Mac 截图当作 Windows 运行证明。
+
+以下为继承的 macOS 中文版背景与验证记录，其中 Mac 签名、通用架构和截图不代表 Windows 版测试结果。
+
 
 这是 [OpenPhoto](https://github.com/yuanzhixiang/openphoto) 的非官方简体中文分支，基于上游提交 `d72a71c12a8d56cf3f49fc4c95372406b6de0222`。界面默认使用简体中文，保留原有快捷键、PSD 读写和 MCP 接口；不是 Adobe 官方产品。
 

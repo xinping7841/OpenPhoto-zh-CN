@@ -18,7 +18,7 @@ The items of the menu behind the status bar's arrow, in Photoshop 2026's order, 
 | Document Sizes | `Doc: 13.5K/13.5K`: the flattened image's size (8-bit RGB, 3 bytes per pixel), then the layered document's estimate (the flattened size plus 4 bytes per non-transparent-bounds pixel of every layer after the first) |
 | Document Profile | `Untagged RGB (8bpc)` (documents carry no color profile yet) |
 | Document Dimensions (default) | `64 px x 72 px (72 ppi)` |
-| GPU Mode | `Metal` |
+| GPU Mode | `Metal` on macOS; `wgpu（自动选择后端）` on Windows/other platforms, without claiming a specific adapter backend |
 | Compositing Mode | `Classic` |
 | Measurement Scale | `1 pixel(s) = 1.0000 pixels` |
 | Scratch Sizes | `Scratch: used/available`: the layered sizes of all open documents, and the free space on the disk holding the temporary directory (`statvfs`; 0 bytes elsewhere than Unix) |

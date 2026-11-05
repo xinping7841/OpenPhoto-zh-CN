@@ -473,14 +473,9 @@ pub fn scales(presets: &[Preset]) -> Vec<f32> {
 }
 
 /// Where the New Document dialog's Recent and Saved presets are kept
-/// across launches: `~/Library/Application Support/OpenPhoto/
-/// new-document-presets.txt`.
+/// across launches: `new-document-presets.txt` in OpenPhoto's per-user data folder.
 pub fn store_path() -> Option<std::path::PathBuf> {
-    let home = std::env::var_os("HOME")?;
-    Some(
-        std::path::PathBuf::from(home)
-            .join("Library/Application Support/OpenPhoto/new-document-presets.txt"),
-    )
+    Some(crate::platform::data_dir()?.join("new-document-presets.txt"))
 }
 
 fn kind_name(kind: Kind) -> String {

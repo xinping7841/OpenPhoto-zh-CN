@@ -25,7 +25,7 @@ The preset gear menus of the Levels, Curves, Hue/Saturation, Channel Mixer, Blac
 | `HDR_TONING` | HDR Toning | `.hdt` |
 | `SHADOWS_HIGHLIGHTS` | Shadows Highlights | `.shh` (OpenPhoto's own layout, for Shadows/Highlights' Load... and Save...) |
 
-Saved presets live in `~/Library/Application Support/OpenPhoto/Presets/<folder>` (`Kind::dir`). `Kind::saved` lists the files there with the kind's extension, by name (the file name without the extension, case-insensitive order).
+Saved presets live in `platform::data_dir()/Presets/<folder>` (`Kind::dir`; see `../platform.md` for Windows, macOS and Linux roots). The folder names and preset formats in the table remain unchanged; resolving the root does not migrate or delete existing data. `Kind::saved` lists the files there with the kind's extension, by name (the file name without the extension, case-insensitive order).
 
 ## The gear menu (`gear`)
 

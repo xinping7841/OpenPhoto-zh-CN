@@ -1276,7 +1276,15 @@ pub fn from_shortcuts(ctx: &egui::Context, app: &AppState) -> Vec<Command> {
             out.push(Command::Clear);
         }
     });
-    out
+    // Some integrations report a clipboard action both as a key and as an
+    // egui clipboard event. Dispatch a command at most once per frame.
+    let mut unique = Vec::with_capacity(out.len());
+    for command in out {
+        if !unique.contains(&command) {
+            unique.push(command);
+        }
+    }
+    unique
 }
 
 pub fn run(command: Command, ctx: &egui::Context, app: &mut AppState) {

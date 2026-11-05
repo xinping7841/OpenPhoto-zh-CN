@@ -1,4 +1,4 @@
-# menu.rs: macOS native menu bar
+# menu.rs: Shared Chinese menus and platform renderers
 
 ## Simplified Chinese fork override
 
@@ -9,7 +9,7 @@ Dynamic Undo, Redo, Fade and Last Filter labels translate the stored operation t
 
 ## Responsibilities
 
-Creates the native menu bar on macOS with muda, structured after Photoshop 2026. Compiled only on macOS.
+Defines one platform-neutral menu tree with Chinese labels, command IDs, shortcut display text, separators, check items and disabled placeholders. macOS materializes this tree as the native muda menu bar. Other platforms render the same tree as an in-window egui menu bar. Native menu installation and AppKit services remain macOS-only. Transform menu constants are available on every platform, including windowless tests.
 
 ## Menu structure
 
@@ -30,6 +30,16 @@ Implemented items emit a `Command`; items not yet implemented are shown grayed o
 - **View**: listed in Photoshop 2026's complete order. Available are Zoom In, Zoom Out, Fit on Screen, Fit Layer(s) on Screen, 100%, 200%, Print Size, Actual Size; Flip Horizontal (with check mark); Screen Mode › Standard Screen Mode, Full Screen Mode With Menu Bar, Full Screen Mode (the current one checked); Extras (⌘H, with check mark); Show › Layer Edges, Selection Edges, Grid (⌘'), Guides (⌘;), Smart Guides, Pixel Grid (with check marks), All, None; Rulers (⌘R, with check mark); Snap (⇧⌘;, with check mark); Snap To › Guides, Grid, Layers, Slices, Document Bounds (with check marks), All, None; Guides › Edit Selected Guides..., Lock Guides (⌥⌘;, with check mark), Clear Guides, Clear Selected Guides, Clear Canvas Guides, New Guide..., New Guide Layout...; Show › Canvas Guides (with check mark). The rest are grayed out with Photoshop's shortcuts: Proof Setup ›, Proof Colors (⌘Y), Gamut Warning (⇧⌘Y), Pixel Aspect Ratio ›, Pixel Aspect Ratio Correction, 32-bit Preview Options..., Fit Artboard on Screen, Pattern Preview, the remaining items in Show (Target Path ⇧⌘H, etc.), the remaining items in Guides, Lock Slices, Clear Slices.
 - **Window**: listed in Photoshop 2026's complete order. Available are Brush Settings (F5), Brushes, Clone Source, Histogram, History, Info (F8), Layer Comps, Navigator, Tool Presets (with check marks); Workspace › Essentials (Default) (checked) and Reset Essentials (`panels/mod.md`; its other items grayed out); the rest are grayed out with Photoshop's shortcuts (Arrange ›, Actions ⌥F9, Brush Settings F5, Color F6, Layers F7, etc., plus Application Frame, Options, Tools, Contextual Task Bar). It is also set as the macOS Window menu, and the system lists windows at the end.
 - **Help**: OpenPhoto Help (grayed out).
+
+## In-window menu bar
+
+On non-macOS platforms the menu bar appears above the options bar in Standard and Full Screen With Menu Bar modes. Full Screen mode hides it; F remains the existing way to cycle screen modes. Tab hides tools and panels without hiding the menu bar. All twelve top-level menus retain the shared order and complete Chinese command hierarchy. Long submenus scroll within 80% of the viewport height, keeping the lower items reachable in short windows.
+
+Command buttons use `Command::enabled` and `Command::checked` every frame, and the same dynamic-label helper as the native renderer. Checked items use egui's selected visual state. Disabled placeholders remain visible and cannot dispatch. AppKit-only Services, Hide Others, Show All and Hide OpenPhoto are disabled on other platforms; the application menu displays the version. Recent-file entries are generated from the current list and preserve user filenames.
+
+A click emits only its `Command`, closes the menu and passes the command to `commands::run`, which validates availability again. Shortcut labels replace CmdOrCtrl with Ctrl on other platforms; labels do not register shortcut handlers. `commands::from_shortcuts` is the sole keyboard dispatcher on these platforms, including the special distinction between clicking Lock Layers (dialog) and pressing Ctrl+/ (toggle lock).
+
+The document view's status-menu and ruler-unit requests open a foreground egui popup at the pointer on non-macOS platforms. Both use the same command IDs and checked/enabled rules as the native popups. Choosing an item, Escape or an outside press closes the popup. Popup bounds are constrained to the viewport. Dialog dropdowns continue to use their existing egui fallback.
 
 ## Pop-up menus
 
@@ -65,4 +75,6 @@ Menu events happen outside the egui frame. The event handler puts the command in
 
 ## Difference from Photoshop: no Adobe branding
 
-The interface shows no Adobe brand names. The four Photoshop menu items pointing to Adobe services are removed: the File menu's Search Adobe Stock..., Search Adobe Express Templates..., Place Free Adobe Stock Images..., and the Type menu's first item More from Adobe Fonts... and the separator after it (so the Type menu starts with Panels ›). The order of the remaining items is unchanged. The test `menus_show_no_adobe_brand` checks that no menu label in `menu.rs` contains "Adobe".
+The interface shows no Adobe brand names. The four Photoshop menu items pointing to Adobe services are removed: the File menu's Search Adobe Stock..., Search Adobe Express Templates..., Place Free Adobe Stock Images..., and the Type menu's first item More from Adobe Fonts... and the separator after it (so the Type menu starts with Panels ›). The order of the remaining items is unchanged. The test `shared_tree_has_all_static_menu_commands_and_chinese_labels` checks that no label in the shared menu tree contains "Adobe".
+
+The shared-tree test walks actual menu data, checks all static menu commands against the command registry, preserves the twelve top-level menus, checks more than 300 labels and rejects Adobe branding. It also verifies that Lock Layers occurs once and Toggle Lock All remains keyboard-only. The non-macOS portable dispatch test checks enabled and disabled commands, Ctrl shortcut display, a view toggle's state change and rejection of a disabled image-size command. Native accelerator parsing remains tested on macOS.

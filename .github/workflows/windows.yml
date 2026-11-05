@@ -1,0 +1,93 @@
+name: Windows x64 portable
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [windows-zh-CN]
+    tags: ['windows*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CARGO_TERM_COLOR: always
+      RUSTFLAGS: -C target-feature=+crt-static
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Install repository-pinned Rust toolchain
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ((Get-Content rust-toolchain.toml -Raw) -notmatch '(?m)^channel\s*=\s*"1\.99\.0"\s*$') {
+            throw 'Expected pinned Rust 1.99.0.'
+          }
+          rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy --target x86_64-pc-windows-msvc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustc +1.99.0 --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Check formatting
+        run: cargo +1.99.0 fmt --all -- --check
+
+      - name: Clippy all workspace targets
+        run: cargo +1.99.0 clippy --locked --workspace --all-targets --target x86_64-pc-windows-msvc -- -D warnings
+
+      - name: Test CPU libraries and MCP
+        run: cargo +1.99.0 test --locked --target x86_64-pc-windows-msvc -p op-core -p op-color -p op-io -p op-tools -p op-mcp
+
+      - name: Test CPU-only UI integration
+        run: cargo +1.99.0 test --locked --target x86_64-pc-windows-msvc -p op-ui --lib offline_tests
+
+      - name: Test theme without GPU
+        run: cargo +1.99.0 test --locked --target x86_64-pc-windows-msvc -p op-ui --lib theme::tests
+
+      - name: Test portable menu and platform behavior
+        run: |
+          cargo +1.99.0 test --locked --target x86_64-pc-windows-msvc -p op-ui --lib menu::
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo +1.99.0 test --locked --target x86_64-pc-windows-msvc -p op-ui --lib platform::tests
+
+      - name: Build and package portable ZIP
+        run: ./scripts/package-windows.ps1
+
+      - name: Verify extracted MCP executable
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $archives = @(Get-ChildItem -LiteralPath dist -Filter '*.zip' -File)
+          if ($archives.Count -ne 1) { throw 'Expected exactly one portable ZIP.' }
+          $extract = Join-Path $env:RUNNER_TEMP ([guid]::NewGuid().ToString())
+          Expand-Archive -LiteralPath $archives[0].FullName -DestinationPath $extract
+          $mcp = @(Get-ChildItem -LiteralPath $extract -Recurse -Filter op-mcp.exe -File)
+          if ($mcp.Count -ne 1) { throw 'Expected exactly one packaged MCP executable.' }
+          ./scripts/test-windows-mcp.ps1 -Executable $mcp[0].FullName
+
+      - name: Record test coverage boundary
+        run: |
+          @'
+          Windows x64 MSVC: formatting, workspace/all-targets Clippy, CPU core/color/IO/tools and MCP tests, CPU-only UI integration, theme/menu/platform tests, release build, ZIP layout/license validation, and extracted MCP initialize/tools/list smoke.
+          GPU-dependent UI/screenshot tests and interactive GUI launch are not run on the hosted runner. This job does not establish rendering, WARP, visual parity, or full UI-suite acceptance.
+          '@ | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload portable ZIP and SHA-256
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: OpenPhoto-zh-CN-windows-x64
+          path: |
+            dist/*.zip
+            dist/*.zip.sha256
+          if-no-files-found: error
+          retention-days: 14

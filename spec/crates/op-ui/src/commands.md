@@ -308,3 +308,7 @@ Cut, Copy, CopyMerged, Paste and PasteInPlace are executed by `actions::clipboar
 - When a text input box has focus, Select All (⌘A) selects all the text in the input box rather than the whole canvas (the shortcut is handed to the input box; when the macOS native menu receives ⌘A first, it is turned into a key event and handed to the input box).
 
 Undo/Redo availability includes local pending Remove mark history so commands remain enabled even without an earlier document edit.
+
+## Portable menu dispatch
+
+The in-window menu uses the same `Command` values, `enabled`, `checked` and `run` as the native menu. Shortcut strings shown in menu rows are display-only and do not add a second shortcut recognizer. Lock Layers clicked from the menu opens its dialog; Ctrl+/ continues to dispatch Toggle Lock All through the shortcut table. `from_shortcuts` deduplicates identical commands within a frame so integrations delivering both a clipboard key press and an egui clipboard event cannot apply the same action twice. Text fields continue to own their clipboard events while typing.

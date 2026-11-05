@@ -4,6 +4,10 @@
 
 Menu entries render the caller-supplied Simplified Chinese display labels without rewriting them in this transport layer. This overrides English wording parity with Photoshop where the caller owns built-in UI copy. User-provided labels remain verbatim. Request IDs, `popup:<index>` protocol IDs, menu indices, shortcuts and native/fallback selection behavior are unchanged. English test fixtures remain transport data rather than required UI wording; this module contains no built-in product UI copy to translate.
 
+## Windows transport
+
+Production non-macOS builds compile only the egui dropdown fallback and shared entry/pick transport. Native request structures and native availability controls are compiled on macOS or in transport tests, preventing unused AppKit-only code from leaking into Windows builds. Windows popups preserve the same Chinese labels, enabled states, checkmarks and choice indices; no AppKit API is invoked.
+
 ## Responsibility
 
 Photoshop's AppKit-drawn dialogs open native macOS menus from their pop-up buttons (light and translucent in light mode, the current item checked and laid over the button's value). This module lets a dialog dropdown ask for such a menu and get the pick back, without the dialog knowing about AppKit.

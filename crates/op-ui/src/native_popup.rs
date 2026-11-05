@@ -6,7 +6,9 @@
 //! frame. Without a native menu (other platforms, tests) the same entries
 //! open as an egui menu.
 
-use egui::{Context, Id, Rect, Response, Ui};
+#[cfg(any(target_os = "macos", test))]
+use egui::{Context, Rect};
+use egui::{Id, Response, Ui};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Entry {
@@ -47,6 +49,7 @@ impl Entry {
 
 /// A menu to open natively: its entries and the button (egui points) the
 /// checked entry is placed over.
+#[cfg(any(target_os = "macos", test))]
 #[derive(Clone, Debug)]
 pub struct Request {
     pub id: Id,
@@ -54,8 +57,10 @@ pub struct Request {
     pub button: Rect,
 }
 
+#[cfg(any(target_os = "macos", test))]
 impl Request {
     /// The entry placed over the button: the checked one, else the first.
+    #[cfg(any(target_os = "macos", test))]
     pub fn positioning(&self) -> usize {
         self.entries
             .iter()
@@ -64,6 +69,7 @@ impl Request {
     }
 }
 
+#[cfg(any(target_os = "macos", test))]
 fn request_id() -> Id {
     Id::new("native-popup-request")
 }
@@ -72,21 +78,25 @@ fn pick_id() -> Id {
     Id::new("native-popup-pick")
 }
 
+#[cfg(any(target_os = "macos", test))]
 fn available_id() -> Id {
     Id::new("native-popup-available")
 }
 
 /// Whether menus open natively (set by the app once its window's view is
 /// known).
+#[cfg(any(target_os = "macos", test))]
 pub fn set_available(ctx: &Context, on: bool) {
     ctx.data_mut(|d| d.insert_temp(available_id(), on));
 }
 
+#[cfg(any(target_os = "macos", test))]
 pub fn available(ctx: &Context) -> bool {
     ctx.data(|d| d.get_temp(available_id()).unwrap_or(false))
 }
 
 /// The menu a dropdown asked for this frame, if any.
+#[cfg(any(target_os = "macos", test))]
 pub fn take_request(ctx: &Context) -> Option<Request> {
     ctx.data_mut(|d| {
         let request = d.get_temp::<Request>(request_id());
@@ -96,12 +106,14 @@ pub fn take_request(ctx: &Context) -> Option<Request> {
 }
 
 /// Hands entry `index` of the menu `id` back to its dropdown.
+#[cfg(any(target_os = "macos", test))]
 pub fn deliver(ctx: &Context, id: Id, index: usize) {
     ctx.data_mut(|d| d.insert_temp(pick_id(), (id, index)));
     ctx.request_repaint();
 }
 
 /// Asks for `entries` to open natively over `button`.
+#[cfg(any(target_os = "macos", test))]
 fn ask(ctx: &Context, id: Id, entries: &[Entry], button: Rect) {
     let request = Request {
         id,
@@ -122,6 +134,7 @@ pub fn dropdown(ui: &mut Ui, response: &Response, id: Id, entries: &[Entry]) -> 
         }
         _ => None,
     });
+    #[cfg(any(target_os = "macos", test))]
     if available(&ctx) {
         if response.clicked() {
             ask(&ctx, id, entries, response.rect);
@@ -179,6 +192,8 @@ mod tests {
         };
         ask(&ctx, id, &entries, Rect::ZERO);
         let request = take_request(&ctx).expect("asked for a menu");
+        assert_eq!(request.id, id);
+        assert_eq!(request.button, Rect::ZERO);
         assert_eq!(request.entries.len(), 3);
         assert_eq!(request.positioning(), 2);
         // Another dropdown's pick isn't this one's

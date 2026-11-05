@@ -160,3 +160,9 @@ pen_tool handles editable path canvas geometry without native input.
 adjustment_tool implements masked retained adjustment painting and editable properties.
 
 The toolbar panel, hover region and fullscreen reveal region use toolbar.width for either column arrangement.
+
+## Portable menus and platform support
+
+`menu` is compiled on every platform so its shared definitions and transform commands are available to UI tests. Non-macOS application instances own a `PortableMenu`; its menu bar is laid out above the options bar and its status/ruler popup is shown after overlays request it. Menu clicks execute once through `commands::run` and request repaint, while keyboard shortcuts remain handled only by `run_commands`. The macOS native menu, its event queue and headless macOS test geometry retain their existing behavior.
+
+The crate-visible `platform` module supplies the platform's application-data directory to persistence callers.

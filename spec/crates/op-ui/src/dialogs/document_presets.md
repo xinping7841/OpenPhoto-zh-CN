@@ -29,7 +29,7 @@ Name, width, height, unit, resolution (ppi), and the kind of card icon (`Kind`).
 
 ## Keeping Recent and Saved (`store_path`, `serialize`, `parse`)
 
-- The file is `~/Library/Application Support/OpenPhoto/new-document-presets.txt` (`store_path`).
+- The file is `platform::data_dir()/new-document-presets.txt` (`store_path`; see `../platform.md` for Windows, macOS and Linux roots). The filename and serialized field names remain unchanged, and root resolution does not migrate or delete existing data.
 - `serialize` writes one line per preset, Recent first (newest first), then Saved. Each line has these fields, separated by tabs:
   1. `recent` or `saved`
   2. the name (tabs and line breaks become spaces)

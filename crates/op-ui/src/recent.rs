@@ -35,21 +35,16 @@ impl RecentFiles {
         }
     }
 
-    /// Where the real app keeps the list: OpenPhoto's folder in the
-    /// user's Application Support.
+    /// Where the real app keeps the list: OpenPhoto's per-user data folder.
     pub fn default_store() -> Option<PathBuf> {
-        let home = std::env::var_os("HOME")?;
-        Some(
-            Path::new(&home)
-                .join("Library/Application Support/OpenPhoto")
-                .join("recent-files.txt"),
-        )
+        Some(crate::platform::data_dir()?.join("recent-files.txt"))
     }
 
     pub fn files(&self) -> &[PathBuf] {
         &self.files
     }
 
+    #[cfg(target_os = "macos")]
     pub fn revision(&self) -> u64 {
         self.revision
     }

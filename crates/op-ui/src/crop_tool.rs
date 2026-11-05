@@ -299,13 +299,9 @@ impl CropPresets {
         }
     }
 
-    /// `~/Library/Application Support/OpenPhoto/crop-presets.txt`.
+    /// `crop-presets.txt` in OpenPhoto's per-user data folder.
     pub fn default_store() -> Option<std::path::PathBuf> {
-        let home = std::env::var_os("HOME")?;
-        Some(
-            std::path::PathBuf::from(home)
-                .join("Library/Application Support/OpenPhoto/crop-presets.txt"),
-        )
+        Some(crate::platform::data_dir()?.join("crop-presets.txt"))
     }
 
     pub fn list(&self) -> &[UserCropPreset] {

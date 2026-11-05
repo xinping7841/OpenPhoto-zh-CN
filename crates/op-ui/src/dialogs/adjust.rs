@@ -977,10 +977,8 @@ pub fn lut_files() -> Vec<(String, std::path::PathBuf)> {
     let mut dirs = vec![std::path::PathBuf::from(
         "/Applications/Adobe Photoshop 2026/Presets/3DLUTs",
     )];
-    if let Some(home) = std::env::var_os("HOME") {
-        dirs.push(
-            std::path::PathBuf::from(home).join("Library/Application Support/OpenPhoto/3DLUTs"),
-        );
+    if let Some(data_dir) = crate::platform::data_dir() {
+        dirs.push(data_dir.join("3DLUTs"));
     }
     let mut out: Vec<(String, std::path::PathBuf)> = dirs
         .iter()

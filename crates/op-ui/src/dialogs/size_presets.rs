@@ -107,10 +107,9 @@ pub fn decode(name: &str, bytes: &[u8]) -> Option<SizePreset> {
 
 /// Where Save Preset... puts presets and the menu lists them from.
 pub fn folder() -> Option<PathBuf> {
-    let home = std::env::var_os("HOME")?;
     Some(
-        PathBuf::from(home)
-            .join("Library/Application Support/OpenPhoto/Presets")
+        crate::platform::data_dir()?
+            .join("Presets")
             .join("Image Size"),
     )
 }

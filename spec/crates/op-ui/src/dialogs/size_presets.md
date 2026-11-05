@@ -30,7 +30,7 @@ The layout of Photoshop 2026's files (decoded from files it saved), 46 bytes, bi
 
 ## The folder
 
-`folder()`: `~/Library/Application Support/OpenPhoto/Presets/Image Size` (Photoshop uses its own `Presets/Image Size`). `list(dir)`: the `.imz` files that decode, oldest first (by creation time, then path), each named after its file stem, as Photoshop adds new presets to the end of the menu group. `read` / `write` read and write one file (`write` creates the folder).
+`folder()`: `platform::data_dir()/Presets/Image Size` (see `../platform.md` for Windows, macOS and Linux roots; Photoshop uses its own `Presets/Image Size`). The existing folder name and `.imz` format remain unchanged; resolving the root does not migrate or delete existing data. `list(dir)`: the `.imz` files that decode, oldest first (by creation time, then path), each named after its file stem, as Photoshop adds new presets to the end of the menu group. `read` / `write` read and write one file (`write` creates the folder).
 
 ## Delete Preset sheet (measured in Photoshop 2026, 356 × 110 pt)
 

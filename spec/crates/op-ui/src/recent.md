@@ -8,8 +8,8 @@ The files opened and saved lately, newest first, for File › Open Recent, kept 
 
 - `add(path)`: a file opened (`actions::open_paths`, including files given on the command line) or saved (Save, Save As, Save a Copy) moves to the top, once (paths are canonicalized so the same file isn't listed twice); the list keeps at most `LIMIT` = 20, Photoshop's default "Recent File List Contains".
 - `clear()`: Clear Recent File List.
-- Every change bumps `revision` (the native menu rebuilds the submenu when it differs) and rewrites the store.
-- Store: a plain text file, one path per line, newest first, at `~/Library/Application Support/OpenPhoto/recent-files.txt` (`default_store`); the real app loads it at startup (`lib.rs`), then adds the files it was started with. An unreadable or missing file reads as an empty list; a failed write is logged. Without a store (`RecentFiles::default()`, as in the headless tests) the list lives in memory only.
+- Every change bumps `revision` and rewrites the store. The macOS native menu reads the macOS-only `revision()` accessor to rebuild the submenu when it differs; the portable menu renders the current list each frame.
+- Store: a plain text file, one path per line, newest first, at `platform::data_dir()/recent-files.txt` (`default_store`; see `platform.md` for Windows, macOS and Linux roots); the real app loads it at startup (`lib.rs`), then adds the files it was started with. An unreadable or missing file reads as an empty list; a failed write is logged. Without a store (`RecentFiles::default()`, as in the headless tests) the list lives in memory only.
 
 ## Menu and commands
 

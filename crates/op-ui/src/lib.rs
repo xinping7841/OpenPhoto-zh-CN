@@ -22,7 +22,6 @@ mod frame_tool;
 mod free_transform;
 mod icons;
 mod measure_tool;
-#[cfg(target_os = "macos")]
 mod menu;
 mod native_popup;
 mod note_tool;
@@ -32,6 +31,7 @@ mod options_tools;
 mod panels;
 mod pen_tool;
 mod perspective_crop;
+pub(crate) mod platform;
 mod ps_icons;
 mod recent;
 mod remove_tool;
@@ -68,6 +68,8 @@ pub struct OpenPhotoApp {
     /// The native menu bar; `None` in headless tests.
     #[cfg(target_os = "macos")]
     menu: Option<menu::NativeMenu>,
+    #[cfg(not(target_os = "macos"))]
+    menu: menu::PortableMenu,
     /// The screen mode the window was last set up for, and whether it was
     /// maximized (zoomed) before Full Screen Mode With Menu Bar zoomed it.
     screen_applied: state::ScreenMode,
@@ -136,6 +138,8 @@ impl OpenPhotoApp {
             panels: panels::Panels::default(),
             #[cfg(target_os = "macos")]
             menu: None,
+            #[cfg(not(target_os = "macos"))]
+            menu: menu::PortableMenu::default(),
             screen_applied: state::ScreenMode::Standard,
             was_maximized: false,
         };
@@ -1326,6 +1330,19 @@ impl eframe::App for OpenPhotoApp {
                 .frame(bar_frame)
                 .show(ui, titlebar::show);
         }
+        #[cfg(not(target_os = "macos"))]
+        if mode != state::ScreenMode::Full {
+            let mut picked = None;
+            egui::Panel::top("menu-bar")
+                .show_separator_line(false)
+                .resizable(false)
+                .frame(bar_frame)
+                .show(ui, |ui| picked = self.menu.show(ui, &self.state));
+            if let Some(command) = picked {
+                commands::run(command, &ctx, &mut self.state);
+                ctx.request_repaint();
+            }
+        }
         if !hide_tools {
             egui::Panel::top("options-bar")
                 .show_separator_line(false)
@@ -1444,6 +1461,11 @@ impl eframe::App for OpenPhotoApp {
         #[cfg(target_os = "macos")]
         if let Some(menu) = &mut self.menu {
             menu.update(&self.state);
+        }
+        #[cfg(not(target_os = "macos"))]
+        if let Some(command) = self.menu.show_context(&ctx, &mut self.state) {
+            commands::run(command, &ctx, &mut self.state);
+            ctx.request_repaint();
         }
         // The status bar's arrow: its native menu (without one, as in
         // tests, the request stays and the commands are run directly)

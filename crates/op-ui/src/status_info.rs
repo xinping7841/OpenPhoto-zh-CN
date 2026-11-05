@@ -87,7 +87,12 @@ impl StatusInfo {
                 d.height,
                 d.resolution.round()
             ),
-            Self::GpuMode => "Metal".to_owned(),
+            Self::GpuMode => if cfg!(target_os = "macos") {
+                "Metal"
+            } else {
+                "wgpu（自动选择后端）"
+            }
+            .to_owned(),
             Self::CompositingMode => "经典".to_owned(),
             Self::MeasurementScale => "1 像素 = 1.0000 像素".to_owned(),
             Self::ScratchSizes => {

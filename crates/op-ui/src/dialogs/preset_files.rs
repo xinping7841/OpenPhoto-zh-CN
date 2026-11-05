@@ -63,13 +63,11 @@ pub const SHADOWS_HIGHLIGHTS: Kind = Kind {
 };
 
 impl Kind {
-    /// Where saved presets live:
-    /// `~/Library/Application Support/OpenPhoto/Presets/<folder>`.
+    /// `Presets/<folder>` in OpenPhoto's per-user data folder.
     pub fn dir(self) -> Option<PathBuf> {
-        let home = std::env::var_os("HOME")?;
         Some(
-            PathBuf::from(home)
-                .join("Library/Application Support/OpenPhoto/Presets")
+            crate::platform::data_dir()?
+                .join("Presets")
                 .join(self.folder),
         )
     }

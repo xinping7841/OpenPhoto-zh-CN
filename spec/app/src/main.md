@@ -19,7 +19,8 @@ The `main` function of the `openphoto` binary: initializes logging, collects fil
 
 ### Window
 
-- The window title and the eframe app name are both `OpenPhoto`.
+- On Windows the native window title is `OpenPhoto 简体中文版`; elsewhere it remains `OpenPhoto`. The eframe application identity remains `OpenPhoto` for compatibility.
+- The Windows GUI executable uses the Windows subsystem, so launching `openphoto.exe` does not open a console window. The separate `op-mcp.exe` remains a console/stdio process for MCP clients.
 - Initial content area size 1350×800 logical points, minimum 960×600 logical points, centered on screen at startup (`centered: true`).
 - File drag and drop is enabled (`with_drag_and_drop(true)`).
 - The renderer is fixed to `eframe::Renderer::Wgpu`; the canvas depends on egui-wgpu's paint callback, and `OpenPhotoApp::new` panics when it cannot get the wgpu render state.
