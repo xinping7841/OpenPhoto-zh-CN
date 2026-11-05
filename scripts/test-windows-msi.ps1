@@ -61,7 +61,8 @@ try {
     if (-not (Test-Path -LiteralPath $shortcutPath -PathType Leaf)) { throw 'Start Menu shortcut missing.' }
     $shell = New-Object -ComObject WScript.Shell
     try {
-        $shortcut = $shell.CreateShortcut($shortcutPath)
+        $shortcut = $shell.CreateShortcut([IO.Path]::GetFullPath($shortcutPath))
+        Write-Host "Raw shortcut target=[$($shortcut.TargetPath)] working=[$($shortcut.WorkingDirectory)] link=[$shortcutPath]"
         $target = [IO.Path]::GetFullPath($shortcut.TargetPath)
         $expectedTarget = [IO.Path]::GetFullPath((Join-Path $installDirectory 'openphoto.exe'))
         $working = [IO.Path]::TrimEndingDirectorySeparator([IO.Path]::GetFullPath($shortcut.WorkingDirectory))
