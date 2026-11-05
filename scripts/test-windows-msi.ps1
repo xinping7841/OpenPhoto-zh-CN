@@ -18,14 +18,21 @@ $shortcutPath = Join-Path $shortcutDirectory 'OpenPhoto 简体中文版.lnk'
 $required = @('openphoto.exe', 'op-mcp.exe', 'README-zh-CN.md', 'Licenses/LICENSE-MIT', 'Licenses/LICENSE-APACHE', 'Licenses/SourceSans3-OFL.txt', 'Licenses/NotoSansCJK-LICENSE.txt')
 
 function Get-OpenPhotoRegistration {
-    foreach ($registryRoot in @('HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall', 'HKCU:/Software/WOW6432Node/Microsoft/Windows/CurrentVersion/Uninstall')) {
-        if (Test-Path -LiteralPath $registryRoot) {
-            Get-ChildItem -LiteralPath $registryRoot | ForEach-Object {
-                $properties = Get-ItemProperty -LiteralPath $_.PSPath
-                if ($properties.PSObject.Properties['DisplayName'] -and $properties.DisplayName -eq 'OpenPhoto 简体中文版') { $properties }
+    $installer = New-Object -ComObject WindowsInstaller.Installer
+    try {
+        foreach ($product in $installer.Products) {
+            $name = $installer.ProductInfo($product, 'ProductName')
+            if ($name -eq 'OpenPhoto 简体中文版') {
+                [pscustomobject]@{
+                    ProductCode = $product
+                    DisplayName = $name
+                    DisplayVersion = $installer.ProductInfo($product, 'VersionString')
+                    AssignmentType = $installer.ProductInfo($product, 'AssignmentType')
+                }
             }
         }
     }
+    finally { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($installer) }
 }
 
 function Invoke-Msi([string]$Operation, [string]$LogPath) {
@@ -108,7 +115,7 @@ namespace OpenPhotoInstallerSmoke {
     }
     $registration = @(Get-OpenPhotoRegistration)
     Write-Host "Apps registration: $($registration | ConvertTo-Json -Depth 3 -Compress)"
-    if ($registration.Count -ne 1 -or $registration[0].DisplayVersion -notin @('0.2.2', '0.2.2.1') -or [string]::IsNullOrWhiteSpace($registration[0].UninstallString)) {
+    if ($registration.Count -ne 1 -or $registration[0].DisplayVersion -notin @('0.2.2', '0.2.2.1') -or $registration[0].AssignmentType -ne '0' -or [string]::IsNullOrWhiteSpace($registration[0].ProductCode)) {
         throw 'Per-user Apps uninstall registration missing or incorrect.'
     }
     & (Join-Path $PSScriptRoot 'test-windows-mcp.ps1') -Executable (Join-Path $installDirectory 'op-mcp.exe')
