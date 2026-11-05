@@ -224,38 +224,45 @@ pub fn properties(ui: &mut Ui, state: &mut DocState) -> bool {
     let Some(mut settings) = state.doc.layer(id).and_then(|l| l.adjustment) else {
         return false;
     };
-    ui.label(settings.kind.name());
+    ui.label(match settings.kind {
+        Kind::Vibrance => "自然饱和度",
+        Kind::BrightnessContrast => "亮度/对比度",
+        Kind::Exposure => "曝光度",
+        Kind::HueSaturation => "色相/饱和度",
+        Kind::ColorBalance => "色彩平衡",
+        Kind::BlackWhite => "黑白",
+    });
     let labels: &[(&str, f32, f32)] = match settings.kind {
-        Kind::Vibrance => &[("Vibrance", -100., 100.), ("Saturation", -100., 100.)],
-        Kind::BrightnessContrast => &[("Brightness", -150., 150.), ("Contrast", -50., 100.)],
+        Kind::Vibrance => &[("自然饱和度", -100., 100.), ("饱和度", -100., 100.)],
+        Kind::BrightnessContrast => &[("亮度", -150., 150.), ("对比度", -50., 100.)],
         Kind::Exposure => &[
-            ("Exposure", -20., 20.),
-            ("Offset", -0.5, 0.5),
-            ("Gamma", 0.01, 9.99),
+            ("曝光度", -20., 20.),
+            ("偏移量", -0.5, 0.5),
+            ("灰度系数", 0.01, 9.99),
         ],
         Kind::HueSaturation => &[
-            ("Hue", -180., 180.),
-            ("Saturation", -100., 100.),
-            ("Lightness", -100., 100.),
+            ("色相", -180., 180.),
+            ("饱和度", -100., 100.),
+            ("明度", -100., 100.),
         ],
         Kind::ColorBalance => &[
-            ("Shadows Cyan/Red", -100., 100.),
-            ("Shadows Magenta/Green", -100., 100.),
-            ("Shadows Yellow/Blue", -100., 100.),
-            ("Midtones Cyan/Red", -100., 100.),
-            ("Midtones Magenta/Green", -100., 100.),
-            ("Midtones Yellow/Blue", -100., 100.),
-            ("Highlights Cyan/Red", -100., 100.),
-            ("Highlights Magenta/Green", -100., 100.),
-            ("Highlights Yellow/Blue", -100., 100.),
+            ("阴影 青色/红色", -100., 100.),
+            ("阴影 洋红色/绿色", -100., 100.),
+            ("阴影 黄色/蓝色", -100., 100.),
+            ("中间调 青色/红色", -100., 100.),
+            ("中间调 洋红色/绿色", -100., 100.),
+            ("中间调 黄色/蓝色", -100., 100.),
+            ("高光 青色/红色", -100., 100.),
+            ("高光 洋红色/绿色", -100., 100.),
+            ("高光 黄色/蓝色", -100., 100.),
         ],
         Kind::BlackWhite => &[
-            ("Reds", -200., 300.),
-            ("Yellows", -200., 300.),
-            ("Greens", -200., 300.),
-            ("Cyans", -200., 300.),
-            ("Blues", -200., 300.),
-            ("Magentas", -200., 300.),
+            ("红色", -200., 300.),
+            ("黄色", -200., 300.),
+            ("绿色", -200., 300.),
+            ("青色", -200., 300.),
+            ("蓝色", -200., 300.),
+            ("洋红色", -200., 300.),
         ],
     };
     let mut changed = false;

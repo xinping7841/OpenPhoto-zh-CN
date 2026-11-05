@@ -59,8 +59,8 @@ impl Dialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         for (i, (name, text, range, y)) in [
-            ("Brightness", &mut self.brightness, BRIGHTNESS, 48.0),
-            ("Contrast", &mut self.contrast, CONTRAST, 103.0),
+            ("亮度", &mut self.brightness, BRIGHTNESS, 48.0),
+            ("对比度", &mut self.contrast, CONTRAST, 103.0),
         ]
         .into_iter()
         .enumerate()
@@ -89,12 +89,12 @@ impl Dialog {
                 *text = format!("{v}");
             }
         }
-        uxp::checkbox(ui, at(20.0, 164.0), "Use Legacy", &mut self.legacy);
+        uxp::checkbox(ui, at(20.0, 164.0), "使用旧版", &mut self.legacy);
         uxp::preview(ui, at(272.0, 174.0), preview);
         uxp::buttons(
             ui,
             frame,
-            Some(("Auto", true)),
+            Some(("自动", true)),
             self.adjustment().is_some(),
             false,
         )

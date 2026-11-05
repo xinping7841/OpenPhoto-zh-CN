@@ -7,7 +7,7 @@
 /// input white, output black, output white.
 pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
     (
-        "Darker",
+        "较暗",
         [
             [15, 100, 255, 0, 255],
             [0, 100, 255, 0, 255],
@@ -16,7 +16,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Increase Contrast 1",
+        "增加对比度 1",
         [
             [10, 100, 245, 0, 255],
             [0, 100, 255, 0, 255],
@@ -25,7 +25,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Increase Contrast 2",
+        "增加对比度 2",
         [
             [20, 100, 235, 0, 255],
             [0, 100, 255, 0, 255],
@@ -34,7 +34,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Increase Contrast 3",
+        "增加对比度 3",
         [
             [30, 100, 225, 0, 255],
             [0, 100, 255, 0, 255],
@@ -43,7 +43,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Lighten Shadows",
+        "提亮阴影",
         [
             [0, 160, 255, 0, 255],
             [0, 100, 255, 0, 255],
@@ -52,7 +52,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Lighter",
+        "较亮",
         [
             [0, 100, 230, 0, 255],
             [0, 100, 255, 0, 255],
@@ -61,7 +61,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Midtones Brighter",
+        "提亮中间调",
         [
             [0, 125, 255, 0, 255],
             [0, 100, 255, 0, 255],
@@ -70,7 +70,7 @@ pub const LEVELS: &[(&str, [[i32; 5]; 4])] = &[
         ],
     ),
     (
-        "Midtones Darker",
+        "压暗中间调",
         [
             [0, 75, 255, 0, 255],
             [0, 100, 255, 0, 255],
@@ -86,7 +86,7 @@ pub type CurvesPreset = (&'static str, [&'static [(u8, u8)]; 4]);
 
 pub const CURVES: &[CurvesPreset] = &[
     (
-        "Color Negative",
+        "彩色负片",
         [
             &[(0, 0), (255, 255)],
             &[(33, 255), (119, 127), (185, 0)],
@@ -95,7 +95,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Cross Process",
+        "交叉冲印",
         [
             &[(0, 0), (255, 255)],
             &[(0, 0), (64, 40), (128, 125), (175, 190), (255, 255)],
@@ -104,7 +104,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Darker",
+        "较暗",
         [
             &[(0, 0), (130, 101), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -113,7 +113,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Increase Contrast",
+        "增加对比度",
         [
             &[(0, 0), (38, 17), (212, 231), (231, 250), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -122,7 +122,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Lighter",
+        "较亮",
         [
             &[(0, 0), (103, 125), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -131,7 +131,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Linear Contrast",
+        "线性对比度",
         [
             &[(0, 0), (78, 73), (177, 182), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -140,7 +140,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Medium Contrast",
+        "中等对比度",
         [
             &[(0, 0), (73, 56), (163, 164), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -149,7 +149,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Negative",
+        "负片",
         [
             &[(0, 255), (255, 0)],
             &[(0, 0), (255, 255)],
@@ -158,7 +158,7 @@ pub const CURVES: &[CurvesPreset] = &[
         ],
     ),
     (
-        "Strong Contrast",
+        "强对比度",
         [
             &[(0, 0), (77, 50), (151, 153), (175, 188), (255, 255)],
             &[(0, 0), (255, 255)],
@@ -175,48 +175,48 @@ pub const CURVES: &[CurvesPreset] = &[
 pub type HueSaturationPreset = (&'static str, [i32; 3], Option<[i32; 3]>);
 
 pub const HUE_SATURATION: &[HueSaturationPreset] = &[
-    ("Cyanotype", [0, 0, 0], Some([215, 25, 0])),
-    ("Increase Saturation", [0, 10, 0], None),
-    ("Increase Saturation More", [0, 30, 0], None),
-    ("Old Style", [0, -40, 5], None),
-    ("Red Boost", [-5, 20, 0], None),
-    ("Sepia", [0, 0, 0], Some([35, 25, 0])),
-    ("Strong Saturation", [0, 50, 0], None),
-    ("Yellow Boost", [5, 20, 0], None),
+    ("蓝晒法", [0, 0, 0], Some([215, 25, 0])),
+    ("增加饱和度", [0, 10, 0], None),
+    ("进一步增加饱和度", [0, 30, 0], None),
+    ("旧式风格", [0, -40, 5], None),
+    ("增强红色", [-5, 20, 0], None),
+    ("棕褐色", [0, 0, 0], Some([35, 25, 0])),
+    ("强饱和度", [0, 50, 0], None),
+    ("增强黄色", [5, 20, 0], None),
 ];
 
 /// Black & White: Reds, Yellows, Greens, Cyans, Blues, Magentas (no
 /// preset tints).
 pub const BLACK_WHITE: &[(&str, [i32; 6])] = &[
-    ("Blue Filter", [0, 0, 0, 110, 110, 110]),
-    ("Darker", [30, 50, 30, 50, 10, 70]),
-    ("Green Filter", [50, 120, 90, 50, 0, 0]),
-    ("High Contrast Blue Filter", [-50, -50, -50, 150, 150, 150]),
-    ("High Contrast Red Filter", [120, 120, -10, -50, -50, 120]),
-    ("Infrared", [-40, 235, 144, -68, -3, -107]),
-    ("Lighter", [50, 70, 50, 70, 30, 90]),
-    ("Maximum Black", [0, 0, 0, 0, 0, 0]),
-    ("Maximum White", [100, 100, 100, 100, 100, 100]),
-    ("Neutral Density", [128, 128, 100, 100, 128, 100]),
-    ("Red Filter", [120, 110, -10, -50, 0, 120]),
-    ("Yellow Filter", [120, 110, 40, -30, 0, 70]),
+    ("蓝色滤镜", [0, 0, 0, 110, 110, 110]),
+    ("较暗", [30, 50, 30, 50, 10, 70]),
+    ("绿色滤镜", [50, 120, 90, 50, 0, 0]),
+    ("高对比度蓝色滤镜", [-50, -50, -50, 150, 150, 150]),
+    ("高对比度红色滤镜", [120, 120, -10, -50, -50, 120]),
+    ("红外线", [-40, 235, 144, -68, -3, -107]),
+    ("较亮", [50, 70, 50, 70, 30, 90]),
+    ("最黑", [0, 0, 0, 0, 0, 0]),
+    ("最白", [100, 100, 100, 100, 100, 100]),
+    ("中性密度", [128, 128, 100, 100, 128, 100]),
+    ("红色滤镜", [120, 110, -10, -50, 0, 120]),
+    ("黄色滤镜", [120, 110, 40, -30, 0, 70]),
 ];
 
 /// Channel Mixer: monochrome presets, the gray output's Red, Green and Blue
 /// percentages.
 pub const CHANNEL_MIXER: &[(&str, [i32; 3])] = &[
-    ("Black & White Infrared", [-70, 200, -30]),
-    ("Black & White with Blue Filter", [0, 0, 100]),
-    ("Black & White with Green Filter", [0, 100, 0]),
-    ("Black & White with Orange Filter", [50, 50, 0]),
-    ("Black & White with Red Filter", [100, 0, 0]),
-    ("Black & White with Yellow Filter", [34, 66, 0]),
+    ("黑白红外线", [-70, 200, -30]),
+    ("黑白配蓝色滤镜", [0, 0, 100]),
+    ("黑白配绿色滤镜", [0, 100, 0]),
+    ("黑白配橙色滤镜", [50, 50, 0]),
+    ("黑白配红色滤镜", [100, 0, 0]),
+    ("黑白配黄色滤镜", [34, 66, 0]),
 ];
 
 /// Exposure: exposure, offset, gamma correction.
 pub const EXPOSURE: &[(&str, [f32; 3])] = &[
-    ("Minus 1.0", [-1e+00, 0e+00, 1e+00]),
-    ("Minus 2.0", [-2e+00, 0e+00, 1e+00]),
-    ("Plus 1.0", [1e+00, 0e+00, 1e+00]),
-    ("Plus 2.0", [2e+00, 0e+00, 1e+00]),
+    ("减少 1.0", [-1e+00, 0e+00, 1e+00]),
+    ("减少 2.0", [-2e+00, 0e+00, 1e+00]),
+    ("增加 1.0", [1e+00, 0e+00, 1e+00]),
+    ("增加 2.0", [2e+00, 0e+00, 1e+00]),
 ];

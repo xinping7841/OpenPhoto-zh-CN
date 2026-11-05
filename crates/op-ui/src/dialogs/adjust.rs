@@ -105,338 +105,304 @@ const fn check(label: &'static str, default: bool) -> Param {
     }
 }
 
-const GAUSSIAN_BLUR: &[Param] = &[param("Radius (pixels):", 0.1, 1000.0, 1.0, 1)];
-const BOX_BLUR: &[Param] = &[param("Radius (pixels):", 1.0, 2000.0, 1.0, 0)];
+const GAUSSIAN_BLUR: &[Param] = &[param("半径 (像素):", 0.1, 1000.0, 1.0, 1)];
+const BOX_BLUR: &[Param] = &[param("半径 (像素):", 1.0, 2000.0, 1.0, 0)];
 const UNSHARP_MASK: &[Param] = &[
-    param("Amount (%):", 1.0, 500.0, 50.0, 0),
-    param("Radius (pixels):", 0.1, 1000.0, 1.0, 1),
-    param("Threshold (levels):", 0.0, 255.0, 0.0, 0),
+    param("数量 (%):", 1.0, 500.0, 50.0, 0),
+    param("半径 (像素):", 0.1, 1000.0, 1.0, 1),
+    param("阈值 (色阶):", 0.0, 255.0, 0.0, 0),
 ];
 const ADD_NOISE: &[Param] = &[
-    param("Amount (%):", 0.1, 400.0, 12.5, 2),
-    choice("Distribution", &["Uniform", "Gaussian"], 0),
-    check("Monochromatic", false),
+    param("数量 (%):", 0.1, 400.0, 12.5, 2),
+    choice("分布", &["平均分布", "高斯分布"], 0),
+    check("单色", false),
 ];
-const RADIUS: &[Param] = &[param("Radius (pixels):", 1.0, 500.0, 1.0, 0)];
+const RADIUS: &[Param] = &[param("半径 (像素):", 1.0, 500.0, 1.0, 0)];
 /// Minimum and Maximum: a fractional radius and Preserve.
 const RANK_RADIUS: &[Param] = &[
-    param("Radius (pixels):", 0.2, 500.0, 1.0, 1),
-    choice("Preserve", &["Squareness", "Roundness"], 0),
+    param("半径 (像素):", 0.2, 500.0, 1.0, 1),
+    choice("保留", &["方形", "圆形"], 0),
 ];
 const MOTION_BLUR: &[Param] = &[
-    param("Angle (°):", -360.0, 360.0, 0.0, 0),
-    param("Distance (pixels):", 1.0, 2000.0, 10.0, 0),
+    param("角度 (°):", -360.0, 360.0, 0.0, 0),
+    param("距离 (像素):", 1.0, 2000.0, 10.0, 0),
 ];
-const TWIRL: &[Param] = &[param("Angle (°):", -999.0, 999.0, 50.0, 0)];
-const CRYSTALLIZE: &[Param] = &[param("Cell Size", 3.0, 300.0, 10.0, 0)];
-const POINTILLIZE: &[Param] = &[param("Cell Size", 3.0, 300.0, 5.0, 0)];
+const TWIRL: &[Param] = &[param("角度 (°):", -999.0, 999.0, 50.0, 0)];
+const CRYSTALLIZE: &[Param] = &[param("单元格大小", 3.0, 300.0, 10.0, 0)];
+const POINTILLIZE: &[Param] = &[param("单元格大小", 3.0, 300.0, 5.0, 0)];
 const RIPPLE: &[Param] = &[
-    param("Amount (%):", -999.0, 999.0, 100.0, 0),
-    choice("Size", &["Small", "Medium", "Large"], 1),
+    param("数量 (%):", -999.0, 999.0, 100.0, 0),
+    choice("大小", &["小", "中", "大"], 1),
 ];
 const MEZZOTINT: &[Param] = &[choice(
-    "Type",
+    "类型",
     &[
-        "Fine Dots",
-        "Medium Dots",
-        "Grainy Dots",
-        "Coarse Dots",
-        "Short Lines",
-        "Medium Lines",
-        "Long Lines",
-        "Short Strokes",
-        "Medium Strokes",
-        "Long Strokes",
+        "精细点",
+        "中等点",
+        "颗粒点",
+        "粗点",
+        "短线",
+        "中等线",
+        "长线",
+        "短描边",
+        "中等描边",
+        "长描边",
     ],
     0,
 )];
 const HSB_HSL: &[Param] = &[
-    choice("Input mode", &["RGB", "HSB", "HSL"], 0),
-    choice("Row order", &["RGB", "HSB", "HSL"], 1),
+    choice("输入模式", &["RGB", "HSB", "HSL"], 0),
+    choice("行顺序", &["RGB", "HSB", "HSL"], 1),
 ];
 const ZIGZAG: &[Param] = &[
-    param("Amount", -100.0, 100.0, 30.0, 0),
-    param("Ridges", 0.0, 20.0, 4.0, 0),
-    choice(
-        "Style",
-        &["Around Center", "Out From Center", "Pond Ripples"],
-        0,
-    ),
+    param("数量", -100.0, 100.0, 30.0, 0),
+    param("起伏", 0.0, 20.0, 4.0, 0),
+    choice("样式", &["围绕中心", "从中心向外", "池塘波纹"], 0),
 ];
 const TILES: &[Param] = &[
-    param("Number Of Tiles:", 1.0, 99.0, 10.0, 0),
-    param("Maximum Offset (%):", 1.0, 99.0, 10.0, 0),
+    param("拼贴数:", 1.0, 99.0, 10.0, 0),
+    param("最大位移 (%):", 1.0, 99.0, 10.0, 0),
     choice(
-        "Fill Empty Area With",
-        &[
-            "Background Color",
-            "Foreground Color",
-            "Inverse Image",
-            "Unaltered Image",
-        ],
+        "空白区域填充",
+        &["背景色", "前景色", "反转图像", "原始图像"],
         0,
     ),
 ];
 const COLOR_HALFTONE: &[Param] = &[
-    param("Max. Radius (pixels):", 4.0, 127.0, 8.0, 0),
-    param("Channel 1:", -360.0, 360.0, 108.0, 0),
-    param("Channel 2:", -360.0, 360.0, 162.0, 0),
-    param("Channel 3:", -360.0, 360.0, 90.0, 0),
-    param("Channel 4:", -360.0, 360.0, 45.0, 0),
+    param("最大半径 (像素):", 4.0, 127.0, 8.0, 0),
+    param("通道 1:", -360.0, 360.0, 108.0, 0),
+    param("通道 2:", -360.0, 360.0, 162.0, 0),
+    param("通道 3:", -360.0, 360.0, 90.0, 0),
+    param("通道 4:", -360.0, 360.0, 45.0, 0),
 ];
-const DIFFUSE: &[Param] = &[choice(
-    "Mode",
-    &["Normal", "Darken Only", "Lighten Only", "Anisotropic"],
-    0,
-)];
-const PINCH: &[Param] = &[param("Amount (%):", -100.0, 100.0, 50.0, 0)];
+const DIFFUSE: &[Param] = &[choice("模式", &["正常", "仅变暗", "仅变亮", "各向异性"], 0)];
+const PINCH: &[Param] = &[param("数量 (%):", -100.0, 100.0, 50.0, 0)];
 const SPHERIZE: &[Param] = &[
-    param("Amount (%):", -100.0, 100.0, 100.0, 0),
-    choice("Mode", &["Normal", "Horizontal only", "Vertical only"], 0),
+    param("数量 (%):", -100.0, 100.0, 100.0, 0),
+    choice("模式", &["正常", "仅水平", "仅垂直"], 0),
 ];
-const POLAR: &[Param] = &[choice(
-    "Options",
-    &["Rectangular to Polar", "Polar to Rectangular"],
-    0,
-)];
+const POLAR: &[Param] = &[choice("选项", &["平面坐标到极坐标", "极坐标到平面坐标"], 0)];
 const EMBOSS: &[Param] = &[
-    param("Angle (°):", -180.0, 180.0, 135.0, 0),
-    param("Height (pixels):", 1.0, 100.0, 3.0, 0),
-    param("Amount (%):", 1.0, 500.0, 100.0, 0),
+    param("角度 (°):", -180.0, 180.0, 135.0, 0),
+    param("高度 (像素):", 1.0, 100.0, 3.0, 0),
+    param("数量 (%):", 1.0, 500.0, 100.0, 0),
 ];
-const HIGH_PASS: &[Param] = &[param("Radius (pixels):", 0.1, 1000.0, 10.0, 1)];
+const HIGH_PASS: &[Param] = &[param("半径 (像素):", 0.1, 1000.0, 10.0, 1)];
 const OFFSET: &[Param] = &[
-    param("Horizontal (pixels right):", -30000.0, 30000.0, 0.0, 0),
-    param("Vertical (pixels down):", -30000.0, 30000.0, 0.0, 0),
-    choice(
-        "Undefined Areas",
-        &["Set to Transparent", "Repeat Edge Pixels", "Wrap Around"],
-        0,
-    ),
+    param("水平 (像素向右):", -30000.0, 30000.0, 0.0, 0),
+    param("垂直 (像素向下):", -30000.0, 30000.0, 0.0, 0),
+    choice("未定义区域", &["设为透明", "重复边缘像素", "折回"], 0),
 ];
-const MOSAIC: &[Param] = &[param("Cell Size (square):", 2.0, 200.0, 10.0, 0)];
+const MOSAIC: &[Param] = &[param("单元格大小 (方形):", 2.0, 200.0, 10.0, 0)];
 const SURFACE_BLUR: &[Param] = &[
-    param("Radius (pixels):", 1.0, 100.0, 5.0, 0),
-    param("Threshold (levels):", 2.0, 255.0, 15.0, 0),
+    param("半径 (像素):", 1.0, 100.0, 5.0, 0),
+    param("阈值 (色阶):", 2.0, 255.0, 15.0, 0),
 ];
 const TRACE_CONTOUR: &[Param] = &[
-    param("Level:", 0.0, 255.0, 128.0, 0),
-    choice("Edge", &["Lower", "Upper"], 1),
+    param("色阶:", 0.0, 255.0, 128.0, 0),
+    choice("边缘", &["较低", "较高"], 1),
 ];
 const WIND: &[Param] = &[
-    choice("Method", &["Wind", "Blast", "Stagger"], 0),
-    choice("Direction", &["From the Right", "From the Left"], 0),
+    choice("方法", &["风", "大风", "飓风"], 0),
+    choice("方向", &["从右", "从左"], 0),
 ];
 const RADIAL_BLUR: &[Param] = &[
-    param("Amount:", 1.0, 100.0, 10.0, 0),
-    choice("Blur Method", &["Spin", "Zoom"], 0),
-    choice("Quality", &["Draft", "Good", "Best"], 1),
+    param("数量:", 1.0, 100.0, 10.0, 0),
+    choice("模糊方法", &["旋转", "缩放"], 0),
+    choice("品质", &["草稿", "好", "最佳"], 1),
 ];
 
 const SMART_BLUR: &[Param] = &[
-    param("Radius:", 0.1, 100.0, 3.0, 1),
-    param("Threshold:", 0.1, 100.0, 25.0, 1),
-    choice("Quality:", &["Low", "Medium", "High"], 2),
-    choice("Mode:", &["Normal", "Edge Only", "Overlay Edge"], 0),
+    param("半径:", 0.1, 100.0, 3.0, 1),
+    param("阈值:", 0.1, 100.0, 25.0, 1),
+    choice("品质:", &["低", "中", "高"], 2),
+    choice("模式:", &["正常", "仅边缘", "叠加边缘"], 0),
 ];
 
 const SHAPE_BLUR: &[Param] = &[
-    param("Radius:", 5.0, 1000.0, 10.0, 0),
-    choice(
-        "Shape:",
-        &["Circle", "Square", "Star", "Heart", "Diamond"],
-        0,
-    ),
+    param("半径:", 5.0, 1000.0, 10.0, 0),
+    choice("形状:", &["圆形", "方形", "星形", "心形", "菱形"], 0),
 ];
 
 /// In the dialog's order (`lens_blur`'s indexes).
 const LENS_BLUR: &[Param] = &[
-    choice("Preview", &["Faster", "More Accurate"], 0),
-    choice("Source:", &["None", "Transparency", "Layer Mask"], 0),
-    param("Blur Focal Distance", 0.0, 255.0, 0.0, 0),
-    check("Invert", false),
+    choice("预览", &["较快", "较准确"], 0),
+    choice("源:", &["无", "透明度", "图层蒙版"], 0),
+    param("模糊焦距", 0.0, 255.0, 0.0, 0),
+    check("反相", false),
     choice(
-        "Shape:",
+        "形状:",
         &[
-            "Triangle (3)",
-            "Square (4)",
-            "Pentagon (5)",
-            "Hexagon (6)",
-            "Heptagon (7)",
-            "Octagon (8)",
+            "三角形 (3)",
+            "四边形 (4)",
+            "五边形 (5)",
+            "六边形 (6)",
+            "七边形 (7)",
+            "八边形 (8)",
         ],
         3,
     ),
-    param("Radius", 0.0, 100.0, 15.0, 0),
-    param("Blade Curvature", 0.0, 100.0, 0.0, 0),
-    param("Rotation", 0.0, 360.0, 0.0, 0),
-    param("Brightness", 0.0, 100.0, 0.0, 0),
-    param("Threshold", 0.0, 255.0, 255.0, 0),
-    param("Amount", 0.0, 100.0, 0.0, 0),
-    choice("Distribution", &["Uniform", "Gaussian"], 0),
-    check("Monochromatic", false),
+    param("半径", 0.0, 100.0, 15.0, 0),
+    param("叶片弯度", 0.0, 100.0, 0.0, 0),
+    param("旋转", 0.0, 360.0, 0.0, 0),
+    param("亮度", 0.0, 100.0, 0.0, 0),
+    param("阈值", 0.0, 255.0, 255.0, 0),
+    param("数量", 0.0, 100.0, 0.0, 0),
+    choice("分布", &["平均分布", "高斯分布"], 0),
+    check("单色", false),
 ];
 
 /// In the dialog's order (`reduce_noise`'s indexes).
 const REDUCE_NOISE: &[Param] = &[
-    choice("Mode", &["Basic", "Advanced"], 0),
-    param("Strength:", 0.0, 10.0, 6.0, 0),
-    param("Preserve Details:", 0.0, 100.0, 60.0, 0),
-    param("Reduce Color Noise:", 0.0, 100.0, 45.0, 0),
-    param("Sharpen Details:", 0.0, 100.0, 25.0, 0),
-    check("Remove JPEG Artifact", false),
-    choice("Channel:", &["Red", "Green", "Blue"], 0),
-    param("Red Strength:", 0.0, 10.0, 0.0, 0),
-    param("Red Preserve Details:", 0.0, 100.0, 60.0, 0),
-    param("Green Strength:", 0.0, 10.0, 0.0, 0),
-    param("Green Preserve Details:", 0.0, 100.0, 60.0, 0),
-    param("Blue Strength:", 0.0, 10.0, 0.0, 0),
-    param("Blue Preserve Details:", 0.0, 100.0, 60.0, 0),
+    choice("模式", &["基本", "高级"], 0),
+    param("强度:", 0.0, 10.0, 6.0, 0),
+    param("保留细节:", 0.0, 100.0, 60.0, 0),
+    param("减少颜色杂色:", 0.0, 100.0, 45.0, 0),
+    param("锐化细节:", 0.0, 100.0, 25.0, 0),
+    check("移去 JPEG 假象", false),
+    choice("通道:", &["红色", "绿色", "蓝色"], 0),
+    param("红色强度:", 0.0, 10.0, 0.0, 0),
+    param("红色保留细节:", 0.0, 100.0, 60.0, 0),
+    param("绿色强度:", 0.0, 10.0, 0.0, 0),
+    param("绿色保留细节:", 0.0, 100.0, 60.0, 0),
+    param("蓝色强度:", 0.0, 10.0, 0.0, 0),
+    param("蓝色保留细节:", 0.0, 100.0, 60.0, 0),
 ];
 
 /// In the dialog's order (`smart_sharpen`'s indexes).
 const SMART_SHARPEN: &[Param] = &[
-    param("Amount:", 1.0, 500.0, 200.0, 0),
-    param("Radius:", 0.1, 64.0, 1.0, 1),
-    param("Reduce Noise:", 0.0, 100.0, 10.0, 0),
-    choice("Remove:", &["Gaussian Blur", "Lens Blur", "Motion Blur"], 1),
-    param("Angle:", -180.0, 180.0, 0.0, 0),
-    param("Shadows Fade Amount:", 0.0, 100.0, 0.0, 0),
-    param("Shadows Tonal Width:", 0.0, 100.0, 50.0, 0),
-    param("Shadows Radius:", 1.0, 100.0, 1.0, 0),
-    param("Highlights Fade Amount:", 0.0, 100.0, 0.0, 0),
-    param("Highlights Tonal Width:", 0.0, 100.0, 50.0, 0),
-    param("Highlights Radius:", 1.0, 100.0, 1.0, 0),
-    check("Use Legacy", false),
-    check("More Accurate", false),
+    param("数量:", 1.0, 500.0, 200.0, 0),
+    param("半径:", 0.1, 64.0, 1.0, 1),
+    param("减少杂色:", 0.0, 100.0, 10.0, 0),
+    choice("移去:", &["高斯模糊", "镜头模糊", "动感模糊"], 1),
+    param("角度:", -180.0, 180.0, 0.0, 0),
+    param("阴影渐隐量:", 0.0, 100.0, 0.0, 0),
+    param("阴影色调宽度:", 0.0, 100.0, 50.0, 0),
+    param("阴影半径:", 1.0, 100.0, 1.0, 0),
+    param("高光渐隐量:", 0.0, 100.0, 0.0, 0),
+    param("高光色调宽度:", 0.0, 100.0, 50.0, 0),
+    param("高光半径:", 1.0, 100.0, 1.0, 0),
+    check("使用旧版", false),
+    check("较准确", false),
 ];
 
 const FIBERS: &[Param] = &[
-    param("Variance:", 1.0, 64.0, 16.0, 0),
-    param("Strength:", 1.0, 64.0, 4.0, 0),
+    param("差异:", 1.0, 64.0, 16.0, 0),
+    param("强度:", 1.0, 64.0, 4.0, 0),
 ];
 
 const LENS_FLARE: &[Param] = &[
-    param("Brightness:", 10.0, 300.0, 100.0, 0),
+    param("亮度:", 10.0, 300.0, 100.0, 0),
     choice(
-        "Lens Type",
-        &["50-300mm Zoom", "35mm Prime", "105mm Prime", "Movie Prime"],
+        "镜头类型",
+        &["50-300mm 变焦", "35mm 定焦", "105mm 定焦", "电影定焦"],
         0,
     ),
 ];
 
 const EXTRUDE: &[Param] = &[
-    choice("Type", &["Blocks", "Pyramids"], 0),
-    param("Size:", 2.0, 255.0, 30.0, 0),
-    param("Depth:", 1.0, 255.0, 30.0, 0),
-    choice("Depth Based On", &["Random", "Level-based"], 0),
-    check("Solid Front Faces", false),
-    check("Mask Incomplete Blocks", false),
+    choice("类型", &["块", "金字塔"], 0),
+    param("大小:", 2.0, 255.0, 30.0, 0),
+    param("深度:", 1.0, 255.0, 30.0, 0),
+    choice("深度依据", &["随机", "基于色阶"], 0),
+    check("实心正面", false),
+    check("蒙版不完整块", false),
 ];
 
 /// In the dialog's order (`oil_paint`'s indexes).
 const OIL_PAINT: &[Param] = &[
-    param("Stylization:", 0.1, 10.0, 1.5, 1),
-    param("Cleanliness:", 0.0, 10.0, 5.0, 1),
-    param("Scale:", 0.1, 10.0, 1.0, 1),
-    param("Bristle Detail:", 0.0, 10.0, 0.0, 1),
-    check("Lighting", true),
-    param("Angle:", -180.0, 180.0, -60.0, 0),
-    param("Shine:", 0.0, 10.0, 1.0, 1),
+    param("样式化:", 0.1, 10.0, 1.5, 1),
+    param("清洁度:", 0.0, 10.0, 5.0, 1),
+    param("缩放:", 0.1, 10.0, 1.0, 1),
+    param("画笔细节:", 0.0, 10.0, 0.0, 1),
+    check("光照", true),
+    param("角度:", -180.0, 180.0, -60.0, 0),
+    param("闪亮:", 0.0, 10.0, 1.0, 1),
 ];
 
 const WAVE: &[Param] = &[
-    param("Number of Generators:", 1.0, 999.0, 5.0, 0),
-    param("Wavelength Min.:", 1.0, 998.0, 10.0, 0),
-    param("Wavelength Max.:", 2.0, 999.0, 120.0, 0),
-    param("Amplitude Min.:", 1.0, 998.0, 5.0, 0),
-    param("Amplitude Max.:", 1.0, 999.0, 35.0, 0),
-    param("Scale Horiz.:", 1.0, 100.0, 100.0, 0),
-    param("Scale Vert.:", 1.0, 100.0, 100.0, 0),
-    choice("Type", &["Sine", "Triangle", "Square"], 0),
-    choice("Undefined Areas", &["Wrap Around", "Repeat Edge Pixels"], 1),
+    param("生成器数量:", 1.0, 999.0, 5.0, 0),
+    param("最小波长:", 1.0, 998.0, 10.0, 0),
+    param("最大波长:", 2.0, 999.0, 120.0, 0),
+    param("最小波幅:", 1.0, 998.0, 5.0, 0),
+    param("最大波幅:", 1.0, 999.0, 35.0, 0),
+    param("水平缩放:", 1.0, 100.0, 100.0, 0),
+    param("垂直缩放:", 1.0, 100.0, 100.0, 0),
+    choice("类型", &["正弦", "三角形", "方形"], 0),
+    choice("未定义区域", &["折回", "重复边缘像素"], 1),
 ];
 
 /// Shear's curve is the dialog's own (`Extra::shear_points`).
-const SHEAR: &[Param] = &[choice(
-    "Undefined Areas",
-    &["Wrap Around", "Repeat Edge Pixels"],
-    0,
-)];
+const SHEAR: &[Param] = &[choice("未定义区域", &["折回", "重复边缘像素"], 0)];
 
 const DISPLACE: &[Param] = &[
-    param("Horizontal Scale:", -999.0, 999.0, 10.0, 0),
-    param("Vertical Scale:", -999.0, 999.0, 10.0, 0),
-    choice("Displacement Map", &["Stretch To Fit", "Tile"], 0),
-    choice("Undefined Areas", &["Wrap Around", "Repeat Edge Pixels"], 1),
+    param("水平比例:", -999.0, 999.0, 10.0, 0),
+    param("垂直比例:", -999.0, 999.0, 10.0, 0),
+    choice("置换图", &["伸展以适合", "拼贴"], 0),
+    choice("未定义区域", &["折回", "重复边缘像素"], 1),
 ];
 
 const SHADOWS_HIGHLIGHTS: &[Param] = &[
-    param("Shadows Amount:", 0.0, 100.0, 35.0, 0),
-    param("Shadows Tone:", 0.0, 100.0, 50.0, 0),
-    param("Shadows Radius:", 0.0, 2500.0, 30.0, 0),
-    param("Highlights Amount:", 0.0, 100.0, 0.0, 0),
-    param("Highlights Tone:", 0.0, 100.0, 50.0, 0),
-    param("Highlights Radius:", 0.0, 2500.0, 30.0, 0),
-    param("Color:", -100.0, 100.0, 20.0, 0),
-    param("Midtone:", -100.0, 100.0, 0.0, 0),
-    param("Black Clip:", 0.0, 50.0, 0.01, 2),
-    param("White Clip:", 0.0, 50.0, 0.01, 2),
-    check("Show More Options", false),
+    param("阴影数量:", 0.0, 100.0, 35.0, 0),
+    param("阴影色调:", 0.0, 100.0, 50.0, 0),
+    param("阴影半径:", 0.0, 2500.0, 30.0, 0),
+    param("高光数量:", 0.0, 100.0, 0.0, 0),
+    param("高光色调:", 0.0, 100.0, 50.0, 0),
+    param("高光半径:", 0.0, 2500.0, 30.0, 0),
+    param("颜色:", -100.0, 100.0, 20.0, 0),
+    param("中间调:", -100.0, 100.0, 0.0, 0),
+    param("黑色修剪:", 0.0, 50.0, 0.01, 2),
+    param("白色修剪:", 0.0, 50.0, 0.01, 2),
+    check("显示更多选项", false),
 ];
 
 const HDR_TONING: &[Param] = &[
     choice(
-        "Method:",
-        &[
-            "Exposure and Gamma",
-            "Highlight Compression",
-            "Equalize Histogram",
-            "Local Adaptation",
-        ],
+        "方法:",
+        &["曝光度和灰度系数", "高光压缩", "均化直方图", "局部适应"],
         3,
     ),
-    param("Radius:", 1.0, 500.0, 15.0, 0),
-    param("Strength:", 0.1, 4.0, 0.52, 2),
-    param("Gamma:", 0.1, 2.0, 1.0, 2),
-    param("Exposure:", -5.0, 5.0, 0.0, 2),
-    param("Detail:", -100.0, 300.0, 30.0, 0),
-    param("Shadow:", -100.0, 100.0, 0.0, 0),
-    param("Highlight:", -100.0, 100.0, 0.0, 0),
-    param("Vibrance:", -100.0, 100.0, 0.0, 0),
-    param("Saturation:", -100.0, 100.0, 20.0, 0),
-    check("Smooth Edges", false),
+    param("半径:", 1.0, 500.0, 15.0, 0),
+    param("强度:", 0.1, 4.0, 0.52, 2),
+    param("灰度系数:", 0.1, 2.0, 1.0, 2),
+    param("曝光度:", -5.0, 5.0, 0.0, 2),
+    param("细节:", -100.0, 300.0, 30.0, 0),
+    param("阴影:", -100.0, 100.0, 0.0, 0),
+    param("高光:", -100.0, 100.0, 0.0, 0),
+    param("自然饱和度:", -100.0, 100.0, 0.0, 0),
+    param("饱和度:", -100.0, 100.0, 20.0, 0),
+    check("平滑边缘", false),
 ];
 
 const REPLACE_COLOR: &[Param] = &[
-    param("Fuzziness:", 0.0, 200.0, 40.0, 0),
-    param("Hue:", -180.0, 180.0, 0.0, 0),
-    param("Saturation:", -100.0, 100.0, 0.0, 0),
-    param("Lightness:", -100.0, 100.0, 0.0, 0),
-    check("Localized Color Clusters", false),
+    param("颜色容差:", 0.0, 200.0, 40.0, 0),
+    param("色相:", -180.0, 180.0, 0.0, 0),
+    param("饱和度:", -100.0, 100.0, 0.0, 0),
+    param("明度:", -100.0, 100.0, 0.0, 0),
+    check("本地化颜色簇", false),
 ];
 
 const MATCH_COLOR: &[Param] = &[
-    param("Luminance:", 1.0, 200.0, 100.0, 0),
-    param("Color Intensity:", 1.0, 200.0, 100.0, 0),
-    param("Fade:", 0.0, 100.0, 0.0, 0),
-    check("Neutralize", false),
-    choice("Source:", &["None"], 0),
-    choice("Layer:", &["Merged"], 0),
-    check("Ignore Selection when Applying Adjustment", false),
-    check("Use Selection in Source to Calculate Colors", false),
-    check("Use Selection in Target to Calculate Adjustment", false),
+    param("明亮度:", 1.0, 200.0, 100.0, 0),
+    param("颜色强度:", 1.0, 200.0, 100.0, 0),
+    param("渐隐:", 0.0, 100.0, 0.0, 0),
+    check("中和", false),
+    choice("源:", &["无"], 0),
+    choice("图层:", &["合并"], 0),
+    check("应用调整时忽略选区", false),
+    check("使用源选区计算颜色", false),
+    check("使用目标选区计算调整", false),
 ];
 
 const COLOR_LOOKUP: &[Param] = &[
-    choice("3DLUT File:", &["Load 3D LUT..."], 0),
-    choice("Source:", &["3DLUT File", "Abstract", "Device Link"], 0),
-    check("Dither", true),
+    choice("3DLUT 文件:", &["载入 3D LUT..."], 0),
+    choice("源:", &["3DLUT 文件", "抽象", "设备链接"], 0),
+    check("仿色", true),
 ];
 
 const DUST_AND_SCRATCHES: &[Param] = &[
-    param("Radius (pixels):", 1.0, 500.0, 1.0, 0),
-    param("Threshold (levels):", 0.0, 255.0, 0.0, 0),
+    param("半径 (像素):", 1.0, 500.0, 1.0, 0),
+    param("阈值 (色阶):", 0.0, 255.0, 0.0, 0),
 ];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -509,68 +475,68 @@ pub enum Kind {
 impl Kind {
     fn title(self) -> &'static str {
         match self {
-            Self::Threshold => "Threshold",
-            Self::Posterize => "Posterize",
-            Self::Levels => "Levels",
-            Self::Curves => "Curves",
-            Self::HueSaturation => "Hue/Saturation",
-            Self::Exposure => "Exposure",
-            Self::BrightnessContrast => "Brightness/Contrast",
-            Self::ColorBalance => "Color Balance",
-            Self::BlackWhite => "Black and White",
-            Self::Vibrance => "Vibrance",
-            Self::ChannelMixer => "Channel Mixer",
-            Self::SelectiveColor => "Selective Color",
-            Self::PhotoFilter => "Photo Filter",
-            Self::GradientMap => "Gradient Map",
-            Self::GaussianBlur => "Gaussian Blur",
-            Self::BoxBlur => "Box Blur",
-            Self::UnsharpMask => "Unsharp Mask",
-            Self::AddNoise => "Add Noise",
-            Self::Median => "Median",
-            Self::Minimum => "Minimum",
-            Self::Maximum => "Maximum",
-            Self::HighPass => "High Pass",
-            Self::Offset => "Offset",
-            Self::Mosaic => "Mosaic",
-            Self::MotionBlur => "Motion Blur",
-            Self::Emboss => "Emboss",
-            Self::Twirl => "Twirl",
-            Self::Crystallize => "Crystallize",
-            Self::Pointillize => "Pointillize",
-            Self::Diffuse => "Diffuse",
-            Self::Ripple => "Ripple",
-            Self::Mezzotint => "Mezzotint",
-            Self::Tiles => "Tiles",
-            Self::ColorHalftone => "Color Halftone",
-            Self::ZigZag => "ZigZag",
-            Self::HsbHsl => "HSB/HSL Parameters",
-            Self::Pinch => "Pinch",
-            Self::Spherize => "Spherize",
-            Self::PolarCoordinates => "Polar Coordinates",
-            Self::SurfaceBlur => "Surface Blur",
-            Self::DustAndScratches => "Dust & Scratches",
-            Self::Custom => "Custom",
-            Self::TraceContour => "Trace Contour",
-            Self::Wind => "Wind",
-            Self::RadialBlur => "Radial Blur",
-            Self::SmartBlur => "Smart Blur",
-            Self::ShapeBlur => "Shape Blur",
-            Self::LensBlur => "Lens Blur",
-            Self::ReduceNoise => "Reduce Noise",
-            Self::SmartSharpen => "Smart Sharpen",
-            Self::Fibers => "Fibers",
-            Self::LensFlare => "Lens Flare",
-            Self::Extrude => "Extrude",
-            Self::OilPaint => "Oil Paint",
-            Self::Wave => "Wave",
-            Self::Shear => "Shear",
-            Self::Displace => "Displace",
-            Self::ShadowsHighlights => "Shadows/Highlights",
-            Self::HdrToning => "HDR Toning",
-            Self::ReplaceColor => "Replace Color",
-            Self::MatchColor => "Match Color",
-            Self::ColorLookup => "Color Lookup",
+            Self::Threshold => "阈值",
+            Self::Posterize => "色调分离",
+            Self::Levels => "色阶",
+            Self::Curves => "曲线",
+            Self::HueSaturation => "色相/饱和度",
+            Self::Exposure => "曝光度",
+            Self::BrightnessContrast => "亮度/对比度",
+            Self::ColorBalance => "色彩平衡",
+            Self::BlackWhite => "黑白",
+            Self::Vibrance => "自然饱和度",
+            Self::ChannelMixer => "通道混合器",
+            Self::SelectiveColor => "可选颜色",
+            Self::PhotoFilter => "照片滤镜",
+            Self::GradientMap => "渐变映射",
+            Self::GaussianBlur => "高斯模糊",
+            Self::BoxBlur => "方框模糊",
+            Self::UnsharpMask => "USM 锐化",
+            Self::AddNoise => "添加杂色",
+            Self::Median => "中间值",
+            Self::Minimum => "最小值",
+            Self::Maximum => "最大值",
+            Self::HighPass => "高反差保留",
+            Self::Offset => "位移",
+            Self::Mosaic => "马赛克",
+            Self::MotionBlur => "动感模糊",
+            Self::Emboss => "浮雕效果",
+            Self::Twirl => "旋转扭曲",
+            Self::Crystallize => "晶格化",
+            Self::Pointillize => "点状化",
+            Self::Diffuse => "扩散",
+            Self::Ripple => "波纹",
+            Self::Mezzotint => "铜版雕刻",
+            Self::Tiles => "拼贴",
+            Self::ColorHalftone => "彩色半调",
+            Self::ZigZag => "水波",
+            Self::HsbHsl => "HSB/HSL 参数",
+            Self::Pinch => "挤压",
+            Self::Spherize => "球面化",
+            Self::PolarCoordinates => "极坐标",
+            Self::SurfaceBlur => "表面模糊",
+            Self::DustAndScratches => "蒙尘与划痕",
+            Self::Custom => "自定",
+            Self::TraceContour => "等高线",
+            Self::Wind => "风",
+            Self::RadialBlur => "径向模糊",
+            Self::SmartBlur => "特殊模糊",
+            Self::ShapeBlur => "形状模糊",
+            Self::LensBlur => "镜头模糊",
+            Self::ReduceNoise => "减少杂色",
+            Self::SmartSharpen => "智能锐化",
+            Self::Fibers => "纤维",
+            Self::LensFlare => "镜头光晕",
+            Self::Extrude => "凸出",
+            Self::OilPaint => "油画",
+            Self::Wave => "波浪",
+            Self::Shear => "切变",
+            Self::Displace => "置换",
+            Self::ShadowsHighlights => "阴影/高光",
+            Self::HdrToning => "HDR 色调",
+            Self::ReplaceColor => "替换颜色",
+            Self::MatchColor => "匹配颜色",
+            Self::ColorLookup => "颜色查找",
         }
     }
 
@@ -722,7 +688,7 @@ fn text_width(ui: &Ui, text: &str) -> f32 {
 /// Custom's Load...: a Photoshop .acf kernel file.
 fn load_kernel(d: &mut custom_filter::Dialog) {
     let path = rfd::FileDialog::new()
-        .add_filter("Custom Filter", &["acf"])
+        .add_filter("自定滤镜", &["acf"])
         .pick_file();
     if let Some(bytes) = path.and_then(|p| std::fs::read(p).ok()) {
         d.load_acf(&bytes);
@@ -735,7 +701,7 @@ fn save_kernel(d: &custom_filter::Dialog) {
         return;
     };
     let path = rfd::FileDialog::new()
-        .add_filter("Custom Filter", &["acf"])
+        .add_filter("自定滤镜", &["acf"])
         .set_file_name("Untitled.acf")
         .save_file();
     if let Some(path) = path {
@@ -983,7 +949,7 @@ impl Extra {
     fn labels(&self, kind: Kind, i: usize, source_pick: Option<usize>) -> Option<Vec<String>> {
         match (kind, i) {
             (Kind::MatchColor, 4) => Some(
-                std::iter::once("None".to_owned())
+                std::iter::once("无".to_owned())
                     .chain(self.sources.iter().map(|s| s.name.clone()))
                     .collect(),
             ),
@@ -996,7 +962,7 @@ impl Extra {
                 _ => vec![self.target_layer.clone()],
             }),
             (Kind::ColorLookup, 0) => Some(
-                std::iter::once("Load 3D LUT...".to_owned())
+                std::iter::once("载入 3D LUT...".to_owned())
                     .chain(self.luts.iter().map(|(n, _)| n.clone()))
                     .collect(),
             ),
@@ -1451,8 +1417,7 @@ impl AdjustDialog {
     /// Gradient Map's two colors (the foreground and background colors).
     pub fn set_gradient_colors(&mut self, colors: ([u8; 3], [u8; 3])) {
         if let Some(Custom::GradientMap(d)) = &mut self.custom {
-            d.gradient =
-                op_core::gradient::Gradient::two("Foreground to Background", colors.0, colors.1);
+            d.gradient = op_core::gradient::Gradient::two("前景色到背景色", colors.0, colors.1);
         }
     }
 
@@ -2193,7 +2158,7 @@ impl AdjustDialog {
                                 && k == 0
                                 && self.extra.on_background
                             {
-                                "Set to Background"
+                                "设为背景色"
                             } else {
                                 option
                             };
@@ -2223,12 +2188,12 @@ impl AdjustDialog {
             )
         };
         let valid = self.effect().is_some();
-        let ok = button(ui, 38.5, "OK", true, valid);
-        let cancel = button(ui, 73.5, "Cancel", false, true);
+        let ok = button(ui, 38.5, "确定", true, valid);
+        let cancel = button(ui, 73.5, "取消", false, true);
         appkit::checkbox(
             ui,
             at(x0 - 0.5, layout.preview_y),
-            "Preview",
+            "预览",
             &mut self.preview,
         );
         if cancel.clicked() {
@@ -2509,7 +2474,7 @@ impl AdjustDialog {
 
         if let Some(b) = layout.randomize {
             let rect = r(b[0], b[1], b[2], b[3]);
-            if flat_button(ui, rect, "Randomize", "distort-randomize") {
+            if flat_button(ui, rect, "随机化", "distort-randomize") {
                 self.extra.seed = self
                     .extra
                     .seed
@@ -2523,7 +2488,7 @@ impl AdjustDialog {
         let ok = appkit::button_with(
             ui,
             r(x0, 41.0, x0 + layout.buttons_w, 67.0),
-            "OK",
+            "确定",
             (true, valid),
             13.0,
             0.0,
@@ -2531,7 +2496,7 @@ impl AdjustDialog {
         let cancel = appkit::button_with(
             ui,
             r(x0, 77.0, x0 + layout.buttons_w, 103.0),
-            "Cancel",
+            "取消",
             (false, true),
             13.0,
             0.0,
@@ -2657,7 +2622,7 @@ impl AdjustDialog {
         let ok = appkit::button_with(
             ui,
             Rect::from_min_max(at(x0, ok_y), at(x0 + bw, ok_y + bh)),
-            "OK",
+            "确定",
             (true, valid),
             size,
             0.0,
@@ -2665,7 +2630,7 @@ impl AdjustDialog {
         let cancel = appkit::button_with(
             ui,
             Rect::from_min_max(at(x0, cancel_y), at(x0 + bw, cancel_y + bh)),
-            "Cancel",
+            "取消",
             (false, true),
             size,
             0.0,

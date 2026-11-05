@@ -28,12 +28,12 @@ impl Unit {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::Pixels => "Pixels",
-            Self::Inches => "Inches",
-            Self::Centimeters => "Centimeters",
-            Self::Millimeters => "Millimeters",
-            Self::Points => "Points",
-            Self::Picas => "Picas",
+            Self::Pixels => "像素",
+            Self::Inches => "英寸",
+            Self::Centimeters => "厘米",
+            Self::Millimeters => "毫米",
+            Self::Points => "点",
+            Self::Picas => "派卡",
         }
     }
 
@@ -155,24 +155,24 @@ pub fn category(index: usize) -> Vec<Preset> {
     };
     match index {
         0 => [
-            ("Default Photoshop Size", 7.0, 5.0),
-            ("Landscape, 3 x 2", 3.0, 2.0),
-            ("Landscape, 6 x 4", 6.0, 4.0),
-            ("Landscape, 7 x 5", 7.0, 5.0),
-            ("Landscape, 10 x 8", 10.0, 8.0),
-            ("Portrait, 2 x 3", 2.0, 3.0),
-            ("Portrait, 4 x 6", 4.0, 6.0),
-            ("Portrait, 5 x 7", 5.0, 7.0),
-            ("Portrait, 8 x 10", 8.0, 10.0),
+            ("默认 Photoshop 大小", 7.0, 5.0),
+            ("横向，3 x 2", 3.0, 2.0),
+            ("横向，6 x 4", 6.0, 4.0),
+            ("横向，7 x 5", 7.0, 5.0),
+            ("横向，10 x 8", 10.0, 8.0),
+            ("纵向，2 x 3", 2.0, 3.0),
+            ("纵向，4 x 6", 4.0, 6.0),
+            ("纵向，5 x 7", 5.0, 7.0),
+            ("纵向，8 x 10", 8.0, 10.0),
         ]
         .into_iter()
         .map(|(n, w, h)| Preset::new(n, (w, h), Inches, 300.0, Photo))
         .collect(),
         1 => {
             let mut v: Vec<Preset> = [
-                ("Letter", 8.5, 11.0),
-                ("Legal", 8.5, 14.0),
-                ("Tabloid", 11.0, 17.0),
+                ("信纸", 8.5, 11.0),
+                ("法律用纸", 8.5, 14.0),
+                ("小报", 11.0, 17.0),
             ]
             .into_iter()
             .map(|(n, w, h)| Preset::new(n, (w, h), Inches, 300.0, Page))
@@ -195,23 +195,23 @@ pub fn category(index: usize) -> Vec<Preset> {
             v
         }
         2 => vec![
-            px("1000 pixel grid", 1000.0, 1000.0, 300.0, Grid),
-            px("2000 pixel grid", 2000.0, 2000.0, 300.0, Grid),
-            Preset::new("Poster", (18.0, 24.0), Inches, 300.0, Brush),
-            Preset::new("Postcard", (4.0, 6.0), Inches, 300.0, Brush),
+            px("1000 像素网格", 1000.0, 1000.0, 300.0, Grid),
+            px("2000 像素网格", 2000.0, 2000.0, 300.0, Grid),
+            Preset::new("海报", (18.0, 24.0), Inches, 300.0, Brush),
+            Preset::new("明信片", (4.0, 6.0), Inches, 300.0, Brush),
             px("1080p", 1920.0, 1080.0, 300.0, Brush),
             px("720p", 1280.0, 720.0, 300.0, Brush),
         ],
         3 => [
-            ("Web Most Common", 1366.0, 768.0),
-            ("Web Large", 1920.0, 1080.0),
-            ("Web Medium", 1440.0, 900.0),
-            ("Web Minimum", 1024.0, 768.0),
-            ("Web Small", 1280.0, 800.0),
+            ("网页常用", 1366.0, 768.0),
+            ("网页 (大)", 1920.0, 1080.0),
+            ("网页 (中)", 1440.0, 900.0),
+            ("网页 (最小)", 1024.0, 768.0),
+            ("网页 (小)", 1280.0, 800.0),
             ("MacBook Pro 13 (Retina)", 2560.0, 1600.0),
             ("MacBook Pro 15 (Retina)", 2880.0, 1800.0),
             ("iMac 27", 2560.0, 1440.0),
-            ("Desktop HD Design", 1440.0, 1024.0),
+            ("桌面高清设计", 1440.0, 1024.0),
         ]
         .into_iter()
         .map(|(n, w, h)| px(n, w, h, 72.0, Browser))
@@ -230,7 +230,7 @@ pub fn category(index: usize) -> Vec<Preset> {
             ("iPad Mini", 768.0, 1024.0, Tablet),
             ("Apple Watch 42mm", 312.0, 390.0, Watch),
             ("Apple Watch 38mm", 272.0, 340.0, Watch),
-            ("Mobile Design", 320.0, 1024.0, Strip),
+            ("移动设备设计", 320.0, 1024.0, Strip),
             ("iOS 7 iPad App Icon", 152.0, 152.0, AppIcon),
             ("iOS 7 iPhone App icon", 120.0, 120.0, AppIcon),
             ("iOS 7 Spotlight", 80.0, 80.0, AppIcon),
@@ -257,19 +257,19 @@ pub fn category(index: usize) -> Vec<Preset> {
             ("FUHDTV/8K 4320p", 7680.0, 4320.0, Some("8K")),
             ("DCI 8K 4320p", 8192.0, 4320.0, Some("8K")),
             ("NTSC DV", 720.0, 480.0, None),
-            ("NTSC DV Widescreen", 720.0, 480.0, None),
+            ("NTSC DV 宽屏", 720.0, 480.0, None),
             ("NTSC D1", 720.0, 486.0, None),
-            ("NTSC D1 Widescreen", 720.0, 486.0, None),
-            ("NTSC D1 Square Pixel", 720.0, 534.0, None),
-            ("NTSC D1 Widescreen Square Pixel", 872.0, 486.0, None),
+            ("NTSC D1 宽屏", 720.0, 486.0, None),
+            ("NTSC D1 方形像素", 720.0, 534.0, None),
+            ("NTSC D1 宽屏方形像素", 872.0, 486.0, None),
             ("PAL D1/DV", 720.0, 576.0, None),
-            ("PAL D1/DV Widescreen", 720.0, 576.0, None),
-            ("PAL D1/DV Square Pixel", 788.0, 576.0, None),
-            ("PAL D1/DV Widescreen Square Pixel", 1050.0, 576.0, None),
-            ("Cineon Half", 1828.0, 1332.0, None),
-            ("Cineon Full", 3656.0, 2664.0, None),
-            ("Film (2K)", 2048.0, 1556.0, Some("2K")),
-            ("Film (4K)", 4096.0, 3112.0, Some("4K")),
+            ("PAL D1/DV 宽屏", 720.0, 576.0, None),
+            ("PAL D1/DV 方形像素", 788.0, 576.0, None),
+            ("PAL D1/DV 宽屏方形像素", 1050.0, 576.0, None),
+            ("Cineon 半幅", 1828.0, 1332.0, None),
+            ("Cineon 全幅", 3656.0, 2664.0, None),
+            ("电影 (2K)", 2048.0, 1556.0, Some("2K")),
+            ("电影 (4K)", 4096.0, 3112.0, Some("4K")),
         ]
         .into_iter()
         .map(|(n, w, h, badge)| px(n, w, h, 72.0, Video(badge)))

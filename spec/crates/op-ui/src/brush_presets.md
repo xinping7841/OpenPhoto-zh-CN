@@ -28,6 +28,8 @@ There are eight presets, all 30 px. Each sets a size, a hardness, and what the p
 - resets the tip to round: angle 0°, roundness 100%, spacing 25%;
 - records the pick in `PaintOptions::preset`.
 
+`Preset::name` keeps the English built-in lookup name. `Preset::display_name()` returns its Simplified Chinese presentation without changing preset identity; the picker uses this adapter. Tests assert both the canonical name and its localized presentation.
+
 ## The popup (`picker_ui`)
 
 The popup is an egui popup that closes on a click outside. From top to bottom:
@@ -58,3 +60,7 @@ For tools without `PaintOptions` (Selection Brush, Adjustment Brush, Art History
   - a pen at 20% pressure paints a thin line;
   - with a mouse the stroke is full size;
   - full Smoothing stops short of a quick release by default, and with Catch-up on Stroke End ends the stroke at the release point.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries.

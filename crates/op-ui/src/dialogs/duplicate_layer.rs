@@ -87,13 +87,13 @@ impl DuplicateLayerDialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let font = theme::dialog(FONT);
-        common::frame(ui, frame, "Duplicate Layer", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "复制图层", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         let label = |cy: f32, text: &str, c: Color32| {
             painter.text(at(81.5, cy), Align2::RIGHT_CENTER, text, font.clone(), c);
         };
 
-        label(45.5, "Duplicate:", LABEL);
+        label(45.5, "复制:", LABEL);
         painter.text(
             at(89.5, 45.5),
             Align2::LEFT_CENTER,
@@ -101,7 +101,7 @@ impl DuplicateLayerDialog {
             font.clone(),
             VALUE,
         );
-        label(70.5, "As:", LABEL);
+        label(70.5, "为:", LABEL);
         common::text_field(
             ui,
             r(86.0, 61.0, 361.0, 80.0),
@@ -129,17 +129,17 @@ impl DuplicateLayerDialog {
         painter.text(
             at(30.0, 95.25),
             Align2::LEFT_CENTER,
-            "Destination",
+            "目标",
             font.clone(),
             VALUE,
         );
 
-        label(121.5, "Document:", LABEL);
+        label(121.5, "文档:", LABEL);
         let names: Vec<String> = self
             .documents
             .iter()
             .map(|(_, t)| t.clone())
-            .chain(std::iter::once("New".to_string()))
+            .chain(std::iter::once("新建".to_string()))
             .collect();
         let mut target = self.target;
         common::field_dropdown(
@@ -156,18 +156,18 @@ impl DuplicateLayerDialog {
         );
         self.target = target;
 
-        label(150.5, "Artboard:", OFF);
+        label(150.5, "画板:", OFF);
         common::field_dropdown(
             ui,
             r(86.0, 140.0, 351.5, 161.0),
             "duplicate-artboard",
-            "Canvas",
+            "画布",
             false,
             |_| {},
         );
 
         let new = self.target == self.documents.len();
-        label(178.75, "Name:", if new { LABEL } else { OFF });
+        label(178.75, "名称:", if new { LABEL } else { OFF });
         let name_box = r(86.0, 169.0, 351.5, 188.0);
         if new {
             common::text_field(
@@ -189,15 +189,8 @@ impl DuplicateLayerDialog {
             );
         }
 
-        let ok = common::ps_button(ui, r(377.5, 39.0, 437.0, 64.0), "OK", true, true, false);
-        let cancel = common::ps_button(
-            ui,
-            r(377.5, 74.0, 437.0, 99.0),
-            "Cancel",
-            false,
-            true,
-            false,
-        );
+        let ok = common::ps_button(ui, r(377.5, 39.0, 437.0, 64.0), "确定", true, true, false);
+        let cancel = common::ps_button(ui, r(377.5, 74.0, 437.0, 99.0), "取消", false, true, false);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

@@ -49,31 +49,26 @@ impl EqualizeDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Equalize", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "色调均化", theme::dialog_bold(pt(13.0)));
         appkit::group(
             ui.painter(),
             r(11.0, 46.5, 322.0, 116.5),
             (at(25.5, 0.0).x, at(79.0, 0.0).x),
         );
-        appkit::label(ui, at(30.5, 46.0), "Options");
-        if appkit::radio(
-            ui,
-            at(27.0, 70.5),
-            "Equalize selected area only",
-            !self.entire_image,
-        ) {
+        appkit::label(ui, at(30.5, 46.0), "选项");
+        if appkit::radio(ui, at(27.0, 70.5), "仅均化所选区域", !self.entire_image) {
             self.entire_image = false;
         }
         if appkit::radio(
             ui,
             at(27.0, 97.0),
-            "Equalize entire image based on selected area",
+            "基于所选区域均化整个图像",
             self.entire_image,
         ) {
             self.entire_image = true;
         }
-        let ok = appkit::button(ui, r(339.5, 45.0, 398.5, 71.0), "OK", true, true);
-        let cancel = appkit::button(ui, r(339.5, 80.0, 398.5, 106.0), "Cancel", false, true);
+        let ok = appkit::button(ui, r(339.5, 45.0, 398.5, 71.0), "确定", true, true);
+        let cancel = appkit::button(ui, r(339.5, 80.0, 398.5, 106.0), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

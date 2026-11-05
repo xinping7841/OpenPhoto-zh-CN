@@ -1,5 +1,11 @@
 # dialogs/brightness_contrast.rs: Brightness/Contrast dialog
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Component responsibility
 
 The dialog for Image › Adjustments › Brightness/Contrast..., rebuilt pixel by pixel after Photoshop 2026's UXP dialog (401 × 212 pt, within 1 pixel of Photoshop screenshots). It only manages the settings; preview and apply are handled by the host in `adjust.rs` and by `lib.rs`.

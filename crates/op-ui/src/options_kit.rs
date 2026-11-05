@@ -11,6 +11,287 @@ use crate::state::SelectionMode;
 use crate::theme::{self, color, pt};
 use crate::widgets;
 
+pub fn display_label(label: &str) -> &str {
+    match label {
+        "Make:" => "创建:",
+        "Selection..." => "选区...",
+        "Mask" => "蒙版",
+        "Shape" => "形状",
+        "Path" => "路径",
+        "Pixels" => "像素",
+        "Path operations" => "路径操作",
+        "Path alignment" => "路径对齐",
+        "Path arrangement" => "路径排列",
+        "Set additional pen and path options" => "设置钢笔和路径附加选项",
+        "Set additional shape and path options" => "设置形状和路径附加选项",
+        "Set additional path options" => "设置路径附加选项",
+        "Toggle text orientation" => "切换文本方向",
+        "Align text left or top" => "文本左对齐或顶端对齐",
+        "Center text" => "文本居中",
+        "Align text right or bottom" => "文本右对齐或底端对齐",
+        "Create warped text" => "创建变形文字",
+        "Toggle the Character and Paragraph panels" => "切换字符和段落面板",
+        "Fill:" => "填充:",
+        "Stroke:" => "描边:",
+        "W:" => "宽:",
+        "H:" => "高:",
+        "Link width and height" => "链接宽度和高度",
+        "Select:" => "选择:",
+        "Active Layers" => "活动图层",
+        "All Layers" => "所有图层",
+        "Align Edges" => "对齐边缘",
+        "Constrain Path Dragging" => "约束路径拖动",
+        "Color and vibrance" => "颜色和自然饱和度",
+        "Brightness and contrast" => "亮度和对比度",
+        "Hue and saturation" => "色相和饱和度",
+        "Color balance" => "色彩平衡",
+        "Black and white" => "黑白",
+        "Toggle the Brush Settings panel" => "切换画笔设置面板",
+        "Mode:" => "模式:",
+        "Opacity:" => "不透明度:",
+        "Always use pressure for opacity" => "始终使用压力控制不透明度",
+        "Flow:" => "流量:",
+        "Enable airbrush-style build-up effects" => "启用喷枪样式的建立效果",
+        "Smoothing:" => "平滑:",
+        "Smoothing" => "平滑",
+        "Set the brush angle" => "设置画笔角度",
+        "Always use pressure for size" => "始终使用压力控制大小",
+        "Set paint symmetry options" => "设置绘画对称选项",
+        "Auto Erase" => "自动抹除",
+        "Brush" => "画笔",
+        "Pencil" => "铅笔",
+        "Block" => "块",
+        "Erase to History" => "抹到历史记录",
+        "Sampling: Continuous" => "取样: 连续",
+        "Sampling: Once" => "取样: 一次",
+        "Sampling: Background Swatch" => "取样: 背景色板",
+        "Limits:" => "限制:",
+        "Tolerance:" => "容差:",
+        "Protect Foreground Color" => "保护前景色",
+        "Anti-alias" => "消除锯齿",
+        "Contiguous" => "连续",
+        "Discontiguous" => "不连续",
+        "Find Edges" => "查找边缘",
+        "Sample All Layers" => "对所有图层取样",
+        "Sample all layers" => "对所有图层取样",
+        "Load the brush after each stroke" => "每次描边后载入画笔",
+        "Clean the brush after each stroke" => "每次描边后清理画笔",
+        "Wet:" => "潮湿:",
+        "Load:" => "载入:",
+        "Mix:" => "混合:",
+        "Toggle the Clone Source panel" => "切换仿制源面板",
+        "Aligned" => "对齐",
+        "Impressionist" => "印象派效果",
+        "Style:" => "样式:",
+        "Tight Short" => "紧密短",
+        "Tight Medium" => "紧密中",
+        "Tight Long" => "紧密长",
+        "Loose Medium" => "松散中",
+        "Loose Long" => "松散长",
+        "Dab" => "轻涂",
+        "Tight Curl" => "紧密卷曲",
+        "Tight Curl Long" => "紧密长卷曲",
+        "Loose Curl" => "松散卷曲",
+        "Loose Curl Long" => "松散长卷曲",
+        "Area:" => "区域:",
+        "Strength:" => "强度:",
+        "Protect Detail" => "保护细节",
+        "Finger Painting" => "手指绘画",
+        "Range:" => "范围:",
+        "Exposure:" => "曝光度:",
+        "Protect Tones" => "保护色调",
+        "Desaturate" => "去色",
+        "Saturate" => "加色",
+        "Replace" => "替换",
+        "Type:" => "类型:",
+        "Content-Aware" => "内容识别",
+        "Create Texture" => "创建纹理",
+        "Proximity Match" => "近似匹配",
+        "Source:" => "源:",
+        "Sampled" => "取样",
+        "Pattern" => "图案",
+        "Use Legacy" => "使用旧版",
+        "Sample:" => "取样:",
+        "Diffusion:" => "扩散:",
+        "Ignore adjustment layers when healing" => "修复时忽略调整图层",
+        "Ignore adjustment layers when cloning" => "仿制时忽略调整图层",
+        "Patch:" => "修补:",
+        "Source" => "源",
+        "Destination" => "目标",
+        "Transparent" => "透明",
+        "Use Pattern" => "使用图案",
+        "Move" => "移动",
+        "Extend" => "扩展",
+        "Structure:" => "结构:",
+        "Color:" => "颜色:",
+        "Transform On Drop" => "拖放时变换",
+        "Pupil Size:" => "瞳孔大小:",
+        "Darken Amount:" => "变暗量:",
+        "Gradient" => "渐变",
+        "Classic gradient" => "经典渐变",
+        "Linear Gradient" => "线性渐变",
+        "Radial Gradient" => "径向渐变",
+        "Angle Gradient" => "角度渐变",
+        "Reflected Gradient" => "对称渐变",
+        "Diamond Gradient" => "菱形渐变",
+        "Reverse" => "反向",
+        "Dither" => "仿色",
+        "Method:" => "方法:",
+        "Foreground" => "前景色",
+        "Sample Size:" => "取样大小:",
+        "Current Layer" => "当前图层",
+        "Current & Below" => "当前和下方图层",
+        "All Layers No Adjustments" => "所有图层 (无调整)",
+        "Current & Below No Adjustments" => "当前和下方图层 (无调整)",
+        "Point Sample" => "取样点",
+        "3 by 3 Average" => "3 x 3 平均",
+        "5 by 5 Average" => "5 x 5 平均",
+        "11 by 11 Average" => "11 x 11 平均",
+        "31 by 31 Average" => "31 x 31 平均",
+        "51 by 51 Average" => "51 x 51 平均",
+        "101 by 101 Average" => "101 x 101 平均",
+        "Show Sampling Ring" => "显示取样环",
+        "Clear All" => "全部清除",
+        "Straighten Layer" => "拉直图层",
+        "Clear" => "清除",
+        "Use Measurement Scale" => "使用测量比例",
+        "Author:" => "作者:",
+        "Toggle the Notes panel" => "切换注释面板",
+        "Auto Add/Delete" => "自动添加/删除",
+        "Magnetic" => "磁性的",
+        "No options for the Add Anchor Point Tool." => "添加锚点工具没有选项。",
+        "No options for the Delete Anchor Point Tool." => "删除锚点工具没有选项。",
+        "No options for the Convert Point Tool." => "转换点工具没有选项。",
+        "Weight:" => "粗细:",
+        "Shape:" => "形状:",
+        "Scroll All Windows" => "滚动所有窗口",
+        "Fit Screen" => "适合屏幕",
+        "Fill Screen" => "填充屏幕",
+        "Rotation Angle:" => "旋转角度:",
+        "Reset View" => "复位视图",
+        "Rotate All Windows" => "旋转所有窗口",
+        "Zoom in" => "放大",
+        "Zoom out" => "缩小",
+        "Resize Windows to Fit" => "调整窗口大小以适合",
+        "Zoom All Windows" => "缩放所有窗口",
+        "Scrubby Zoom" => "细微缩放",
+        "Size:" => "大小:",
+        "Size" => "大小",
+        "Width:" => "宽度:",
+        "Height:" => "高度:",
+        "Portrait artboard" => "纵向画板",
+        "Landscape artboard" => "横向画板",
+        "Add new artboard" => "添加新画板",
+        "Align artboards" => "对齐画板",
+        "Set additional artboard options" => "设置画板附加选项",
+        "Swap height and width" => "交换高度和宽度",
+        "Resolution:" => "分辨率:",
+        "Pixels/in" => "像素/英寸",
+        "Pixels/cm" => "像素/厘米",
+        "Front Image" => "前面的图像",
+        "Show Grid" => "显示网格",
+        "Fixed Aspect Ratio" => "固定长宽比",
+        "Fixed Size" => "固定大小",
+        "Slices From Guides" => "基于参考线的切片",
+        "Bring to front" => "置于顶层",
+        "Bring forward" => "前移一层",
+        "Send backward" => "后移一层",
+        "Send to back" => "置于底层",
+        "Promote" => "提升",
+        "Divide..." => "划分...",
+        "Align left edges" => "左边缘对齐",
+        "Align horizontal centers" => "水平居中对齐",
+        "Align right edges" => "右边缘对齐",
+        "Distribute vertical centers" => "垂直居中分布",
+        "Align top edges" => "顶边缘对齐",
+        "Align vertical centers" => "垂直居中对齐",
+        "Align bottom edges" => "底边缘对齐",
+        "Distribute horizontal centers" => "水平居中分布",
+        "More distribute options" => "更多分布选项",
+        "Hide Auto Slices" => "隐藏自动切片",
+        "Set options for current slice" => "设置当前切片选项",
+        "Create rectangular frame" => "创建矩形图框",
+        "Create elliptical frame" => "创建椭圆图框",
+        "Create triangular frame" => "创建三角形图框",
+        "Create polygonal frame" => "创建多边形图框",
+        "Create custom frame" => "创建自定图框",
+        "Inside" => "内部",
+        "Center" => "居中",
+        "Outside" => "外部",
+        "Add" => "添加",
+        "Subtract" => "减去",
+        "Add to the area to remove" => "添加到移除区域",
+        "Subtract from the area to remove" => "从移除区域减去",
+        "Find distractions" => "查找干扰元素",
+        "Auto (May use generative AI)" => "自动 (生成式 AI)",
+        "Generative AI on" => "开启生成式 AI",
+        "Generative AI off" => "关闭生成式 AI",
+        "Remove after each stroke" => "每次描边后移除",
+        "Create new layer" => "创建新图层",
+        "Reset removal area" => "复位移除区域",
+        "Apply removal" => "应用移除",
+        "Adjustment:" => "调整:",
+        "Subtract from the adjustment" => "从调整中减去",
+        "Add to the adjustment" => "添加到调整",
+        "Select a subject to adjust" => "选择要调整的主体",
+        "Overlay" => "叠加",
+        "Count:" => "计数:",
+        "Count Group" => "计数组",
+        "Toggle count group visibility" => "切换计数组可见性",
+        "Create a new count group" => "创建新计数组",
+        "Delete the current count group" => "删除当前计数组",
+        "Marker Size:" => "标记大小:",
+        "Label Size:" => "标签大小:",
+        "Set additional options for smoothing" => "设置平滑附加选项",
+        "Set additional options" => "设置附加选项",
+        "Set shape fill type" => "设置形状填充类型",
+        "Set shape stroke type" => "设置形状描边类型",
+        "New selection" => "新选区",
+        "Add to selection" => "添加到选区",
+        "Subtract from selection" => "从选区减去",
+        "Intersect with selection" => "与选区交叉",
+        "Solid" => "实线",
+        "Dashed" => "虚线",
+        "Dotted" => "点线",
+        "Regular" => "常规",
+        "Semibold" => "半粗体",
+        "Custom" => "自定",
+        "Dry" => "干燥",
+        "Dry, Light Load" => "干燥，少量载入",
+        "Dry, Heavy Load" => "干燥，大量载入",
+        "Moist" => "湿润",
+        "Moist, Light Load" => "湿润，少量载入",
+        "Moist, Heavy Load" => "湿润，大量载入",
+        "Wet" => "潮湿",
+        "Wet, Light Load" => "潮湿，少量载入",
+        "Wet, Heavy Load" => "潮湿，大量载入",
+        "Very Wet" => "非常潮湿",
+        "Very Wet, Light Load" => "非常潮湿，少量载入",
+        "Very Wet, Heavy Load" => "非常潮湿，大量载入",
+        "Shadows" => "阴影",
+        "Midtones" => "中间调",
+        "Highlights" => "高光",
+        "Vibrance" => "自然饱和度",
+        "White" => "白色",
+        "Black" => "黑色",
+        "Other" => "其他",
+        "Behind" => "背后",
+        "Web 1280" => "网页 1280",
+        "Web 1920" => "网页 1920",
+        "Select and Mask..." => "选择并遮住...",
+        "Select Subject" => "选择主体",
+        "Select people" => "选择人物",
+        "Refresh object finder" => "刷新对象查找器",
+        "Show all objects" => "显示所有对象",
+        "Use tablet pressure to change pen width" => "使用数位板压力改变钢笔宽度",
+        "Send feedback" => "发送反馈",
+        "Distribute vertically" => "垂直分布",
+        "Distribute horizontally" => "水平分布",
+        "More options" => "更多选项",
+        _ => crate::dialogs::common::display_label(label),
+    }
+}
+
 /// Label text (`#dddddd`) and disabled text (`#878787`), measured.
 pub const LABEL: Color32 = Color32::from_gray(0xdd);
 pub const LABEL_OFF: Color32 = Color32::from_gray(0x87);
@@ -70,7 +351,7 @@ impl<'a> Bar<'a> {
         self.ui.painter().text(
             self.at(x - 0.75, TEXT_Y),
             Align2::LEFT_CENTER,
-            text,
+            display_label(text),
             theme::body(),
             if enabled { LABEL } else { LABEL_OFF },
         );
@@ -86,7 +367,7 @@ impl<'a> Bar<'a> {
         self.ui.painter().text(
             self.at(cx, TEXT_Y),
             Align2::CENTER_CENTER,
-            text,
+            display_label(text),
             theme::body(),
             LABEL,
         );
@@ -105,8 +386,10 @@ impl<'a> Bar<'a> {
             .scope_builder(egui::UiBuilder::new().max_rect(rect), |ui| {
                 // The checkbox draws its own disabled look, unfaded
                 ui.visuals_mut().disabled_alpha = 1.0;
-                ui.add_enabled_ui(enabled, |ui| widgets::checkbox(ui, value, label))
-                    .inner
+                ui.add_enabled_ui(enabled, |ui| {
+                    widgets::checkbox(ui, value, display_label(label))
+                })
+                .inner
             })
             .inner
     }
@@ -150,6 +433,11 @@ impl<'a> Bar<'a> {
         options: &[&str],
         enabled: bool,
     ) -> Option<String> {
+        let shown = if id == "type.style" {
+            display_label(&shown).to_owned()
+        } else {
+            shown
+        };
         let typed = self.value_y(x0, x1, COMBO_Y, id, shown, enabled);
         let rect = self.rect(x1 - 1.0, COMBO_Y, x2);
         let (fill, border, tint) = if enabled {
@@ -188,7 +476,7 @@ impl<'a> Bar<'a> {
             .id(self.ui.id().with(("options-combo-menu", id)))
             .show(|ui| {
                 for o in options {
-                    if ui.button(*o).clicked() {
+                    if ui.button(display_label(o)).clicked() {
                         picked = Some((*o).to_owned());
                     }
                 }
@@ -237,7 +525,7 @@ impl<'a> Bar<'a> {
         let mut chosen = *value;
         self.popup(x0, x1, id, "", true, |ui| {
             for (i, o) in options.iter().enumerate() {
-                ui.selectable_value(&mut chosen, i, *o);
+                ui.selectable_value(&mut chosen, i, display_label(o));
             }
         });
         let dash = match chosen {
@@ -367,9 +655,19 @@ impl<'a> Bar<'a> {
     ) {
         let current = options[(*value).min(options.len() - 1)];
         let mut chosen = *value;
-        self.popup(x0, x1, id, current, enabled, |ui| {
+        let shown = if id == "count-group" {
+            current
+        } else {
+            display_label(current)
+        };
+        self.popup(x0, x1, id, shown, enabled, |ui| {
             for (i, o) in options.iter().enumerate() {
-                ui.selectable_value(&mut chosen, i, *o);
+                let label = if id == "count-group" {
+                    *o
+                } else {
+                    display_label(o)
+                };
+                ui.selectable_value(&mut chosen, i, label);
             }
         });
         *value = chosen;
@@ -419,7 +717,7 @@ impl<'a> Bar<'a> {
         self.ui.painter().text(
             rect.center(),
             Align2::CENTER_CENTER,
-            text,
+            display_label(text),
             theme::body(),
             ink,
         );
@@ -476,7 +774,7 @@ impl<'a> Bar<'a> {
             color::OPTIONS_BAR
         };
         crate::ps_icons::paint(self.ui.painter(), rect.center(), icon, tint, bg);
-        response.on_hover_text(tip)
+        response.on_hover_text(display_label(tip))
     }
 
     /// The brush preset picker centered at `cx`: the brush's tip as
@@ -734,7 +1032,7 @@ impl<'a> Bar<'a> {
             self.ui.painter().text(
                 rect.center(),
                 Align2::CENTER_CENTER,
-                labels[k],
+                display_label(labels[k]),
                 theme::body(),
                 if enabled { LABEL } else { LABEL_OFF },
             );
@@ -897,7 +1195,7 @@ impl<'a> Bar<'a> {
                 color::OPTIONS_BAR
             };
             mode_icon(self, x0 + 13.5, mode, bg);
-            if response.on_hover_text(tip).clicked() {
+            if response.on_hover_text(display_label(tip)).clicked() {
                 *current = mode;
             }
         }
@@ -935,5 +1233,23 @@ fn mode_icon(bar: &Bar, cx: f32, mode: SelectionMode, bg: Color32) {
             ring(r(-2.5, -3.0, 7.0, 6.5));
             p.rect_filled(r(-2.5, -3.0, 2.5, 3.0), 0, ink);
         }
+    }
+}
+
+#[cfg(test)]
+mod localization_tests {
+    use super::display_label;
+
+    #[test]
+    fn built_in_copy_is_localized_without_rewriting_unknown_strings() {
+        assert_eq!(display_label("Select and Mask..."), "选择并遮住...");
+        assert_eq!(
+            display_label("Always use pressure for size"),
+            "始终使用压力控制大小"
+        );
+        assert_eq!(display_label("Multiply"), "正片叠底");
+        assert_eq!(display_label("Regular"), "常规");
+        assert_eq!(display_label("Source Sans 3"), "Source Sans 3");
+        assert_eq!(display_label("user text"), "user text");
     }
 }

@@ -104,7 +104,7 @@ pub fn reset(state: &mut DocState) {
 fn apply(state: &mut DocState, opts: Options) -> Option<String> {
     let area = state.remove_session.as_ref()?.area.as_ref()?.clone();
     if opts.ai == 1 {
-        return Some("Generative AI removal requires a configured native/model backend; no replacement model is used.".into());
+        return Some("生成式 AI 移除需要配置原生或模型后端；当前未使用替代模型。".into());
     }
     match op_core::remove::apply(&mut state.doc, &area, opts.all, opts.new_layer) {
         Ok(changed) => {
@@ -140,7 +140,7 @@ pub fn input(
         .map(|p| to_doc(state, p, ppp));
     if response.contains_pointer() && ui.input(|i| i.pointer.primary_pressed()) {
         if (state.doc.width as usize).saturating_mul(state.doc.height as usize) > 16_777_216 {
-            return Some("The document exceeds the offline marking limit.".into());
+            return Some("文档超出了离线标记的大小限制。".into());
         }
         let s = state.remove_session.get_or_insert_with(Session::default);
         s.before = s.area.clone();

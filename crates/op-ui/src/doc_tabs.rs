@@ -27,13 +27,13 @@ pub fn title(state: &DocState) -> String {
         document_view::zoom_label(state.view.zoom),
         // Photoshop 2026 names its temporary layer while cropping
         if crate::crop_tool::previewing(state) {
-            "Crop Preview, "
+            "裁剪预览，"
         } else {
             ""
         },
         // Photoshop shows the channel being edited in Quick Mask
         if d.quick_mask.is_some() {
-            "Quick Mask"
+            "快速蒙版"
         } else {
             d.color_mode.short()
         },
@@ -66,7 +66,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState, rect: Rect) {
             egui::WidgetInfo::labeled(
                 egui::WidgetType::Button,
                 true,
-                format!("Document tab: {}", state.doc.title),
+                format!("文档标签页：{}", state.doc.title),
             )
         });
         let hovering_drag = app.tool == op_tools::Tool::Move

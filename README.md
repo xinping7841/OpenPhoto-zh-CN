@@ -1,3 +1,46 @@
+# OpenPhoto 简体中文版
+
+这是 [OpenPhoto](https://github.com/yuanzhixiang/openphoto) 的非官方简体中文分支，基于上游提交 `d72a71c12a8d56cf3f49fc4c95372406b6de0222`。界面默认使用简体中文，保留原有快捷键、PSD 读写和 MCP 接口；不是 Adobe 官方产品。
+
+- 中文化菜单、工具栏、面板、对话框和常用提示；用户文件名、图层名和工程数据不会自动翻译。
+- 内置 Noto Sans CJK SC 开源字体作为中文显示后备，字体采用 SIL OFL 1.1；源码保留上游 MIT / Apache-2.0 许可证，允许商业使用。
+- 项目仍处于早期开发阶段。正式交付前请用工程副本验证分层 PSD 在接收方软件中的图层、坐标、透明度和分组，勿覆盖唯一原件。
+- MCP 是独立编辑进程，不代表 AI 操作会实时同步到已打开的图形窗口；MCP 协议名称保留英文。
+- 本分支自行构建的应用不继承上游签名或苹果公证；没有开发者证书时仅做临时签名，请勿把它描述为已公证版本。
+
+下载中文版请使用 [本仓库 Releases](https://github.com/xinping7841/OpenPhoto-zh-CN/releases)。下方保留上游英文介绍作为功能背景，原有截图和上游下载链接不代表中文版安装包。
+
+## 验证范围
+
+- 全工作区测试：672 项通过，0 失败；52 项上游或截图专用测试默认忽略。界面测试为其中的 360 项。`cargo fmt --all -- --check` 与严格 Clippy（`-D warnings`）通过。
+- 额外运行中文版四张界面截图与工具选项栏截图测试，检查中文显示及布局。
+- 中文 PSD 回读测试核对中文分组/图层名、层级、顺序、非零坐标、透明度和完整合成结果；这不是对所有第三方 PSD 导入器的兼容性认证。
+- 安装包内应用和 MCP 均为 `arm64 + x86_64` 通用二进制；临时签名完整性与 ZIP 校验通过。
+- MCP 初始化及工具发现测试通过；对话式 AI 客户端仍需自行配置和承担其服务费用。
+
+## 中文界面预览
+
+以下为本分支通过无窗口 UI 渲染测试实际生成的截图，并非上游英文截图：
+
+![中文工作区](docs/images/zh-CN/workspace.png)
+![新建文档](docs/images/zh-CN/new-document.png)
+![中文图层与分组 PSD 保存回读](docs/images/zh-CN/psd-roundtrip.png)
+
+默认新文档名和图层名（如 `Untitled`、`Layer`、`Background`）、用户自定义名称和部分技术错误详情保留英文；界面中文化不自动改写工程数据。中文文字工具的排版能力仍受上游实现限制，不能由 UI 中文字体支持推断全部中文文本编辑功能已完善。
+
+## 构建
+
+安装 Rust 1.99.0 和 Xcode Command Line Tools 后运行：
+
+```sh
+cargo test --workspace
+cargo run --release -p openphoto
+```
+
+Mac 通用包可通过 `scripts/package-macos.sh` 构建，包含 Apple Silicon、Intel 和 `op-mcp`。简体中文界面文字与上游英文逐像素文字指标不同，布局保持原有结构。
+
+---
+
 <div align="center">
 
 <img src="crates/op-ui/assets/app-icon.png" alt="OpenPhoto icon" width="128">

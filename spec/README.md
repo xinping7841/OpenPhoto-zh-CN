@@ -1,5 +1,9 @@
 # OpenPhoto Product Specification Overview
 
+## Simplified Chinese fork
+
+This repository is an unofficial Chinese-only interface fork of upstream commit `d72a71c12a8d56cf3f49fc4c95372406b6de0222`. Chinese visible copy overrides upstream English-copy parity; document data, shortcuts, file formats and MCP protocol identifiers retain their original contracts. The root README identifies the upstream origin, free-commercial-use licenses, separate-process MCP behavior, early-development PSD validation requirement and absence of inherited Developer ID signing or notarization. Noto Sans CJK SC is bundled with its OFL license for offline text rendering. The fork release destination is `xinping7841/OpenPhoto-zh-CN`, not the upstream Releases page.
+
 ## Product Positioning
 
 OpenPhoto is a Photoshop clone written in Rust. Its goal is to match Photoshop 2026 in features, interaction, and keyboard shortcuts, and to match the original Photoshop interface pixel for pixel (compared pixel by pixel at the same window size). The reference is a running Photoshop 2026 (macOS, default "Medium Gray" theme, Essentials workspace). The specific behavior of each module is in the spec at the corresponding source path; the overall UI-layer specification is in `crates/op-ui/src/README.md`.

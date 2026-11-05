@@ -58,13 +58,13 @@ impl RulerUnit {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::Pixels => "Pixels",
-            Self::Inches => "Inches",
-            Self::Centimeters => "Centimeters",
-            Self::Millimeters => "Millimeters",
-            Self::Points => "Points",
-            Self::Picas => "Picas",
-            Self::Percent => "Percent",
+            Self::Pixels => "像素",
+            Self::Inches => "英寸",
+            Self::Centimeters => "厘米",
+            Self::Millimeters => "毫米",
+            Self::Points => "点",
+            Self::Picas => "派卡",
+            Self::Percent => "百分比",
         }
     }
 

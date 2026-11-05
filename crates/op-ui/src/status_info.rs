@@ -47,21 +47,21 @@ impl StatusInfo {
     /// The menu item.
     pub fn label(self) -> &'static str {
         match self {
-            Self::DocumentSizes => "Document Sizes",
-            Self::DocumentProfile => "Document Profile",
-            Self::DocumentDimensions => "Document Dimensions",
-            Self::GpuMode => "GPU Mode",
-            Self::CompositingMode => "Compositing Mode",
-            Self::MeasurementScale => "Measurement Scale",
-            Self::ScratchSizes => "Scratch Sizes",
-            Self::Efficiency => "Efficiency",
-            Self::Timing => "Timing",
-            Self::CurrentTool => "Current Tool",
-            Self::Exposure32 => "32-bit Exposure",
-            Self::SaveProgress => "Save Progress",
-            Self::DownloadProgress => "Download Progress",
-            Self::SmartObjects => "Smart Objects",
-            Self::LayerCount => "Layer Count",
+            Self::DocumentSizes => "文档大小",
+            Self::DocumentProfile => "文档配置文件",
+            Self::DocumentDimensions => "文档尺寸",
+            Self::GpuMode => "GPU 模式",
+            Self::CompositingMode => "合成模式",
+            Self::MeasurementScale => "测量比例",
+            Self::ScratchSizes => "暂存盘大小",
+            Self::Efficiency => "效率",
+            Self::Timing => "计时",
+            Self::CurrentTool => "当前工具",
+            Self::Exposure32 => "32 位曝光度",
+            Self::SaveProgress => "保存进度",
+            Self::DownloadProgress => "下载进度",
+            Self::SmartObjects => "智能对象",
+            Self::LayerCount => "图层计数",
         }
     }
 
@@ -77,10 +77,10 @@ impl StatusInfo {
         match self {
             Self::DocumentSizes => {
                 let (flat, layered) = document_sizes(doc);
-                format!("Doc: {}/{}", size(flat), size(layered))
+                format!("文档：{}/{}", size(flat), size(layered))
             }
             // Documents carry no color profile yet
-            Self::DocumentProfile => "Untagged RGB (8bpc)".to_owned(),
+            Self::DocumentProfile => "未标记的 RGB（8 位/通道）".to_owned(),
             Self::DocumentDimensions => format!(
                 "{} px x {} px ({} ppi)",
                 d.width,
@@ -88,34 +88,36 @@ impl StatusInfo {
                 d.resolution.round()
             ),
             Self::GpuMode => "Metal".to_owned(),
-            Self::CompositingMode => "Classic".to_owned(),
-            Self::MeasurementScale => "1 pixel(s) = 1.0000 pixels".to_owned(),
+            Self::CompositingMode => "经典".to_owned(),
+            Self::MeasurementScale => "1 像素 = 1.0000 像素".to_owned(),
             Self::ScratchSizes => {
                 let used: u64 = app.docs.values().map(|d| document_sizes(d).1).sum();
-                format!("Scratch: {}/{}", size(used), size(scratch_available()))
+                format!("暂存盘：{}/{}", size(used), size(scratch_available()))
             }
             // Nothing is ever paged out to disk
-            Self::Efficiency => "Efficiency: 100%".to_owned(),
-            Self::Timing => format!("{:.1}s (100%)", app.last_timing),
+            Self::Efficiency => "效率：100%".to_owned(),
+            Self::Timing => format!("{:.1} 秒 (100%)", app.last_timing),
             Self::CurrentTool => {
                 let name = app.tool.name();
-                name.strip_suffix(" Tool").unwrap_or(name).to_owned()
+                crate::state::display_name(name)
+                    .trim_end_matches("工具")
+                    .to_owned()
             }
-            Self::Exposure32 => "Exposure works in 32-bit only".to_owned(),
+            Self::Exposure32 => "曝光度仅适用于 32 位图像".to_owned(),
             Self::SaveProgress | Self::DownloadProgress => String::new(),
-            Self::SmartObjects => "Missing: 0 / Changed: 0".to_owned(),
+            Self::SmartObjects => "缺失：0 / 已更改：0".to_owned(),
             Self::LayerCount => {
                 let groups = d.layers.iter().filter(|l| l.is_group()).count();
                 let layers = d.layers.len() - groups;
                 let mut s = if layers == 1 {
-                    "1 Layer".to_owned()
+                    "1 个图层".to_owned()
                 } else {
-                    format!("{layers} Layers")
+                    format!("{layers} 个图层")
                 };
                 match groups {
                     0 => {}
-                    1 => s.push_str(", 1 Group"),
-                    n => s.push_str(&format!(", {n} Groups")),
+                    1 => s.push_str("，1 个组"),
+                    n => s.push_str(&format!("，{n} 个组")),
                 }
                 s
             }
@@ -179,7 +181,7 @@ pub fn size(bytes: u64) -> String {
             return format!("{v:.decimals$}{unit}");
         }
     }
-    format!("{bytes} bytes")
+    format!("{bytes} 字节")
 }
 
 #[cfg(test)]
@@ -193,6 +195,6 @@ mod tests {
         assert_eq!(size(734 * 811 * 3), "1.70M");
         assert_eq!(size(89_014_000_000), "82.9G");
         assert_eq!(size(300 << 10), "300K");
-        assert_eq!(size(0), "0 bytes");
+        assert_eq!(size(0), "0 字节");
     }
 }

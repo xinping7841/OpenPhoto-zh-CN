@@ -8,7 +8,7 @@ use crate::state::AppState;
 use crate::theme::{color, pt};
 
 /// The expanded view's channels, as its menu lists them.
-pub const CHANNELS: [&str; 6] = ["Luminosity", "Red", "Green", "Blue", "RGB", "Colors"];
+pub const CHANNELS: [&str; 6] = ["明度", "红", "绿", "蓝", "RGB", "颜色"];
 
 /// The expanded view's height (its compact one is the panel's default).
 pub const EXPANDED: f32 = pt(260.0);
@@ -78,9 +78,9 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
     let response = ui
         .interact(toggle, ui.id().with("histogram-expand"), Sense::click())
         .on_hover_text(if expanded {
-            "Compact View"
+            "紧凑视图"
         } else {
-            "Expanded View"
+            "扩展视图"
         });
     ui.painter().text(
         toggle.center(),
@@ -171,24 +171,24 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
     });
     let rows: [(&str, String, &str, String); 4] = [
         (
-            "Mean:",
+            "平均值：",
             format!("{mean:.2}"),
-            "Level:",
+            "色阶：",
             level.map_or(String::new(), |l| l.0.to_string()),
         ),
         (
-            "Std Dev:",
+            "标准差：",
             format!("{dev:.2}"),
-            "Count:",
+            "数量：",
             level.map_or(String::new(), |l| l.1.to_string()),
         ),
         (
-            "Median:",
+            "中间值：",
             median.to_string(),
-            "Percentile:",
+            "百分位：",
             level.map_or(String::new(), |l| format!("{:.2}", l.2)),
         ),
-        ("Pixels:", pixels.to_string(), "Cache Level:", "1".into()),
+        ("像素：", pixels.to_string(), "高速缓存级别：", "1".into()),
     ];
     for (k, (a, av, b, bv)) in rows.iter().enumerate() {
         let y = graph.bottom() + pt(16.0) + k as f32 * pt(16.0);
@@ -214,6 +214,11 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn channel_labels_keep_their_algorithm_order() {
+        assert_eq!(CHANNELS, ["明度", "红", "绿", "蓝", "RGB", "颜色"]);
+    }
 
     #[test]
     fn statistics_of_a_histogram() {

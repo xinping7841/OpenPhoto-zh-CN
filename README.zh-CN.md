@@ -1,3 +1,5 @@
+> **此仓库是非官方简体中文界面分支。** 最新构建说明、中文化范围、许可证与注意事项请看[仓库首页](README.md)，中文版安装包请到[本仓库 Releases](https://github.com/xinping7841/OpenPhoto-zh-CN/releases)。下方为保留的上游介绍，截图与上游下载链接不是中文版发布。
+
 <div align="center">
 
 <img src="crates/op-ui/assets/app-icon.png" alt="OpenPhoto 图标" width="128">

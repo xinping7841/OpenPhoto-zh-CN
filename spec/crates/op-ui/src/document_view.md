@@ -1,5 +1,12 @@
 # document_view.rs: Document window (canvas and status bar)
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+Canvas tools retain their operation/history identifiers. The application error-alert boundary translates their known error messages; coordinate transforms, numerical option values and all settings keys remain unchanged.
+
+
 ## Component responsibility
 
 Displays one document: the canvas area (zoom, pan, tool input) and the status bar at the bottom. Canvas pixels are drawn by `op-render` through an egui-wgpu paint callback; this file only computes the view transform and handles input.

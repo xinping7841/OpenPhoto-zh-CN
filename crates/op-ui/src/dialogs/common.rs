@@ -7,6 +7,83 @@ use egui::{
 
 use crate::theme::{self, color, pt};
 
+pub fn display_label(label: &str) -> &str {
+    match label {
+        "Normal" => "正常",
+        "Dissolve" => "溶解",
+        "Darken" => "变暗",
+        "Multiply" => "正片叠底",
+        "Color Burn" => "颜色加深",
+        "Linear Burn" => "线性加深",
+        "Darker Color" => "深色",
+        "Lighten" => "变亮",
+        "Screen" => "滤色",
+        "Color Dodge" => "颜色减淡",
+        "Linear Dodge (Add)" => "线性减淡 (添加)",
+        "Lighter Color" => "浅色",
+        "Overlay" => "叠加",
+        "Soft Light" => "柔光",
+        "Hard Light" => "强光",
+        "Vivid Light" => "亮光",
+        "Linear Light" => "线性光",
+        "Pin Light" => "点光",
+        "Hard Mix" => "实色混合",
+        "Difference" => "差值",
+        "Exclusion" => "排除",
+        "Subtract" => "减去",
+        "Divide" => "划分",
+        "Hue" => "色相",
+        "Saturation" => "饱和度",
+        "Color" => "颜色",
+        "Luminosity" => "明度",
+        "Pass Through" => "穿透",
+        "None" => "无",
+        "Red" => "红色",
+        "Orange" => "橙色",
+        "Yellow" => "黄色",
+        "Green" => "绿色",
+        "Blue" => "蓝色",
+        "Violet" => "紫罗兰色",
+        "Gray" => "灰色",
+        "Automatic" => "自动",
+        "Preserve Details (enlargement)" => "保留细节 (扩大)",
+        "Preserve Details 2.0" => "保留细节 2.0",
+        "Bicubic Smoother (enlargement)" => "两次立方 (较平滑，扩大)",
+        "Bicubic Sharper (reduction)" => "两次立方 (较锐利，缩小)",
+        "Bicubic (smooth gradients)" => "两次立方 (平滑渐变)",
+        "Nearest Neighbor (hard edges)" => "邻近 (硬边缘)",
+        "Bilinear" => "两次线性",
+        "Enhance Monochromatic Contrast" => "增强单色对比度",
+        "Enhance Per Channel Contrast" => "增强每通道对比度",
+        "Find Dark & Light Colors" => "查找深色与浅色",
+        "Enhance Brightness and Contrast" => "增强亮度和对比度",
+        "Perceptual" => "感知",
+        "Linear" => "线性",
+        "Classic" => "经典",
+        "Smooth" => "平滑",
+        "Circle" => "圆形",
+        "Square" => "方形",
+        "Star" => "星形",
+        "Heart" => "心形",
+        "Diamond" => "菱形",
+        "Exposure and Gamma" => "曝光度和灰度系数",
+        "Highlight Compression" => "高光压缩",
+        "Equalize Histogram" => "均化直方图",
+        "Local Adaptation" => "局部适应",
+        "Levels" => "色阶",
+        "Curves" => "曲线",
+        "Hue and Saturation" => "色相和饱和度",
+        "Channel Mixer" => "通道混合器",
+        "Black and White" => "黑白",
+        "Exposure" => "曝光度",
+        "Replace Color" => "替换颜色",
+        "Match Color" => "匹配颜色",
+        "HDR Toning" => "HDR 色调",
+        "Shadows Highlights" => "阴影高光",
+        _ => label,
+    }
+}
+
 pub const TITLE_BAR: f32 = pt(28.0);
 const TITLE_FILL: Color32 = Color32::from_rgb(0xd0, 0xd2, 0xd4);
 const TITLE_TEXT: Color32 = Color32::from_rgb(0x33, 0x33, 0x33);
@@ -478,4 +555,19 @@ pub fn elide(ui: &Ui, text: &str, width: f32) -> String {
         .map(|n| format!("{}...", chars[..n].iter().collect::<String>()))
         .find(|t| fits(t))
         .unwrap_or_else(|| "...".into())
+}
+
+#[cfg(test)]
+mod localization_tests {
+    use super::display_label;
+
+    #[test]
+    fn built_in_display_labels_are_chinese_without_rewriting_unknown_data() {
+        assert_eq!(display_label("Multiply"), "正片叠底");
+        assert_eq!(display_label("Automatic"), "自动");
+        assert_eq!(display_label("Perceptual"), "感知");
+        assert_eq!(display_label("Levels"), "色阶");
+        assert_eq!(display_label("customer preset"), "customer preset");
+        assert_eq!(display_label("RGB"), "RGB");
+    }
 }

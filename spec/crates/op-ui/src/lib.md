@@ -1,5 +1,12 @@
 # lib.rs: Application entry point and overall layout
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+Errors are translated through `state::display_error` immediately before constructing the visible alert. Preview effects, filter settings, recorded history and error propagation remain unchanged. Color Picker and displacement-map chooser titles use Chinese display copy.
+
+
 ## Responsibilities
 
 Defines `OpenPhotoApp` (implements `eframe::App`), which:

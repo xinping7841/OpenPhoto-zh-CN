@@ -12,7 +12,7 @@ mod canvas_size;
 mod channel_mixer;
 mod color_balance;
 mod color_picker;
-mod common;
+pub(crate) mod common;
 mod curves;
 mod custom_filter;
 mod distort;

@@ -21,7 +21,7 @@ pub fn open_paths(app: &mut AppState, paths: Vec<PathBuf>) {
             }
             Err(e) => {
                 log::error!("{}: {e}", path.display());
-                app.alert = Some(format!("Could not open “{}”: {e}", path.display()));
+                app.alert = Some(format!("无法打开“{}”：{e}", path.display()));
             }
         }
     }
@@ -63,14 +63,14 @@ pub fn drop_paths(app: &mut AppState, paths: Vec<PathBuf>, pointer: Option<egui:
                     state.record("Place Frame Content");
                 }
             }
-            Err(e) => app.alert = Some(format!("Could not place “{}”: {e}", path.display())),
+            Err(e) => app.alert = Some(format!("无法置入“{}”：{e}", path.display())),
         }
     }
 }
 
 pub fn open_dialog(app: &mut AppState) {
     let paths = rfd::FileDialog::new()
-        .add_filter("Images", op_io::OPEN_EXTENSIONS)
+        .add_filter("图像", op_io::OPEN_EXTENSIONS)
         .pick_files();
     if let Some(paths) = paths {
         open_paths(app, paths);
@@ -229,7 +229,7 @@ pub fn export_dialog(app: &mut AppState) {
     if let Some(path) = path
         && let Err(e) = op_io::export_composite(&state.doc, &path)
     {
-        app.alert = Some(format!("Could not export: {e}"));
+        app.alert = Some(format!("无法导出：{e}"));
     }
 }
 
@@ -329,7 +329,7 @@ pub fn quick_export(app: &mut AppState, layer: bool) {
         return;
     };
     if let Err(e) = write_export(doc, &path, &options) {
-        app.alert = Some(format!("Could not export: {e}"));
+        app.alert = Some(format!("无法导出：{e}"));
     }
 }
 
@@ -342,7 +342,7 @@ pub fn export_layer_dialog(app: &mut AppState) {
     if let Some(path) = export_panel(&doc.title, true)
         && let Err(e) = write_export(&doc, &path, &options)
     {
-        app.alert = Some(format!("Could not export: {e}"));
+        app.alert = Some(format!("无法导出：{e}"));
     }
 }
 
@@ -425,7 +425,7 @@ pub fn save_as(app: &mut AppState, id: DocId, copy: bool) -> bool {
         dialog = dialog.set_directory(dir);
     }
     for (name, extensions) in op_io::SAVE_FORMATS {
-        dialog = dialog.add_filter(*name, extensions);
+        dialog = dialog.add_filter(crate::state::display_name(name), extensions);
     }
     let Some(path) = dialog.save_file() else {
         return false;
@@ -471,7 +471,7 @@ pub fn write_to(
     crate::note_tool::commit(state);
     crate::count_tool::commit_name(state);
     if let Err(e) = op_io::save_with(&state.doc, &path, options) {
-        app.alert = Some(format!("Could not save “{}”: {e}", path.display()));
+        app.alert = Some(format!("无法保存“{}”：{e}", path.display()));
         return false;
     }
     app.recent.add(&path);
@@ -504,7 +504,7 @@ pub fn revert(app: &mut AppState) {
             state.record("Revert");
             state.mark_saved();
         }
-        Err(e) => app.alert = Some(format!("Could not open “{}”: {e}", path.display())),
+        Err(e) => app.alert = Some(format!("无法打开“{}”：{e}", path.display())),
     }
 }
 

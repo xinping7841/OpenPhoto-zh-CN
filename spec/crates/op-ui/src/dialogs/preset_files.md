@@ -1,5 +1,11 @@
 # dialogs/preset_files.rs: Adjustment preset files
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Responsibilities
 
 The preset gear menus of the Levels, Curves, Hue/Saturation, Channel Mixer, Black & White and Exposure dialogs, the saved presets their Preset pop-ups list, and Photoshop's preset file formats. The formats were decoded from the presets Photoshop 2026 ships (`/Applications/Adobe Photoshop 2026/Presets/<folder>`), so presets saved here open in Photoshop and Photoshop's open here.

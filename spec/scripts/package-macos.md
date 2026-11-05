@@ -1,5 +1,9 @@
 # scripts/package-macos.sh: the macOS release package
 
+## Simplified Chinese distribution
+
+The fork names its unsigned/ad-hoc release archive `dist/OpenPhoto-<version>-zh-CN-macos-universal.zip`, includes the upstream MIT and Apache licenses, Source Sans 3 OFL and Noto Sans CJK OFL under `Contents/Resources/Licenses`, and uses the fork bundle metadata described in `spec/packaging/macos/Info.md`. The optional `DIST` environment variable selects a separate output directory (default `dist`). Existing application bundles and archives cause a refusal instead of deletion. Optional notarization creates a separate `-notarized.zip` archive and keeps the original archive; the script reports the final archive checksum. The no-certificate build is ad-hoc signed, not Developer ID signed or notarized.
+
 ## Responsibilities
 
 Builds the macOS download attached to GitHub releases: `dist/OpenPhoto-<version>-macos-universal.zip`, holding `OpenPhoto.app`. The version comes from `[workspace.package] version` in the root `Cargo.toml`. `dist/` is ignored by git.

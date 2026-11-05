@@ -1,5 +1,11 @@
 # options_kit.rs: Options bar controls (positioned from Photoshop measurements)
 
+## Simplified Chinese interface fork
+
+The Chinese-only fork displays built-in labels, buttons, selection tooltips and segmented choices in Simplified Chinese. This overrides English wording parity with Photoshop; the English examples below identify measured controls rather than required display text. `display_label` translates a finite set of built-in UI values at rendering boundaries and leaves unknown text unchanged. Button text, icon tips and segmented labels still supply their original interaction IDs before display translation, preserving existing test and interaction protocols.
+
+Choice menus keep original option values and indices; only their captions are translated. Count-group choices bypass translation because group names are document user data. The font-style combo displays localized captions but keeps original selected values; typed Chinese and English style names are both accepted by the caller. Numeric text, font family names, units, setting keys, shortcuts and user-entered values stay unchanged. Fixed measured coordinates remain; Chinese font coverage and clipping require visual checks. Unit tests cover representative built-in translations and unchanged technical/user strings.
+
 ## Component responsibilities
 
 The various Photoshop 2026 controls in the options bar, absolutely positioned in "bar coordinates": `x` is pt from the left edge of the options bar, `y` is pt from 0.5 pt above the top of the options bar (matching how the screenshots were cropped when measuring). Each tool's options bar is therefore a sequence of measured coordinates (see "Tools with measured layouts" in `options_bar.md`).

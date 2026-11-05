@@ -11,8 +11,8 @@ use crate::theme::pt;
 
 pub const SIZE: egui::Vec2 = vec2(pt(447.0), pt(295.0));
 const RANGE: (f32, f32) = (-100.0, 100.0);
-pub const TONES: [&str; 3] = ["Shadows", "Midtones", "Highlights"];
-const SLIDERS: [&str; 3] = ["Cyan to Red", "Magenta to Green", "Yellow to Blue"];
+pub const TONES: [&str; 3] = ["阴影", "中间调", "高光"];
+const SLIDERS: [&str; 3] = ["青色到红色", "洋红色到绿色", "黄色到蓝色"];
 
 // The tracks' colors at 17 even stops, sampled from Photoshop 2026
 const CYAN_RED: [[u8; 3]; 17] = [
@@ -134,7 +134,7 @@ impl Dialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
 
-        uxp::label(ui, at(20.0, 60.5), "Tone");
+        uxp::label(ui, at(20.0, 60.5), "色调");
         for (i, &(cx, fill, label_x)) in SWATCHES.iter().enumerate() {
             let center = at(cx, 60.0);
             let label = uxp::label(ui, at(label_x, 60.5), TONES[i]);
@@ -184,7 +184,7 @@ impl Dialog {
         uxp::checkbox(
             ui,
             at(20.0, 257.0),
-            "Preserve Luminosity",
+            "保持明度",
             &mut self.preserve_luminosity,
         );
         uxp::preview(ui, at(318.0, 127.0), preview);

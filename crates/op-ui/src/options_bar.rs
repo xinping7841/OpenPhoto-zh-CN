@@ -48,7 +48,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
             color::OPTIONS_BAR,
         );
     } else {
-        ps_button(ui, home, Icon::Home).on_hover_text("Home");
+        ps_button(ui, home, Icon::Home).on_hover_text("主页");
     }
     separator(&painter, bar, 53.0);
 
@@ -94,7 +94,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         }
         r
     };
-    let response = response.on_hover_text("Tool Presets");
+    let response = response.on_hover_text("工具预设");
     // The Tool Presets picker: the current tool's presets, and New Tool
     // Preset...
     if !busy {
@@ -116,10 +116,10 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     }
                 }
                 if !any {
-                    ui.weak("No tool presets defined for current tool.");
+                    ui.weak("当前工具没有定义工具预设。");
                 }
                 ui.separator();
-                if ui.button("New Tool Preset...").clicked() {
+                if ui.button("新建工具预设...").clicked() {
                     new = true;
                 }
             });
@@ -170,11 +170,11 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         };
         let from_right = |x: f32, dy: f32| Pos2::new(bar.right() + push - pt(x), cy + pt(dy));
         for (x, dy, icon, tip) in [
-            (200.0, 0.0, Icon::Share, "Share"),
-            (163.5, 0.5, Icon::Bell, "Notifications"),
-            (131.0, 0.5, Icon::Search, "Search"),
-            (98.5, -0.25, Icon::Lightbulb, "Discover"),
-            (69.5, 1.0, Icon::Workspace, "Workspace"),
+            (200.0, 0.0, Icon::Share, "共享"),
+            (163.5, 0.5, Icon::Bell, "通知"),
+            (131.0, 0.5, Icon::Search, "搜索"),
+            (98.5, -0.25, Icon::Lightbulb, "发现"),
+            (69.5, 1.0, Icon::Workspace, "工作区"),
         ] {
             let tint = if icon == Icon::Bell {
                 color::OPTIONS_BELL
@@ -191,7 +191,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     color::OPTIONS_BAR,
                 );
             } else {
-                ps_button_tinted(ui, rect, icon, tint).on_hover_text(tip);
+                ps_button_tinted(ui, rect, icon, tint).on_hover_text(display_label(tip));
             }
         }
         crate::ps_icons::paint(
@@ -288,14 +288,14 @@ fn perspective_commit_buttons(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     let at = |x: f32| bar.left() + pt(x);
     let cancel = Rect::from_center_size(Pos2::new(at(1103.75), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, cancel, Icon::CropCancel)
-        .on_hover_text("Cancel current crop operation (Esc)")
+        .on_hover_text("取消当前裁剪操作 (Esc)")
         .clicked()
     {
         state.perspective_crop = None;
     }
     let commit = Rect::from_center_size(Pos2::new(at(1138.5), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, commit, Icon::CropCommit)
-        .on_hover_text("Commit current crop operation (Return)")
+        .on_hover_text("提交当前裁剪操作 (Return)")
         .clicked()
     {
         crate::perspective_crop::commit(state, &options);
@@ -331,7 +331,7 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
     let has_selection = app.active().is_some_and(|d| d.doc.selection().is_some());
     b.modes(110.0, &mut app.marquee.mode);
     b.sep(222.0);
-    b.label(233.0, "Feather:", true);
+    b.label(233.0, "羽化：", true);
     // The single row and column marquees' fields sit 2 pt further left
     let dx = if single { -2.0 } else { 0.0 };
     let shown = with_unit(app.marquee.feather, "px");
@@ -347,14 +347,14 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
     );
     // Photoshop shows it unchecked where it doesn't apply
     let mut shown = app.marquee.anti_alias && curved;
-    b.check(338.0 + dx, "Anti-alias", &mut shown, curved);
+    b.check(338.0 + dx, "消除锯齿", &mut shown, curved);
     if curved {
         app.marquee.anti_alias = shown;
     }
     b.sep(412.0 + dx);
     if marquee {
         let fixed = !single && app.marquee.style != MarqueeStyle::Normal;
-        b.label(421.5 + dx, "Style:", !single);
+        b.label(421.5 + dx, "样式：", !single);
         let mut style = MarqueeStyle::ALL
             .iter()
             .position(|s| *s == app.marquee.style)
@@ -363,7 +363,7 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
             453.5 + dx,
             531.0 + dx,
             "marquee-style",
-            &["Normal", "Fixed Ratio", "Fixed Size"],
+            &["正常", "固定比例", "固定大小"],
             &mut style,
             !single,
         );
@@ -373,7 +373,7 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
         let shown = |app: &mut AppState, k: usize| {
             keys.map_or(String::new(), |ks| app.setting(ks[k].0, ks[k].1).clone())
         };
-        b.label(541.0 + dx, "Width:", fixed);
+        b.label(541.0 + dx, "宽度：", fixed);
         let w = shown(app, 0);
         if let Some(t) = b.value(574.0 + dx, 615.5 + dx, "marquee-width", w, fixed)
             && let Some(ks) = keys
@@ -395,7 +395,7 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
             *app.setting(ks[0].0, ks[0].1) = h;
             *app.setting(ks[1].0, ks[1].1) = w;
         }
-        b.label(663.5 + dx, "Height:", fixed);
+        b.label(663.5 + dx, "高度：", fixed);
         let h = shown(app, 1);
         if let Some(t) = b.value(699.5 + dx, 741.0 + dx, "marquee-height", h, fixed)
             && let Some(ks) = keys
@@ -406,9 +406,9 @@ fn selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
         b.button(760.5 + dx, 870.5 + dx, "Select and Mask...", has_selection);
     } else if tool == Tool::MagneticLasso {
         for (x, label, x0, x1, key, default) in [
-            (422.5, "Width:", 457.5, 500.5, "lasso.width", "10 px"),
-            (509.0, "Contrast:", 557.5, 600.5, "lasso.contrast", "10%"),
-            (609.5, "Frequency:", 666.0, 693.0, "lasso.frequency", "57"),
+            (422.5, "宽度：", 457.5, 500.5, "lasso.width", "10 px"),
+            (509.0, "对比度：", 557.5, 600.5, "lasso.contrast", "10%"),
+            (609.5, "频率：", 666.0, 693.0, "lasso.frequency", "57"),
         ] {
             b.label(x, label, true);
             let shown = app.setting(key, default).clone();
@@ -494,24 +494,24 @@ fn wand_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
     let has_selection = app.active().is_some_and(|d| d.doc.selection().is_some());
     b.modes(110.0, &mut app.wand.mode);
     b.sep(222.0);
-    b.label(231.5, "Sample Size:", true);
+    b.label(231.5, "取样大小：", true);
     setting_choice(
         b,
         app,
         (298.0, 413.5),
         "wand.sample_size",
         &[
-            "Point Sample",
-            "3 by 3 Average",
-            "5 by 5 Average",
-            "11 by 11 Average",
-            "31 by 31 Average",
-            "51 by 51 Average",
-            "101 by 101 Average",
+            "取样点",
+            "3 × 3 平均",
+            "5 × 5 平均",
+            "11 × 11 平均",
+            "31 × 31 平均",
+            "51 × 51 平均",
+            "101 × 101 平均",
         ],
         true,
     );
-    b.label(422.5, "Tolerance:", true);
+    b.label(422.5, "容差：", true);
     let region = &mut app.wand.region;
     if let Some(t) = b.value(
         476.5,
@@ -523,9 +523,9 @@ fn wand_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
     {
         region.tolerance = v.clamp(0.0, 255.0) as u8;
     }
-    b.check(532.5, "Anti-alias", &mut region.anti_alias, true);
-    b.check(606.5, "Contiguous", &mut region.contiguous, true);
-    b.check(690.0, "Sample All Layers", &mut region.all_layers, true);
+    b.check(532.5, "消除锯齿", &mut region.anti_alias, true);
+    b.check(606.5, "连续", &mut region.contiguous, true);
+    b.check(690.0, "对所有图层取样", &mut region.all_layers, true);
     b.sep(803.5);
     subject_and_mask(b, 815.0, 945.0, has_selection);
 }
@@ -552,19 +552,12 @@ fn object_selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
         app,
         (405.0, 483.0),
         "object.mode",
-        &["Rectangle", "Lasso"],
+        &["矩形", "套索"],
         true,
     );
     b.sep(487.0);
-    setting_check(
-        b,
-        app,
-        492.0,
-        "Sample All Layers",
-        "object.all_layers",
-        false,
-    );
-    setting_check(b, app, 602.0, "Hard Edge", "object.hard_edge", true);
+    setting_check(b, app, 492.0, "对所有图层取样", "object.all_layers", false);
+    setting_check(b, app, 602.0, "硬边", "object.hard_edge", true);
     b.sep(677.0);
     b.icon(696.0, Icon::Feedback, "Send feedback", false, true);
     b.sep(712.0);
@@ -599,15 +592,8 @@ fn quick_selection_bar(b: &mut crate::options_kit::Bar, app: &mut AppState) {
     b.icon(266.0, Icon::Angle, "Set the brush angle", false, true);
     setting_field(b, app, (277.0, 318.5), "quick.angle", "0°", true);
     b.sep(322.5);
-    setting_check(
-        b,
-        app,
-        327.5,
-        "Sample All Layers",
-        "quick.all_layers",
-        false,
-    );
-    setting_check(b, app, 437.0, "Enhance Edge", "quick.enhance_edge", false);
+    setting_check(b, app, 327.5, "对所有图层取样", "quick.all_layers", false);
+    setting_check(b, app, 437.0, "增强边缘", "quick.enhance_edge", false);
     b.sep(530.0);
     subject_and_mask(b, 543.5, 669.5, has_selection);
 }
@@ -649,14 +635,14 @@ fn type_buttons(ui: &mut Ui, app: &mut AppState) {
         return;
     };
     if widgets::icon_button(ui, icons::CHECK, 34.0, false)
-        .on_hover_text("Commit any current edits")
+        .on_hover_text("提交当前编辑")
         .clicked()
     {
         crate::type_tool::commit(state);
         return;
     }
     if widgets::icon_button(ui, icons::PROHIBIT, 34.0, false)
-        .on_hover_text("Cancel any current edits")
+        .on_hover_text("取消当前编辑")
         .clicked()
     {
         crate::type_tool::cancel(state);
@@ -692,15 +678,15 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         .and_then(|i| app.crop_presets.list().get(i))
         .map(|p| p.name.clone());
     let label = match &user_name {
-        // Cut short like Photoshop's "W x H x Reso..."
+        // Cut short like Photoshop's "宽 × 高 × 分辨率..."
         Some(name) if name.chars().count() > 15 => {
             format!("{}...", name.chars().take(12).collect::<String>())
         }
         Some(name) => name.clone(),
         None if options.preset == crate::crop_tool::CropPreset::SizeResolution => {
-            "W x H x Reso...".to_owned()
+            "宽 × 高 × 分辨率...".to_owned()
         }
-        None => options.preset.label().to_owned(),
+        None => display_label(options.preset.label()).to_owned(),
     };
     // Photoshop's menu: the built-in groups, the saved presets, then New
     // and Delete Crop Preset...
@@ -721,7 +707,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         for &p in group {
             let on = options.user.is_none() && p == options.preset;
             menu.push((
-                crate::native_popup::Entry::item(p.label(), on),
+                crate::native_popup::Entry::item(display_label(p.label()), on),
                 Pick::Builtin(p),
             ));
         }
@@ -738,11 +724,11 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     }
     menu.push(sep());
     menu.push((
-        crate::native_popup::Entry::item("New Crop Preset...", false),
+        crate::native_popup::Entry::item("新建裁剪预设...", false),
         Pick::New,
     ));
     menu.push((
-        crate::native_popup::Entry::item("Delete Crop Preset...", false)
+        crate::native_popup::Entry::item("删除裁剪预设...", false)
             .enabled(!app.crop_presets.list().is_empty()),
         Pick::Delete,
     ));
@@ -767,7 +753,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         }
         Some(Pick::New) => {
             app.new_crop_preset = Some(crate::dialogs::new_preset::NewPresetDialog::new(
-                "New Crop Preset",
+                "新建裁剪预设",
                 options.preset_name(),
             ));
         }
@@ -778,11 +764,9 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
                 .iter()
                 .map(|p| p.name.clone())
                 .collect();
-            app.delete_crop_preset =
-                Some(crate::dialogs::size_presets::DeletePresetDialog::titled(
-                    "Delete Crop Preset",
-                    names,
-                ));
+            app.delete_crop_preset = Some(
+                crate::dialogs::size_presets::DeletePresetDialog::titled("删除裁剪预设", names),
+            );
         }
         Some(Pick::Nothing) | None => {}
     }
@@ -796,7 +780,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     );
     let swap = Rect::from_center_size(Pos2::new(at(290.25), cy - pt(0.75)), Vec2::splat(pt(24.0)));
     let swapped = ps_button(ui, swap, Icon::Swap)
-        .on_hover_text("Swap height and width")
+        .on_hover_text("交换高度和宽度")
         .clicked();
     let h = widgets::text_box(
         ui,
@@ -856,7 +840,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     painter.text(
         clear_rect.center() - Vec2::new(0.0, pt(0.5)),
         egui::Align2::CENTER_CENTER,
-        "Clear",
+        "清除",
         theme::body(),
         color::TEXT,
     );
@@ -866,7 +850,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     let icon_button = |ui: &mut Ui, x: f32, dy: f32, icon: Icon, tip: &str| {
         let rect =
             Rect::from_center_size(Pos2::new(at(x + dx), cy + pt(dy)), Vec2::splat(pt(24.0)));
-        ps_button(ui, rect, icon).on_hover_text(tip)
+        ps_button(ui, rect, icon).on_hover_text(display_label(tip))
     };
     // Straighten: on while waiting for the line, as in Photoshop
     let straighten_rect = Rect::from_center_size(
@@ -895,7 +879,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         574.0,
         -1.75,
         Icon::Straighten,
-        "Straighten the image by drawing a line on it",
+        "在图像上绘制直线以拉直图像",
     )
     .clicked()
         || label_click
@@ -905,7 +889,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     painter.text(
         Pos2::new(at(592.0 + dx), cy - pt(0.5)),
         egui::Align2::LEFT_CENTER,
-        "Straighten",
+        "拉直",
         theme::body(),
         color::TEXT,
     );
@@ -915,19 +899,19 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         670.75,
         -0.25,
         Icon::CropOverlay,
-        "Set the overlay options for the Crop Tool",
+        "设置裁剪工具的叠加选项",
     );
     {
         use crate::crop_tool::{Overlay, OverlayShow};
         use crate::native_popup::Entry;
         let shows = [
-            (OverlayShow::Auto, "Auto Show Overlay"),
-            (OverlayShow::Always, "Always Show Overlay"),
-            (OverlayShow::Never, "Never Show Overlay"),
+            (OverlayShow::Auto, "自动显示叠加"),
+            (OverlayShow::Always, "始终显示叠加"),
+            (OverlayShow::Never, "从不显示叠加"),
         ];
         let mut entries: Vec<Entry> = Overlay::ALL
             .iter()
-            .map(|&o| Entry::item(o.label(), o == options.overlay))
+            .map(|&o| Entry::item(display_label(o.label()), o == options.overlay))
             .collect();
         entries.push(Entry::Separator);
         entries.extend(
@@ -936,8 +920,8 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
                 .map(|&(s, label)| Entry::item(label, s == options.overlay_show)),
         );
         entries.push(Entry::Separator);
-        entries.push(Entry::item("Cycle Overlay", false));
-        entries.push(Entry::item("Cycle Orientation", false).enabled(false));
+        entries.push(Entry::item("循环叠加", false));
+        entries.push(Entry::item("循环方向", false).enabled(false));
         let picked = crate::native_popup::dropdown(
             ui,
             &overlay,
@@ -958,30 +942,30 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
             _ => {}
         }
     }
-    let gear = icon_button(ui, 705.0, -0.75, Icon::Gear, "Set additional Crop options");
+    let gear = icon_button(ui, 705.0, -0.75, Icon::Gear, "设置其他裁剪选项");
     let mut pick_shield = false;
     egui::Popup::menu(&gear)
         .id(ui.id().with("crop-gear-menu"))
         .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
         .show(|ui| {
-            ui.checkbox(&mut options.classic, "Use Classic Mode");
-            ui.checkbox(&mut options.show_cropped_area, "Show Cropped Area");
+            ui.checkbox(&mut options.classic, "使用经典模式");
+            ui.checkbox(&mut options.show_cropped_area, "显示裁剪区域");
             ui.add_enabled(
                 !options.classic,
-                egui::Checkbox::new(&mut options.auto_center, "Auto Center Preview"),
+                egui::Checkbox::new(&mut options.auto_center, "自动居中预览"),
             );
             ui.separator();
-            ui.checkbox(&mut options.shield, "Enable Crop Shield");
+            ui.checkbox(&mut options.shield, "启用裁剪屏蔽");
             ui.add_enabled_ui(options.shield, |ui| {
                 // Match Canvas, or a custom color picked in the Color
                 // Picker (also from the swatch)
                 ui.horizontal(|ui| {
-                    ui.label("Color:");
+                    ui.label("颜色：");
                     let custom = options.shield_color.is_some();
-                    let label = if custom { "Custom" } else { "Match Canvas" };
+                    let label = if custom { "自定" } else { "匹配画布" };
                     let entries = [
-                        crate::native_popup::Entry::item("Match Canvas", !custom),
-                        crate::native_popup::Entry::item("Custom", custom),
+                        crate::native_popup::Entry::item("匹配画布", !custom),
+                        crate::native_popup::Entry::item("自定", custom),
                     ];
                     let response = ui.button(label);
                     match crate::native_popup::dropdown(
@@ -1009,7 +993,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
                     }
                 });
                 ui.horizontal(|ui| {
-                    ui.label("Opacity:");
+                    ui.label("不透明度：");
                     let mut percent = (options.shield_opacity * 100.0).round();
                     ui.add(
                         egui::DragValue::new(&mut percent)
@@ -1018,7 +1002,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
                     );
                     options.shield_opacity = percent / 100.0;
                 });
-                ui.checkbox(&mut options.auto_adjust_opacity, "Auto Adjust Opacity");
+                ui.checkbox(&mut options.auto_adjust_opacity, "自动调整不透明度");
             });
         });
     separator(&painter, bar, 726.5 + dx);
@@ -1027,13 +1011,13 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
             .max_rect(span(735.0 + dx, 870.0 + dx, 20.0).translate(Vec2::new(0.0, pt(1.5)))),
         |ui| {
             ui.spacing_mut().item_spacing.x = 0.0;
-            widgets::checkbox(ui, &mut options.delete_cropped, "Delete Cropped Pixels")
+            widgets::checkbox(ui, &mut options.delete_cropped, "删除裁剪的像素")
         },
     );
     painter.text(
         Pos2::new(at(870.5 + dx), cy),
         egui::Align2::LEFT_CENTER,
-        "Fill:",
+        "填充：",
         theme::body(),
         color::TEXT,
     );
@@ -1045,17 +1029,18 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
             // Both need Adobe's services or a content-aware engine
             let fills = [
                 Entry::item(
-                    CropFill::Background.label(),
+                    display_label(CropFill::Background.label()),
                     options.fill == CropFill::Background,
                 ),
-                Entry::item(CropFill::GenerativeExpand.label(), false).enabled(false),
-                Entry::item(CropFill::ContentAware.label(), false).enabled(false),
+                Entry::item(display_label(CropFill::GenerativeExpand.label()), false)
+                    .enabled(false),
+                Entry::item(display_label(CropFill::ContentAware.label()), false).enabled(false),
             ];
             if widgets::dropdown_entries(
                 ui,
                 "crop-fill",
                 pt(131.5),
-                options.fill.label(),
+                display_label(options.fill.label()),
                 true,
                 &fills,
             ) == Some(0)
@@ -1064,13 +1049,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
             }
         },
     );
-    icon_button(
-        ui,
-        1042.0,
-        -0.5,
-        Icon::Info,
-        "Learn more about the Crop tool",
-    );
+    icon_button(ui, 1042.0, -0.5, Icon::Info, "了解裁剪工具的更多信息");
 
     if pick_shield {
         app.crop_options = options.clone();
@@ -1105,7 +1084,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     let reset = Rect::from_center_size(Pos2::new(at(1070.5), cy - pt(1.5)), Vec2::splat(pt(24.0)));
     if modified {
         if ps_button(ui, reset, Icon::CropReset)
-            .on_hover_text("Reset crop box, image rotation and aspect ratio settings")
+            .on_hover_text("复位裁剪框、图像旋转和长宽比设置")
             .clicked()
         {
             state.crop = Some(crate::crop_tool::full(state));
@@ -1120,7 +1099,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         }
         let cancel = Rect::from_center_size(Pos2::new(at(1103.75), cy), Vec2::splat(pt(24.0)));
         if ps_button(ui, cancel, Icon::CropCancel)
-            .on_hover_text("Cancel current crop operation (Esc)")
+            .on_hover_text("取消当前裁剪操作 (Esc)")
             .clicked()
         {
             state.crop = Some(crate::crop_tool::full(state));
@@ -1128,7 +1107,7 @@ fn crop_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         }
         let commit = Rect::from_center_size(Pos2::new(at(1138.5), cy), Vec2::splat(pt(24.0)));
         if ps_button(ui, commit, Icon::CropCommit)
-            .on_hover_text("Commit current crop operation (Return)")
+            .on_hover_text("提交当前裁剪操作 (Return)")
             .clicked()
         {
             crate::crop_tool::commit(state, &options, background);
@@ -1218,7 +1197,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     let check = Rect::from_center_size(Pos2::new(at(120.25), cy + pt(0.25)), Vec2::splat(pt(13.5)));
     if ui
         .interact(check, ui.id().with("ref-check"), Sense::click())
-        .on_hover_text("Toggle reference point")
+        .on_hover_text("切换参考点")
         .clicked()
     {
         t.show_reference = !t.show_reference;
@@ -1297,7 +1276,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         Rect::from_center_size(Pos2::new(at(250.75), cy + pt(0.25)), Vec2::splat(pt(20.0)));
     if ui
         .interact(triangle, ui.id().with("relative"), Sense::click())
-        .on_hover_text("Use relative positioning for reference point")
+        .on_hover_text("使用参考点相对定位")
         .clicked()
     {
         t.relative = !t.relative;
@@ -1349,7 +1328,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     );
     if ui
         .interact(link, ui.id().with("link-wh"), Sense::click())
-        .on_hover_text("Maintain aspect ratio")
+        .on_hover_text("保持长宽比")
         .clicked()
     {
         t.linked = !t.linked;
@@ -1439,18 +1418,18 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     separator(&painter, bar, 763.5);
 
     // Interpolation
-    label(770.0, "Interpolation:");
+    label(770.0, "插值：");
     let mut how = t.interpolation;
     ui.scope_builder(egui::UiBuilder::new().max_rect(span(839.5, 901.5)), |ui| {
         widgets::dropdown_with(
             ui,
             "transform-interpolation",
             pt(62.0),
-            how.label(),
+            display_label(how.label()),
             true,
             |ui| {
                 for m in op_core::transform::Interpolation::ALL {
-                    ui.selectable_value(&mut how, m, m.label());
+                    ui.selectable_value(&mut how, m, display_label(m.label()));
                 }
             },
         );
@@ -1459,7 +1438,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     // Switch to Warp
     let toggle = Rect::from_center_size(Pos2::new(at(919.0), cy), Vec2::new(pt(24.0), pt(24.0)));
     if ps_button(ui, toggle, Icon::WarpToggle)
-        .on_hover_text("Switch between free transform and warp modes")
+        .on_hover_text("切换自由变换和变形模式")
         .clicked()
     {
         crate::free_transform::set_mode(t, crate::state::TransformMode::Warp);
@@ -1468,7 +1447,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
 
     let cancel = Rect::from_center_size(Pos2::new(at(983.0), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, cancel, Icon::CropCancel)
-        .on_hover_text("Cancel transform (Esc)")
+        .on_hover_text("取消变换 (Esc)")
         .clicked()
     {
         crate::free_transform::cancel(state);
@@ -1476,7 +1455,7 @@ fn transform_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     }
     let commit = Rect::from_center_size(Pos2::new(at(1011.5), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, commit, Icon::CropCommit)
-        .on_hover_text("Commit transform (Return)")
+        .on_hover_text("提交变换 (Return)")
         .clicked()
         && let Some(crate::free_transform::Outcome::Committed(m)) =
             crate::free_transform::commit(state)
@@ -1518,7 +1497,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         egui::StrokeKind::Inside,
     );
     separator(&painter, bar, 161.5);
-    label(171.5, "Split:", color::TEXT);
+    label(171.5, "拆分：", color::TEXT);
     let Some(state) = app.active() else {
         return;
     };
@@ -1531,9 +1510,9 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     // Split Crosswise, Vertically, Horizontally: the next click on the
     // mesh splits it there (not while a preset style is on)
     for (x, kind, tip) in [
-        (208.5, WarpSplit::Crosswise, "Split warp crosswise"),
-        (234.0, WarpSplit::Vertical, "Split warp vertically"),
-        (260.0, WarpSplit::Horizontal, "Split warp horizontally"),
+        (208.5, WarpSplit::Crosswise, "交叉拆分变形"),
+        (234.0, WarpSplit::Vertical, "垂直拆分变形"),
+        (260.0, WarpSplit::Horizontal, "水平拆分变形"),
     ] {
         let hit = Rect::from_center_size(Pos2::new(at(x), cy), Vec2::splat(pt(24.0)));
         let enabled = styled.is_none();
@@ -1543,7 +1522,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         } else if enabled && response.hovered() {
             painter.rect_filled(hit, pt(3.0), color::HOVER);
         }
-        if enabled && response.on_hover_text(tip).clicked() {
+        if enabled && response.on_hover_text(display_label(tip)).clicked() {
             t.warp_split = (t.warp_split != Some(kind)).then_some(kind);
         }
         let ink = if enabled { color::OPTIONS_ICON } else { dim };
@@ -1565,20 +1544,20 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         }
     }
     separator(&painter, bar, 282.0);
-    label(290.5, "Grid:", color::TEXT);
+    label(290.5, "网格：", color::TEXT);
     // Default is one patch; the others are that many patches each way
-    let grids = [(1, "Default"), (3, "3 x 3"), (4, "4 x 4"), (5, "5 x 5")];
+    let grids = [(1, "默认"), (3, "3 x 3"), (4, "4 x 4"), (5, "5 x 5")];
     let (cols, rows) = t.warp.as_ref().map_or((1, 1), |m| (m.cols, m.rows));
     let grid_label = grids
         .iter()
         .find(|(n, _)| (*n, *n) == (cols, rows))
-        .map_or("Custom".to_owned(), |(_, l)| (*l).to_owned());
+        .map_or("自定".to_owned(), |(_, l)| (*l).to_owned());
     let mut grid_entries: Vec<_> = grids
         .iter()
         .map(|(n, l)| crate::native_popup::Entry::item(*l, (*n, *n) == (cols, rows)))
         .collect();
     let custom = !grids.iter().any(|(n, _)| (*n, *n) == (cols, rows));
-    grid_entries.push(crate::native_popup::Entry::item("Custom...", custom));
+    grid_entries.push(crate::native_popup::Entry::item("自定...", custom));
     let mut grid_pick = None;
     ui.scope_builder(egui::UiBuilder::new().max_rect(span(319.5, 378.5)), |ui| {
         grid_pick = widgets::dropdown_entries(
@@ -1600,17 +1579,18 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         }
     }
     separator(&painter, bar, 386.5);
-    label(395.0, "Warp:", color::TEXT);
+    label(395.0, "变形：", color::TEXT);
     let mut style_entries = vec![
-        crate::native_popup::Entry::item("Custom", styled.is_none()),
+        crate::native_popup::Entry::item("自定", styled.is_none()),
         crate::native_popup::Entry::Separator,
     ];
-    style_entries.extend(
-        WarpStyle::ALL.iter().map(|s| {
-            crate::native_popup::Entry::item(s.label(), styled.map(|w| w.style) == Some(*s))
-        }),
-    );
-    let style_label = styled.map_or("Custom", |w| w.style.label());
+    style_entries.extend(WarpStyle::ALL.iter().map(|s| {
+        crate::native_popup::Entry::item(
+            display_label(s.label()),
+            styled.map(|w| w.style) == Some(*s),
+        )
+    }));
+    let style_label = styled.map_or("自定", |w| display_label(w.style.label()));
     let mut style_pick = None;
     ui.scope_builder(egui::UiBuilder::new().max_rect(span(428.5, 518.5)), |ui| {
         style_pick = widgets::dropdown_entries(
@@ -1656,9 +1636,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     let orient = Rect::from_center_size(Pos2::new(at(575.0), cy), Vec2::splat(pt(24.0)));
     let orient_response = ui.interact(orient, ui.id().with("warp-orient"), Sense::click());
     if let Some(w) = styled
-        && orient_response
-            .on_hover_text("Change the warp orientation")
-            .clicked()
+        && orient_response.on_hover_text("更改变形方向").clicked()
         && let Some(m) = t.warp.as_mut()
     {
         m.style = Some(StyleWarp {
@@ -1684,7 +1662,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
         dim_text
     };
     for (k, (lx, text, x0, x1, px)) in [
-        (600.5, "Bend:", 631.0, 678.0, 685.0),
+        (600.5, "弯曲：", 631.0, 678.0, 685.0),
         (700.0, "H:", 713.0, 760.0, 763.0),
         (779.0, "V:", 793.0, 840.0, 843.0),
     ]
@@ -1722,7 +1700,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     );
     if ui
         .interact(toggle, ui.id().with("warp-off"), Sense::click())
-        .on_hover_text("Switch between free transform and warp modes")
+        .on_hover_text("切换自由变换和变形模式")
         .clicked()
     {
         t.mode = crate::state::TransformMode::Free;
@@ -1737,7 +1715,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     separator(&painter, bar, 935.0);
     let reset = Rect::from_center_size(Pos2::new(at(951.5), cy - pt(1.5)), Vec2::splat(pt(24.0)));
     if ps_button(ui, reset, Icon::CropReset)
-        .on_hover_text("Reset warp")
+        .on_hover_text("复位变形")
         .clicked()
     {
         let m = t.mapping();
@@ -1749,7 +1727,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     }
     let cancel = Rect::from_center_size(Pos2::new(at(983.0), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, cancel, Icon::CropCancel)
-        .on_hover_text("Cancel transform (Esc)")
+        .on_hover_text("取消变换 (Esc)")
         .clicked()
     {
         crate::free_transform::cancel(state);
@@ -1757,7 +1735,7 @@ fn warp_bar(ui: &mut Ui, app: &mut AppState, bar: Rect) {
     }
     let commit = Rect::from_center_size(Pos2::new(at(1013.0), cy), Vec2::splat(pt(24.0)));
     if ps_button(ui, commit, Icon::CropCommit)
-        .on_hover_text("Commit transform (Return)")
+        .on_hover_text("提交变换 (Return)")
         .clicked()
     {
         crate::free_transform::commit(state);
@@ -1770,20 +1748,20 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
     let mut opts = app.move_options;
     let mut more = None;
     ui.spacing_mut().item_spacing.x = 0.0;
-    widgets::checkbox(ui, &mut opts.auto_select, "Auto-Select:");
+    widgets::checkbox(ui, &mut opts.auto_select, "自动选择：");
     ui.add_space(pt(8.5));
     let entries = [
-        crate::native_popup::Entry::item("Group", opts.auto_select_group),
-        crate::native_popup::Entry::item("Layer", !opts.auto_select_group),
+        crate::native_popup::Entry::item("组", opts.auto_select_group),
+        crate::native_popup::Entry::item("图层", !opts.auto_select_group),
     ];
     if let Some(index) = widgets::dropdown_entries(
         ui,
         "move-auto-select",
         pt(55.0),
         if opts.auto_select_group {
-            "Group"
+            "组"
         } else {
-            "Layer"
+            "图层"
         },
         true,
         &entries,
@@ -1793,11 +1771,7 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
     ui.add_space(pt(4.5));
     sep(ui);
     ui.add_space(pt(4.0));
-    widgets::checkbox(
-        ui,
-        &mut opts.show_transform_controls,
-        "Show Transform Controls",
-    );
+    widgets::checkbox(ui, &mut opts.show_transform_controls, "显示变换控件");
     ui.add_space(pt(5.5));
     sep(ui);
     // Offsets of the icon centers from the separator before them
@@ -1846,9 +1820,10 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
             // (or a pixel selection), three or more to distribute
             let enabled = command.is_none_or(|c| move_command_enabled(app, c, opts.align_canvas));
             if enabled {
-                let response = ps_button(ui, rect, icon).on_hover_text(tip);
-                response
-                    .widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tip));
+                let response = ps_button(ui, rect, icon).on_hover_text(display_label(tip));
+                response.widget_info(|| {
+                    egui::WidgetInfo::labeled(egui::WidgetType::Button, true, display_label(tip))
+                });
                 if response.clicked()
                     && let Some(c) = command
                 {
@@ -1867,7 +1842,7 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
                     color::OPTIONS_BAR,
                 );
                 ui.interact(rect, ui.id().with(tip), Sense::hover())
-                    .on_hover_text(tip);
+                    .on_hover_text(display_label(tip));
             }
         }
         let sep_x = [117.0, 234.0, 269.0][g];
@@ -1884,37 +1859,32 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
     let gear = ui
         .scope_builder(egui::UiBuilder::new().max_rect(gear), |ui| {
             widgets::ps_icon_button(ui, gear.size(), Icon::Gear, color::OPTIONS_ICON)
-                .on_hover_text("Set additional options")
+                .on_hover_text("设置其他选项")
         })
         .inner;
-    gear.widget_info(|| {
-        egui::WidgetInfo::labeled(egui::WidgetType::Button, true, "Set additional options")
-    });
+    gear.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, "设置其他选项"));
     egui::Popup::menu(&gear)
         .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
         .show(|ui| {
-            ui.checkbox(&mut opts.show_hover_bounds, "Show layer bounds on hover");
-            ui.checkbox(&mut opts.expand_groups, "Expand layer group on click");
-            ui.checkbox(
-                &mut opts.show_layer_panel_bounds,
-                "Show hover bounds from Layers",
-            );
+            ui.checkbox(&mut opts.show_hover_bounds, "悬停时显示图层边界");
+            ui.checkbox(&mut opts.expand_groups, "单击时展开图层组");
+            ui.checkbox(&mut opts.show_layer_panel_bounds, "显示图层面板悬停边界");
         });
     if let Some(more) = more {
         egui::Popup::menu(&more)
             .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
             .show(|ui| {
                 ui.horizontal(|ui| {
-                    ui.label("Align To:");
-                    ui.selectable_value(&mut opts.align_canvas, false, "Selection");
-                    ui.selectable_value(&mut opts.align_canvas, true, "Canvas");
+                    ui.label("对齐到：");
+                    ui.selectable_value(&mut opts.align_canvas, false, "选区");
+                    ui.selectable_value(&mut opts.align_canvas, true, "画布");
                 });
                 for how in op_core::align::Align::ALL {
                     let c = Command::Align(how);
                     if ui
                         .add_enabled(
                             move_command_enabled(app, c, opts.align_canvas),
-                            egui::Button::new(format!("Align {}", how.label())),
+                            egui::Button::new(format!("对齐{}", display_label(how.label()))),
                         )
                         .clicked()
                     {
@@ -1927,7 +1897,7 @@ fn move_options(ui: &mut Ui, app: &mut AppState) {
                     if ui
                         .add_enabled(
                             c.enabled(app),
-                            egui::Button::new(format!("Distribute {}", how.label())),
+                            egui::Button::new(format!("分布{}", display_label(how.label()))),
                         )
                         .clicked()
                     {
@@ -1967,9 +1937,75 @@ fn sep(ui: &mut Ui) {
     ui.painter().rect_filled(rect, 0, color::OPTIONS_SEPARATOR);
 }
 
+/// Translate built-in labels at the display boundary; IDs and user names stay raw.
+fn display_label(label: &str) -> &str {
+    match label {
+        "Align left edges" => "左边缘对齐",
+        "Align horizontal centers" => "水平居中对齐",
+        "Align right edges" => "右边缘对齐",
+        "Align top edges" => "顶边缘对齐",
+        "Align vertical centers" => "垂直居中对齐",
+        "Align bottom edges" => "底边缘对齐",
+        "Distribute vertically" => "垂直分布",
+        "Distribute horizontally" => "水平分布",
+        "More options" => "更多选项",
+        "Set additional options" => "设置其他选项",
+        "Nearest Neighbor" => "邻近",
+        "Bilinear" => "两次线性",
+        "Bicubic" => "两次立方",
+        "Bicubic Smoother" => "两次立方（较平滑）",
+        "Bicubic Sharper" => "两次立方（较锐利）",
+        "Bicubic Automatic" => "两次立方（自动）",
+        "Ratio" => "比例",
+        "W x H x Resolution" => "宽 × 高 × 分辨率",
+        "Original Ratio" => "原始比例",
+        "Front Image" => "前面的图像",
+        "Rule of Thirds" => "三等分",
+        "Grid" => "网格",
+        "Diagonal" => "对角线",
+        "Triangle" => "三角形",
+        "Golden Ratio" => "黄金比例",
+        "Golden Spiral" => "黄金螺旋",
+        "Background" => "背景",
+        "Generative Expand" => "生成式扩展",
+        "Content-Aware Fill" => "内容识别填充",
+        "Arc" => "弧形",
+        "Arc Lower" => "下弧形",
+        "Arc Upper" => "上弧形",
+        "Arch" => "拱形",
+        "Bulge" => "凸出",
+        "Shell Lower" => "下壳形",
+        "Shell Upper" => "上壳形",
+        "Flag" => "旗帜",
+        "Wave" => "波浪",
+        "Fish" => "鱼形",
+        "Rise" => "上升",
+        "Fisheye" => "鱼眼",
+        "Inflate" => "膨胀",
+        "Squeeze" => "挤压",
+        "Twist" => "扭转",
+        "Left Edges" | "Left" => "左边缘",
+        "Horizontal Centers" | "Horizontal Center" => "水平中心",
+        "Right Edges" | "Right" => "右边缘",
+        "Top Edges" | "Top" => "顶边缘",
+        "Vertical Centers" | "Vertical Center" => "垂直中心",
+        "Bottom Edges" | "Bottom" => "底边缘",
+        "Horizontally" => "水平间距",
+        "Vertically" => "垂直间距",
+        _ => label,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn display_copy_does_not_rewrite_user_values() {
+        assert_eq!(display_label("Align left edges"), "左边缘对齐");
+        assert_eq!(display_label("Bicubic"), "两次立方");
+        assert_eq!(display_label("My preset"), "My preset");
+    }
 
     #[test]
     fn numbers_are_typed_with_or_without_units() {

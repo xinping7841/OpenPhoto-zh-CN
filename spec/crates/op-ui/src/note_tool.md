@@ -4,3 +4,7 @@ Click creates/selects a Note; dragging an existing marker moves it, release reco
 The toolbar color swatch edits a persisted session default, or the staged current note color; new notes use that default. Notes-panel toggle opens the selected/latest note or commits and closes the editor.
 
 File save commits staged note edits before encoding.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries.

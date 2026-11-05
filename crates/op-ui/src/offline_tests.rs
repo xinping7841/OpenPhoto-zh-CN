@@ -1715,7 +1715,7 @@ fn remove_genai_rejects_without_fallback_and_can_retry_offline_cpu() {
         h.app
             .alert
             .as_ref()
-            .is_some_and(|s| s.contains("Generative AI"))
+            .is_some_and(|s| s.contains("生成式 AI"))
     );
     assert!(h.state().remove_session.as_ref().unwrap().area.is_some());
     assert_eq!(h.state().doc.composite_rgba8(), before);
@@ -2465,6 +2465,53 @@ fn toolbar_two_columns_toggle_selects_second_column_and_collapses_cpu() {
     assert!(!h.app.flag("toolbar.two_columns", false));
     assert_eq!(crate::toolbar::width(&h.app), single);
     assert_eq!(h.app.tool.slot(), 1);
+}
+
+#[test]
+fn chinese_psd_layer_groups_positions_alpha_and_order_round_trip_cpu() {
+    use op_core::{Color, Document, Layer, TiledImage};
+    let mut document = Document::new_with_background("中文图层交接", 32, 24, Color::WHITE);
+    document.layers.clear();
+    let lower_id = document.new_layer_id();
+    let upper_id = document.new_layer_id();
+    let group_id = document.new_layer_id();
+    let mut lower_pixels = TiledImage::new(32, 24);
+    lower_pixels.set_pixel(7, 9, [210, 40, 80, 128]);
+    let mut lower = Layer::raster(lower_id, "半透明红点", lower_pixels);
+    lower.parent = Some(group_id);
+    let mut upper_pixels = TiledImage::new(32, 24);
+    upper_pixels.set_pixel(18, 13, [20, 100, 230, 255]);
+    let mut upper = Layer::raster(upper_id, "右侧蓝点", upper_pixels);
+    upper.parent = Some(group_id);
+    document
+        .layers
+        .extend([lower, upper, Layer::group(group_id, "产品素材组")]);
+    document.select_layer(upper_id);
+    let pixels = document.composite_rgba8();
+    let path = std::env::temp_dir().join(format!("中文图层交接-{}.psd", document.id.0));
+    op_io::save(&document, &path).unwrap();
+    let reopened = op_io::open(&path).unwrap();
+    std::fs::remove_file(&path).unwrap();
+    assert_eq!((reopened.width, reopened.height), (32, 24));
+    assert_eq!(
+        reopened
+            .layers
+            .iter()
+            .map(|layer| layer.name.as_str())
+            .collect::<Vec<_>>(),
+        ["半透明红点", "右侧蓝点", "产品素材组"]
+    );
+    let group = &reopened.layers[2];
+    assert!(group.is_group());
+    assert_eq!(reopened.layers[0].parent, Some(group.id));
+    assert_eq!(reopened.layers[1].parent, Some(group.id));
+    let lower = reopened.layers[0].image().unwrap();
+    let upper = reopened.layers[1].image().unwrap();
+    assert_eq!(lower.pixel(7, 9), [210, 40, 80, 128]);
+    assert_eq!(upper.pixel(18, 13), [20, 100, 230, 255]);
+    assert_eq!(lower.pixel(0, 0), [0, 0, 0, 0]);
+    assert_eq!(upper.pixel(0, 0), [0, 0, 0, 0]);
+    assert_eq!(reopened.composite_rgba8(), pixels);
 }
 
 #[test]

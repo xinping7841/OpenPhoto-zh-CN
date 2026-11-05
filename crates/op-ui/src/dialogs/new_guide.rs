@@ -12,15 +12,15 @@ use crate::theme::{self, pt};
 const SIZE: egui::Vec2 = vec2(pt(390.0), pt(188.0));
 /// Photoshop's guide colors, Cyan first (the default).
 const COLORS: [(&str, [u8; 3]); 9] = [
-    ("Cyan", [0x85, 0xfb, 0xfd]),
-    ("Light Blue", [0x4a, 0x9c, 0xff]),
-    ("Light Red", [0xff, 0x6e, 0x6e]),
-    ("Green", [0x4a, 0xff, 0x4a]),
-    ("Medium Blue", [0x31, 0x31, 0xff]),
-    ("Yellow", [0xff, 0xff, 0x4a]),
-    ("Magenta", [0xff, 0x4a, 0xff]),
-    ("Gray", [0x80, 0x80, 0x80]),
-    ("Black", [0, 0, 0]),
+    ("青色", [0x85, 0xfb, 0xfd]),
+    ("浅蓝色", [0x4a, 0x9c, 0xff]),
+    ("浅红色", [0xff, 0x6e, 0x6e]),
+    ("绿色", [0x4a, 0xff, 0x4a]),
+    ("中蓝色", [0x31, 0x31, 0xff]),
+    ("黄色", [0xff, 0xff, 0x4a]),
+    ("洋红色", [0xff, 0x4a, 0xff]),
+    ("灰色", [0x80, 0x80, 0x80]),
+    ("黑色", [0, 0, 0]),
 ];
 
 pub enum Outcome {
@@ -162,19 +162,19 @@ impl NewGuideDialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let title = if self.editing.is_some() {
-            "Edit Guide"
+            "编辑参考线"
         } else {
-            "New guide"
+            "新建参考线"
         };
         common::frame(ui, frame, title, theme::dialog_bold(pt(13.0)));
         ui.painter().text(
             at(20.0, 57.0),
             Align2::LEFT_CENTER,
-            "Orientation",
+            "方向",
             theme::uxp_bold(pt(12.0)),
             uxp::TEXT,
         );
-        for (vertical, label, x) in [(false, "Horizontal", 26.0), (true, "Vertical", 108.0)] {
+        for (vertical, label, x) in [(false, "水平", 26.0), (true, "垂直", 108.0)] {
             if uxp::radio(ui, at(x, 84.0), label, self.vertical == vertical) {
                 self.vertical = vertical;
             }
@@ -188,7 +188,7 @@ impl NewGuideDialog {
                 uxp::TEXT,
             );
         };
-        right_label(ui, 120.5, "Position");
+        right_label(ui, 120.5, "位置");
         common::text_field(
             ui,
             r(68.0, 108.0, 161.0, 132.0),
@@ -199,9 +199,9 @@ impl NewGuideDialog {
             false,
         );
 
-        right_label(ui, 156.5, "Color");
+        right_label(ui, 156.5, "颜色");
         let (name, [cr, cg, cb]) = match self.custom {
-            Some(c) => ("Custom", c),
+            Some(c) => ("自定", c),
             None => COLORS[self.color],
         };
         let mut chosen = if self.custom.is_some() {
@@ -265,17 +265,10 @@ impl NewGuideDialog {
         let ok = common::ps_focused_button(
             ui,
             r(300.0, 48.0, 370.0, 72.0),
-            "OK",
+            "确定",
             theme::uxp_bold(pt(12.0)),
         );
-        let cancel = common::ps_button(
-            ui,
-            r(300.0, 84.0, 370.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let cancel = common::ps_button(ui, r(300.0, 84.0, 370.0, 108.0), "取消", false, true, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

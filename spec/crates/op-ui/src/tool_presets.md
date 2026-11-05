@@ -28,3 +28,12 @@ A tool preset is a tool with its options saved under a name. Presets are made wi
 
 - `capture_and_apply`: a 77 px Multiply brush saved, then restored from the Eraser.
 - `ui_tests::tool_presets_save_and_pick`: see `panels/tool_presets.md`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. Chinese display wording overrides upstream English-copy parity described above; the English names in this specification identify controls and behavior, rather than requiring English rendering. Specifications remain in English.
+
+New preset suggestions use the localized tool display name followed by the existing sequence number. Capturing and applying preserve user-supplied names, tool enums, keyed settings and paint options verbatim. The scoped capture/apply test expects the Chinese default brush suggestion and verifies that an English user name stays unchanged.
+
+Chinese glyph coverage and clipping in upstream-derived fixed control dimensions require visual verification. This change does not alter algorithm keys, identifiers, user data, shortcuts or icon artwork.

@@ -154,7 +154,7 @@ pub fn draw(ui: &mut Ui, state: &mut DocState, ppp: f32) {
     let mut opened = true;
     let mut done = false;
     let mut delete = false;
-    egui::Window::new("Notes")
+    egui::Window::new("注释")
         .id(ui.id().with("notes-editor"))
         .default_pos(egui::pos2(
             state.view.viewport.right() - 290.0,
@@ -164,7 +164,7 @@ pub fn draw(ui: &mut Ui, state: &mut DocState, ppp: f32) {
         .open(&mut opened)
         .show(ui.ctx(), |ui| {
             ui.horizontal(|ui| {
-                ui.label("Author:");
+                ui.label("作者：");
                 ui.text_edit_singleline(&mut edit.author);
             });
             ui.color_edit_button_srgb(&mut edit.color);
@@ -174,8 +174,8 @@ pub fn draw(ui: &mut Ui, state: &mut DocState, ppp: f32) {
                     .desired_width(f32::INFINITY),
             );
             ui.horizontal(|ui| {
-                done = ui.button("Done").clicked();
-                delete = ui.button("Delete").clicked();
+                done = ui.button("完成").clicked();
+                delete = ui.button("删除").clicked();
             });
         });
     if delete {

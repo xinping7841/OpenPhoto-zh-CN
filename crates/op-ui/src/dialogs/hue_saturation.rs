@@ -259,7 +259,7 @@ impl Dialog {
                 .flatten()
                 .all(|v| parse(v, HUE) == Some(0));
         if untouched {
-            return "Default";
+            return "默认";
         }
         let ranges_flat = self.bounds == HUE_RANGES
             && self.values[1..]
@@ -278,7 +278,7 @@ impl Dialog {
                         None => !self.colorize && same(&self.values[0], *master),
                     }
             })
-            .map_or("Custom", |(name, ..)| name)
+            .map_or("自定", |(name, ..)| name)
     }
 
     /// Picks Photoshop's preset `k`: its Master values, or Colorize with
@@ -420,7 +420,7 @@ impl Dialog {
         let painter = ui.painter().clone();
 
         // Preset
-        uxp::label(ui, at(20.0, 61.0), "Preset");
+        uxp::label(ui, at(20.0, 61.0), "预设");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::HUE_SATURATION, encoded.as_deref());
@@ -443,10 +443,10 @@ impl Dialog {
                 );
             },
             |ui| {
-                if ui.button("Default").clicked() {
+                if ui.button("默认").clicked() {
                     reset = true;
                 }
-                ui.add_enabled(false, egui::Button::new("Custom"));
+                ui.add_enabled(false, egui::Button::new("自定"));
                 ui.separator();
                 for (k, (name, ..)) in super::adjust_presets::HUE_SATURATION.iter().enumerate() {
                     if ui.selectable_label(preset == *name, *name).clicked() {
@@ -542,7 +542,7 @@ impl Dialog {
             [HUE, AMOUNT, AMOUNT]
         };
         let colorize_hue = parse(&self.colorize_values[0], COLORIZE_HUE).unwrap_or(0) as f32;
-        for (k, name) in ["Hue", "Saturation", "Lightness"].into_iter().enumerate() {
+        for (k, name) in ["色相", "饱和度", "明度"].into_iter().enumerate() {
             let y = 120.0 + 55.0 * k as f32;
             uxp::label(ui, at(20.0, y + 12.5), name);
             let text = if editing == 7 {
@@ -599,7 +599,7 @@ impl Dialog {
 
         // Colorize, the eyedroppers and Invert (not available here)
         let was = self.colorize;
-        uxp::checkbox(ui, at(20.0, 292.0), "Colorize", &mut self.colorize);
+        uxp::checkbox(ui, at(20.0, 292.0), "着色", &mut self.colorize);
         if self.colorize != was {
             self.selected = 0;
         }
@@ -647,7 +647,7 @@ impl Dialog {
         if common::ps_button_with(
             ui,
             r(233.0, 286.0, 296.0, 310.0),
-            "Invert",
+            "反相",
             false,
             ranged,
             crate::theme::uxp_bold(pt(12.0)),
@@ -670,7 +670,7 @@ impl Dialog {
     fn before_after(&mut self, ui: &mut Ui, frame: Rect) {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let painter = ui.painter().clone();
-        uxp::label(ui, at(20.0, 331.0), "Before - After");
+        uxp::label(ui, at(20.0, 331.0), "调整前 - 调整后");
         let settings = self.settings();
         let x0 = at(STRIP_X.0, 0.0).x;
         let x1 = at(STRIP_X.1, 0.0).x;
@@ -957,27 +957,27 @@ mod tests {
                 .position(|(n, ..)| *n == name)
                 .unwrap()
         };
-        d.apply_preset(k("Sepia"));
+        d.apply_preset(k("棕褐色"));
         assert!(d.colorize);
         assert_eq!(d.colorize_values, ["35", "25", "0"].map(String::from));
-        assert_eq!(d.preset(), "Sepia");
-        d.apply_preset(k("Old Style"));
+        assert_eq!(d.preset(), "棕褐色");
+        d.apply_preset(k("旧式风格"));
         assert!(!d.colorize);
         assert_eq!(d.values[0], ["0", "-40", "5"].map(String::from));
-        assert_eq!(d.preset(), "Old Style");
+        assert_eq!(d.preset(), "旧式风格");
     }
 
     #[test]
     fn values_ranges_and_preset() {
         let mut d = Dialog::new(200);
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         assert_eq!(
             d.adjustment(),
             Some(Adjustment::HueSaturation(HueSaturation::master(0, 0, 0)))
         );
         // Each range keeps its own values
         d.values[2][1] = "-40".into();
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         let s = d.settings().unwrap();
         assert_eq!(s.ranges[1].saturation, -40);
         assert_eq!(s.ranges[1].bounds, HUE_RANGES[1]);

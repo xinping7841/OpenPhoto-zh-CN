@@ -13,7 +13,15 @@ use crate::theme::{color, pt};
 pub const SIZE: egui::Vec2 = vec2(pt(473.0), pt(400.0));
 const RANGE: (f32, f32) = (-100.0, 100.0);
 pub const COLORS: [&str; 9] = [
-    "Reds", "Yellows", "Greens", "Cyans", "Blues", "Magentas", "Whites", "Neutrals", "Blacks",
+    "红色",
+    "黄色",
+    "绿色",
+    "青色",
+    "蓝色",
+    "洋红色",
+    "白色",
+    "中性色",
+    "黑色",
 ];
 const FILLS: [[u8; 3]; 9] = [
     [234, 51, 36],
@@ -145,9 +153,9 @@ impl Dialog {
 
     fn preset(&self) -> &'static str {
         if self.values.iter().flatten().all(|v| parse(v) == Some(0)) {
-            "Default"
+            "默认"
         } else {
-            "Custom"
+            "自定"
         }
     }
 
@@ -162,7 +170,7 @@ impl Dialog {
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let painter = ui.painter().clone();
 
-        uxp::label(ui, at(20.0, 61.0), "Preset");
+        uxp::label(ui, at(20.0, 61.0), "预设");
         let preset = self.preset();
         let mut reset = false;
         common::ps_dropdown(
@@ -179,10 +187,10 @@ impl Dialog {
                 );
             },
             |ui| {
-                if ui.button("Default").clicked() {
+                if ui.button("默认").clicked() {
                     reset = true;
                 }
-                ui.add_enabled(false, egui::Button::new("Custom"));
+                ui.add_enabled(false, egui::Button::new("自定"));
             },
         );
         if reset {
@@ -223,10 +231,7 @@ impl Dialog {
         let focus = first_frame || std::mem::take(&mut self.focus);
         let tracks: [&'static [[u8; 3]]; 4] =
             [&CYAN_TRACK, &MAGENTA_TRACK, &YELLOW_TRACK, &BLACK_TRACK];
-        for (k, name) in ["Cyan", "Magenta", "Yellow", "Black"]
-            .into_iter()
-            .enumerate()
-        {
+        for (k, name) in ["青色", "洋红色", "黄色", "黑色"].into_iter().enumerate() {
             let y = 120.0 + 55.0 * k as f32;
             uxp::label(ui, at(20.0, y + 12.5), name);
             let text = &mut self.values[self.selected][k];
@@ -269,11 +274,11 @@ impl Dialog {
             }
         }
 
-        uxp::label(ui, at(20.0, 348.5), "Method");
-        if uxp::radio(ui, at(26.0, 368.5), "Relative", !self.absolute) {
+        uxp::label(ui, at(20.0, 348.5), "方法");
+        if uxp::radio(ui, at(26.0, 368.5), "相对", !self.absolute) {
             self.absolute = false;
         }
-        if uxp::radio(ui, at(98.0, 368.5), "Absolute", self.absolute) {
+        if uxp::radio(ui, at(98.0, 368.5), "绝对", self.absolute) {
             self.absolute = true;
         }
         uxp::preview(ui, at(344.0, 127.0), preview);
@@ -288,7 +293,7 @@ mod tests {
     #[test]
     fn ranges_keep_their_values() {
         let mut d = Dialog::default();
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         d.values[7][3] = "30%".into();
         d.values[0][0] = "-20".into();
         d.absolute = true;
@@ -297,7 +302,7 @@ mod tests {
         };
         assert!(absolute);
         assert_eq!((colors[7], colors[0][0]), ([0, 0, 0, 30], -20));
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         d.values[2][1] = "101".into();
         assert_eq!(d.adjustment(), None);
     }

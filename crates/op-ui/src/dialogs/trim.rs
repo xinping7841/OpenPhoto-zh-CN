@@ -58,7 +58,7 @@ impl TrimDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Trim", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "裁切", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         let heading = |cy: f32, text: &str| {
             painter.text(
@@ -70,11 +70,11 @@ impl TrimDialog {
             );
         };
 
-        heading(57.0, "Based on");
+        heading(57.0, "基于");
         let choices = [
-            (TrimBasis::Transparent, "Transparent pixels"),
-            (TrimBasis::TopLeftColor, "Top left pixel color"),
-            (TrimBasis::BottomRightColor, "Bottom right pixel color"),
+            (TrimBasis::Transparent, "透明像素"),
+            (TrimBasis::TopLeftColor, "左上角像素颜色"),
+            (TrimBasis::BottomRightColor, "右下角像素颜色"),
         ];
         for (i, (basis, label)) in choices.into_iter().enumerate() {
             let enabled = basis != TrimBasis::Transparent || self.can_trim_transparent;
@@ -89,26 +89,19 @@ impl TrimDialog {
             }
         }
 
-        heading(166.0, "Trim away");
+        heading(166.0, "裁切掉");
         let sides = [
-            (&mut self.sides.top, "Top", 20.0, 186.0),
-            (&mut self.sides.left, "Left", 97.0, 186.0),
-            (&mut self.sides.bottom, "Bottom", 20.0, 210.0),
-            (&mut self.sides.right, "Right", 97.0, 210.0),
+            (&mut self.sides.top, "上", 20.0, 186.0),
+            (&mut self.sides.left, "左", 97.0, 186.0),
+            (&mut self.sides.bottom, "下", 20.0, 210.0),
+            (&mut self.sides.right, "右", 97.0, 210.0),
         ];
         for (flag, label, x, y) in sides {
             common::ps_checkbox(ui, at(x, y), label, flag, true);
         }
 
-        let ok = common::ps_button(ui, r(168.0, 48.0, 238.0, 72.0), "OK", true, true, true);
-        let cancel = common::ps_button(
-            ui,
-            r(168.0, 84.0, 238.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let ok = common::ps_button(ui, r(168.0, 48.0, 238.0, 72.0), "确定", true, true, true);
+        let cancel = common::ps_button(ui, r(168.0, 84.0, 238.0, 108.0), "取消", false, true, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

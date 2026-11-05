@@ -53,7 +53,7 @@ impl Dialog {
             ui,
             at(171.5, 47.25),
             Align2::RIGHT_CENTER,
-            "Threshold Level:",
+            "阈值色阶:",
             appkit::TEXT,
         );
         appkit::field(
@@ -111,12 +111,12 @@ impl Dialog {
         let ok = appkit::button(
             ui,
             r(290.0, 38.5, 370.5, 64.5),
-            "OK",
+            "确定",
             true,
             self.adjustment().is_some(),
         );
-        let cancel = appkit::button(ui, r(290.0, 73.5, 370.5, 99.5), "Cancel", false, true);
-        appkit::checkbox(ui, at(290.0, 118.0), "Preview", preview);
+        let cancel = appkit::button(ui, r(290.0, 73.5, 370.5, 99.5), "取消", false, true);
+        appkit::checkbox(ui, at(290.0, 118.0), "预览", preview);
         if cancel.clicked() {
             return Some(Button::Cancel);
         }

@@ -36,3 +36,12 @@ The Layer Comps panel (Window › Layer Comps) is a floating panel (`floating.md
 - applying it shows a layer hidden since, recorded as "Apply Layer Comp";
 - Last Document State hides it again;
 - screenshot `layer_comps_panel.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Panel actions, Last Document State, new-comp dialog headings, fields and buttons use Simplified Chinese. Existing comp names/comments and the editable default Layer Comp N name remain user data and are not translated. Apply Layer Comp remains the stored history identifier.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

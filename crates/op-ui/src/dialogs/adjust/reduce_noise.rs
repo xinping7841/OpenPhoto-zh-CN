@@ -28,10 +28,10 @@ static SAVED: Mutex<Vec<(String, Vec<String>)>> = Mutex::new(Vec::new());
 
 /// The Overall rows: label center y, label, unit.
 const OVERALL: [(f32, &str, Option<&str>); 4] = [
-    (255.0, "Strength:", None),
-    (311.0, "Preserve Details:", Some("%")),
-    (367.0, "Reduce Color Noise:", Some("%")),
-    (423.0, "Sharpen Details:", Some("%")),
+    (255.0, "强度:", None),
+    (311.0, "保留细节:", Some("%")),
+    (367.0, "减少颜色杂色:", Some("%")),
+    (423.0, "锐化细节:", Some("%")),
 ];
 
 fn overall_row(label: &'static str, y: f32, unit: Option<&'static str>) -> Row {
@@ -49,7 +49,7 @@ impl AdjustDialog {
     pub(super) fn reduce_noise_ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Reduce Noise", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "减少杂色", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         self.legacy_preview(ui, frame, 637.5);
         let buttons = self.legacy_buttons(ui, frame, 616.0);
@@ -57,10 +57,7 @@ impl AdjustDialog {
 
         // Basic or Advanced
         let advanced = self.value(MODE) == Some(1.0);
-        for (k, (x, label)) in [(569.5, "Basic"), (646.0, "Advanced")]
-            .into_iter()
-            .enumerate()
-        {
+        for (k, (x, label)) in [(569.5, "基本"), (646.0, "高级")].into_iter().enumerate() {
             let font = theme::dialog(pt(13.0));
             if appkit::radio_with(ui, at(x, 155.0), label, advanced == (k == 1), (16.0, font)) {
                 self.values[MODE] = k.to_string();
@@ -77,7 +74,7 @@ impl AdjustDialog {
             ui,
             at(518.0, 193.0),
             Align2::LEFT_CENTER,
-            "Settings:",
+            "设置:",
             appkit::TEXT,
         );
         self.settings_popup(ui, r(574.0, 182.5, 740.5, 202.5));
@@ -93,7 +90,7 @@ impl AdjustDialog {
         trash_icon(&painter, delete.center());
         if save_clicked {
             let mut saved = SAVED.lock().expect("settings");
-            let name = format!("Settings {}", saved.len() + 1);
+            let name = format!("设置 {}", saved.len() + 1);
             saved.push((name.clone(), self.values.clone()));
             self.extra.rn_setting = Some(name);
         }
@@ -106,7 +103,7 @@ impl AdjustDialog {
         if advanced {
             let bar = r(500.0, 213.5, 795.0, 229.5);
             painter.rect_filled(bar, 0, Color32::from_gray(0x47));
-            for (k, (x0, x1, label)) in [(500.0, 549.5, "Overall"), (549.5, 622.5, "Per Channel")]
+            for (k, (x0, x1, label)) in [(500.0, 549.5, "整体"), (549.5, 622.5, "每通道")]
                 .into_iter()
                 .enumerate()
             {
@@ -158,7 +155,7 @@ impl AdjustDialog {
                 ui,
                 at(530.0, 472.5),
                 (12.0, 9.5),
-                "Remove JPEG Artifact",
+                "移去 JPEG 假象",
                 &mut jpeg,
                 true,
             );
@@ -194,7 +191,7 @@ impl AdjustDialog {
             ui,
             at(539.5, 444.0),
             Align2::LEFT_CENTER,
-            "Channel:",
+            "通道:",
             appkit::TEXT,
         );
         if let ParamKind::Choice(options) = self.kind.params()[CHANNEL].kind
@@ -217,20 +214,13 @@ impl AdjustDialog {
             track: (540.5, 758.5, y + 15.5),
             scale: super::filter_layout::Scale::Linear,
         };
-        self.legacy_row(
-            ui,
-            frame,
-            strength,
-            &row("Strength:", 474.0, None),
-            true,
-            false,
-        );
+        self.legacy_row(ui, frame, strength, &row("强度:", 474.0, None), true, false);
         let on = self.value(strength).unwrap_or(0.0) > 0.0;
         self.legacy_row(
             ui,
             frame,
             strength + 1,
-            &row("Preserve Details:", 519.0, Some(("%", 688.5))),
+            &row("保留细节:", 519.0, Some(("%", 688.5))),
             on,
             false,
         );
@@ -239,7 +229,7 @@ impl AdjustDialog {
     /// Settings: Default (Photoshop's values) and those saved this session.
     fn settings_popup(&mut self, ui: &mut Ui, rect: Rect) {
         let saved = SAVED.lock().expect("settings").clone();
-        let names: Vec<&str> = std::iter::once("Default")
+        let names: Vec<&str> = std::iter::once("默认")
             .chain(saved.iter().map(|(n, _)| n.as_str()))
             .collect();
         let chosen = self

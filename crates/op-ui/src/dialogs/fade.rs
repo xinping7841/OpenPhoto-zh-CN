@@ -64,12 +64,12 @@ impl FadeDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Fade", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "渐隐", theme::dialog_bold(pt(13.0)));
         appkit::text(
             ui,
             at(10.0, 47.5),
             Align2::LEFT_CENTER,
-            "Opacity:",
+            "不透明度:",
             appkit::TEXT,
         );
         appkit::field(
@@ -108,7 +108,7 @@ impl FadeDialog {
             ui,
             at(10.0, 95.5),
             Align2::LEFT_CENTER,
-            "Mode:",
+            "模式:",
             appkit::TEXT,
         );
         let (entries, modes) = appkit::blend_modes(self.mode);
@@ -116,7 +116,7 @@ impl FadeDialog {
             ui,
             r(51.0, 85.0, 184.5, 106.0),
             "fade-mode",
-            self.mode.label(),
+            crate::dialogs::common::display_label(self.mode.label()),
             &entries,
         ) {
             self.mode = modes[k].unwrap_or(self.mode);
@@ -125,16 +125,16 @@ impl FadeDialog {
         let ok = appkit::button(
             ui,
             r(201.0, 38.5, 280.5, 64.5),
-            "OK",
+            "确定",
             true,
             self.opacity().is_some(),
         );
-        let cancel = appkit::button(ui, r(201.0, 73.5, 280.5, 99.5), "Cancel", false, true);
+        let cancel = appkit::button(ui, r(201.0, 73.5, 280.5, 99.5), "取消", false, true);
         appkit::checkbox_with(
             ui,
             at(201.0, 118.5),
             (11.5, 10.0),
-            "Preview",
+            "预览",
             &mut self.preview,
             true,
         );

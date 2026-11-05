@@ -56,14 +56,14 @@ impl SizeUnit {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::Percent => "Percent",
-            Self::Pixels => "Pixels",
-            Self::Inches => "Inches",
-            Self::Centimeters => "Centimeters",
-            Self::Millimeters => "Millimeters",
-            Self::Points => "Points",
-            Self::Picas => "Picas",
-            Self::Columns => "Columns",
+            Self::Percent => "百分比",
+            Self::Pixels => "像素",
+            Self::Inches => "英寸",
+            Self::Centimeters => "厘米",
+            Self::Millimeters => "毫米",
+            Self::Points => "点",
+            Self::Picas => "派卡",
+            Self::Columns => "列",
         }
     }
 
@@ -110,8 +110,8 @@ impl ResolutionUnit {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::PerInch => "Pixels/Inch",
-            Self::PerCentimeter => "Pixels/Centimeter",
+            Self::PerInch => "像素/英寸",
+            Self::PerCentimeter => "像素/厘米",
         }
     }
 }
@@ -202,10 +202,10 @@ pub const FIT_PRESETS: [&[FitTo]; 3] = [
 impl FitTo {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Original => "Original Size",
-            Self::AutoResolution => "Auto Resolution...",
+            Self::Original => "原始大小",
+            Self::AutoResolution => "自动分辨率...",
             Self::Preset(name, ..) => name,
-            Self::User(_) | Self::Custom => "Custom",
+            Self::User(_) | Self::Custom => "自定",
         }
     }
 }
@@ -515,7 +515,7 @@ impl Model {
         if now == was {
             now
         } else {
-            format!("{now} (was {was})")
+            format!("{now} (原为 {was})")
         }
     }
 
@@ -663,7 +663,7 @@ impl ImageSizeDialog {
             FitTo::User(i) => self
                 .presets
                 .get(i)
-                .map_or("Custom".into(), |(_, p)| p.name.clone()),
+                .map_or("自定".into(), |(_, p)| p.name.clone()),
             fit => fit.label().into(),
         }
     }
@@ -728,17 +728,14 @@ impl ImageSizeDialog {
             }
         }
         menu.push(separator.clone());
-        menu.push((Entry::item("Load Preset...", false), FitAction::Load));
-        menu.push((Entry::item("Save Preset...", false), FitAction::Save));
+        menu.push((Entry::item("载入预设...", false), FitAction::Load));
+        menu.push((Entry::item("保存预设...", false), FitAction::Save));
         menu.push((
-            Entry::item("Delete Preset...", false).enabled(!self.presets.is_empty()),
+            Entry::item("删除预设...", false).enabled(!self.presets.is_empty()),
             FitAction::Delete,
         ));
         menu.push(separator);
-        menu.push((
-            Entry::item("Custom", fit == FitTo::Custom),
-            FitAction::Custom,
-        ));
+        menu.push((Entry::item("自定", fit == FitTo::Custom), FitAction::Custom));
         menu
     }
 
@@ -858,7 +855,7 @@ impl ImageSizeDialog {
         let at = |x: f32, y: f32| column.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let font = theme::dialog(pt(12.0));
-        common::frame(ui, frame, "Image Size", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "图像大小", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         traffic_lights(&painter, frame);
         self.preview_ui(
@@ -880,7 +877,7 @@ impl ImageSizeDialog {
         };
 
         // Memory size and the gear's menu
-        label("Image Size:", 50.25);
+        label("图像大小:", 50.25);
         painter.text(
             at(431.5, 49.75),
             Align2::LEFT_CENTER,
@@ -891,13 +888,13 @@ impl ImageSizeDialog {
         let gear = r(633.5, 41.5, 654.5, 58.5);
         let response = ui.interact(gear, ui.id().with("gear"), Sense::click());
         gear_icon(&painter, gear.center());
-        let styles = [Entry::item("Scale Styles", self.model.scale_styles)];
+        let styles = [Entry::item("缩放样式", self.model.scale_styles)];
         if native_popup::dropdown(ui, &response, ui.id().with("gear-menu"), &styles).is_some() {
             self.model.scale_styles = !self.model.scale_styles;
         }
 
         // Dimensions, with the unit chosen from the box's menu
-        label("Dimensions:", 79.75);
+        label("尺寸:", 79.75);
         let dims_box = r(432.0, 70.5, 450.0, 88.0);
         let response = ui.interact(dims_box, ui.id().with("dims-unit"), Sense::click());
         painter.rect(
@@ -944,7 +941,7 @@ impl ImageSizeDialog {
         );
 
         // Fit To
-        label("Fit To:", 107.5);
+        label("适合:", 107.5);
         let menu = self.fit_menu();
         let entries: Vec<Entry> = menu.iter().map(|(e, _)| e.clone()).collect();
         let picked = common::field_popup(
@@ -975,9 +972,9 @@ impl ImageSizeDialog {
             // macOS's own panels, as Photoshop's
             Some(FitAction::Save) => {
                 let mut panel = rfd::FileDialog::new()
-                    .set_title("Save settings in:")
+                    .set_title("保存设置到:")
                     .set_file_name("Untitled.imz")
-                    .add_filter("Image Size", &["imz"]);
+                    .add_filter("图像大小", &["imz"]);
                 if let Some(dir) = &self.folder {
                     let _ = std::fs::create_dir_all(dir);
                     panel = panel.set_directory(dir);
@@ -987,7 +984,7 @@ impl ImageSizeDialog {
                 }
             }
             Some(FitAction::Load) => {
-                let mut panel = rfd::FileDialog::new().add_filter("Image Size", &["imz"]);
+                let mut panel = rfd::FileDialog::new().add_filter("图像大小", &["imz"]);
                 if let Some(dir) = &self.folder {
                     panel = panel.set_directory(dir);
                 }
@@ -1001,8 +998,8 @@ impl ImageSizeDialog {
         // Width and Height, the chain between them, and their unit
         let editable = self.model.size_editable();
         let rows = [
-            (136.5, 127.0, 126.0, "Width:"),
-            (165.5, 156.0, 155.0, "Height:"),
+            (136.5, 127.0, 126.0, "宽度:"),
+            (165.5, 156.0, 155.0, "高度:"),
         ];
         for (k, &(cy, fy, dy, text)) in rows.iter().enumerate() {
             label(text, cy);
@@ -1055,7 +1052,7 @@ impl ImageSizeDialog {
         self.chain_ui(ui, column);
 
         // Resolution
-        label("Resolution:", 194.75);
+        label("分辨率:", 194.75);
         let response = common::text_field(
             ui,
             r(427.5, 185.0, 503.0, 204.0),
@@ -1092,7 +1089,7 @@ impl ImageSizeDialog {
         common::ps_checkbox_with(
             ui,
             at(334.5, 217.5),
-            "Resample:",
+            "重新采样:",
             &mut resample,
             true,
             font.clone(),
@@ -1129,8 +1126,13 @@ impl ImageSizeDialog {
         let mut methods = Vec::new();
         let mut picks = Vec::new();
         for (k, m) in Resample::ALL.into_iter().enumerate() {
-            methods
-                .push(Entry::item(m.label(), m == method).shortcut(format!("\u{2325}{}", k + 1)));
+            methods.push(
+                Entry::item(
+                    crate::dialogs::common::display_label(m.label()),
+                    m == method,
+                )
+                .shortcut(format!("\u{2325}{}", k + 1)),
+            );
             picks.push(Some(m));
             if m.separator_after() {
                 methods.push(Entry::Separator);
@@ -1141,7 +1143,7 @@ impl ImageSizeDialog {
             ui,
             r(428.0, 213.0, 655.0, 234.0),
             "resample",
-            method.label(),
+            crate::dialogs::common::display_label(method.label()),
             self.model.resample,
             &methods,
         )
@@ -1164,11 +1166,11 @@ impl ImageSizeDialog {
         painter.text(
             at(328.5, 276.5),
             Align2::LEFT_CENTER,
-            "Create a new, larger document with more detail",
+            "创建更大、细节更丰富的新文档",
             font.clone(),
             LABEL,
         );
-        let link = painter.layout_no_wrap("Open in Generative Upscale...".into(), font, LINK);
+        let link = painter.layout_no_wrap("在生成式放大中打开...".into(), font, LINK);
         let link_min = at(328.0, 287.5);
         let underline_y = at(0.0, 301.25).y;
         painter.line_segment(
@@ -1184,7 +1186,7 @@ impl ImageSizeDialog {
         let cancel = common::ps_button(
             ui,
             r(329.0, 311.5 + grow_h, 486.5, 337.5 + grow_h),
-            "Cancel",
+            "取消",
             false,
             true,
             false,
@@ -1192,7 +1194,7 @@ impl ImageSizeDialog {
         let ok = common::ps_button(
             ui,
             r(496.5, 311.5 + grow_h, 654.0, 337.5 + grow_h),
-            "OK",
+            "确定",
             true,
             values.is_some(),
             false,
@@ -1224,7 +1226,7 @@ impl ImageSizeDialog {
         painter.text(
             at(LABEL_RIGHT, 251.5),
             Align2::RIGHT_CENTER,
-            "Reduce Noise:",
+            "减少杂色:",
             theme::dialog(pt(12.0)),
             LABEL,
         );
@@ -1505,7 +1507,7 @@ mod tests {
         m.unit = SizeUnit::Pixels;
         m.set_width(367.0);
         assert_eq!(m.result(), Some((367, 406, 72.0)));
-        assert_eq!(m.memory_text(), "436.5K (was 1.70M)");
+        assert_eq!(m.memory_text(), "436.5K (原为 1.70M)");
         m.unit = SizeUnit::Percent;
         assert_eq!(m.field_text(m.width, 734), "50");
         m.set_constrain(false);

@@ -27,7 +27,7 @@ impl AdjustDialog {
     pub(super) fn match_color_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Match Color", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "匹配颜色", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         let group = |ui: &egui::Ui, rect: Rect, x: f32, title: &str| {
             let t = appkit::label(ui, Pos2::new(at(x, 0.0).x, rect.top()), title);
@@ -36,17 +36,12 @@ impl AdjustDialog {
         let has_selection = self.extra.target_selected.is_some();
 
         // Destination Image: the target, Ignore Selection, Image Options
-        group(
-            ui,
-            r(10.75, 46.75, 381.25, 318.75),
-            31.0,
-            "Destination Image",
-        );
+        group(ui, r(10.75, 46.75, 381.25, 318.75), 31.0, "目标图像");
         appkit::text(
             ui,
             at(24.5, 69.25),
             Align2::LEFT_CENTER,
-            "Target:",
+            "目标:",
             appkit::TEXT,
         );
         let target = format!("{} (RGB/8)", self.extra.target_name);
@@ -58,11 +53,8 @@ impl AdjustDialog {
             appkit::TEXT,
         );
         self.mc_check(ui, frame, IGNORE_SELECTION, (68.0, 88.0), has_selection);
-        group(ui, r(20.75, 119.75, 371.75, 308.75), 40.5, "Image Options");
-        for (k, label) in ["Luminance", "Color Intensity", "Fade"]
-            .into_iter()
-            .enumerate()
-        {
+        group(ui, r(20.75, 119.75, 371.75, 308.75), 40.5, "图像选项");
+        for (k, label) in ["明亮度", "颜色强度", "渐隐"].into_iter().enumerate() {
             let cy = 143.5 + 49.0 * k as f32;
             appkit::text(ui, at(68.5, cy), Align2::LEFT_CENTER, label, appkit::TEXT);
             let p = &self.kind.params()[k];
@@ -81,12 +73,7 @@ impl AdjustDialog {
         self.mc_check(ui, frame, NEUTRALIZE, (68.0, 285.0), true);
 
         // Image Statistics
-        group(
-            ui,
-            r(10.75, 336.75, 381.25, 548.0),
-            31.0,
-            "Image Statistics",
-        );
+        group(ui, r(10.75, 336.75, 381.25, 548.0), 31.0, "图像统计");
         let source = self.value(SOURCE).unwrap_or(0.0) as usize;
         let source_has_selection = source > 0
             && self
@@ -105,7 +92,7 @@ impl AdjustDialog {
         self.mc_check(ui, frame, TARGET_SELECTION, (68.0, 389.0), has_selection);
         // Source and Layer, labels right-aligned at 61.5
         for (i, cy) in [(SOURCE, 431.0), (LAYER, 460.0)] {
-            let label = if i == SOURCE { "Source:" } else { "Layer:" };
+            let label = if i == SOURCE { "源:" } else { "图层:" };
             let on = i == SOURCE || source > 0;
             let ink = if on { appkit::TEXT } else { appkit::TEXT_OFF };
             appkit::text(ui, at(61.5, cy), Align2::RIGHT_CENTER, label, ink);
@@ -159,13 +146,13 @@ impl AdjustDialog {
         let load = super::flat_button(
             ui,
             r(67.5, 477.5, 191.5, 503.0),
-            "Load Statistics...",
+            "载入统计数据...",
             "mc-load",
         );
         let save = super::flat_button(
             ui,
             r(67.5, 512.5, 191.5, 538.0),
-            "Save Statistics...",
+            "保存统计数据...",
             "mc-save",
         );
         if load
@@ -174,7 +161,7 @@ impl AdjustDialog {
         {
             self.extra.sources.push(MatchSource {
                 name,
-                layers: vec![("Merged".to_owned(), stats, None)],
+                layers: vec![("合并".to_owned(), stats, None)],
                 thumb: None,
             });
             self.values[SOURCE] = self.extra.sources.len().to_string();
@@ -200,14 +187,14 @@ impl AdjustDialog {
 
         // OK, Cancel and Preview
         let valid = self.effect().is_some();
-        let ok = appkit::button(ui, r(411.5, 45.0, 471.0, 70.5), "OK", true, valid).clicked();
+        let ok = appkit::button(ui, r(411.5, 45.0, 471.0, 70.5), "确定", true, valid).clicked();
         let cancel =
-            appkit::button(ui, r(411.5, 80.0, 471.0, 105.5), "Cancel", false, true).clicked();
+            appkit::button(ui, r(411.5, 80.0, 471.0, 105.5), "取消", false, true).clicked();
         appkit::checkbox_with(
             ui,
             at(392.0, 125.0),
             (12.0, 10.5),
-            "Preview",
+            "预览",
             &mut self.preview,
             true,
         );

@@ -1636,7 +1636,7 @@ fn run_command(command: Command, ctx: &egui::Context, app: &mut AppState) {
                     .filter_map(|id| app.docs.get(id))
                     .map(|d| {
                         let (all, sel) = both(&d.doc.composite_rgba8(), &d.doc);
-                        let mut layers = vec![("Merged".to_owned(), all, sel)];
+                        let mut layers = vec![("合并结果".to_owned(), all, sel)];
                         for layer in d.doc.layers.iter().rev() {
                             if let Some(image) = layer.image() {
                                 let (all, sel) = both(&image.to_rgba8(), &d.doc);
@@ -1881,10 +1881,8 @@ fn run_command(command: Command, ctx: &egui::Context, app: &mut AppState) {
                 match open {
                     Some(id) => app.active_doc = Some(id),
                     None if !path.exists() => {
-                        app.alert = Some(format!(
-                            "Could not open “{}” because the file was not found.",
-                            path.display()
-                        ));
+                        app.alert =
+                            Some(format!("无法打开“{}”，因为找不到该文件。", path.display()));
                     }
                     None => crate::actions::open_paths(app, vec![path]),
                 }
@@ -2082,9 +2080,7 @@ fn run_command(command: Command, ctx: &egui::Context, app: &mut AppState) {
                     Some(true) => state.record("Lock Layer"),
                     Some(false) => state.record("Unlock Layer"),
                     None => {
-                        app.alert = Some(
-                            "The command \u{201c}Set\u{201d} is not currently available.".into(),
-                        );
+                        app.alert = Some("命令“设置”当前不可用。".into());
                     }
                 },
                 Command::DuplicateLayer => {
@@ -2201,9 +2197,8 @@ fn run_command(command: Command, ctx: &egui::Context, app: &mut AppState) {
                     // Photoshop asks before throwing hidden layers away
                     let hidden = state.doc.layers.iter().any(|l| !l.visible);
                     if hidden && !skip_flatten_prompt {
-                        app.flatten_prompt = Some(crate::dialogs::alert::Alert::caution(
-                            "Discard hidden layers?",
-                        ));
+                        app.flatten_prompt =
+                            Some(crate::dialogs::alert::Alert::caution("要丢弃隐藏图层吗？"));
                     } else {
                         layer_ops::flatten(&mut state.doc);
                         state.record("Flatten Image");
@@ -2278,11 +2273,7 @@ fn define_pattern(app: &mut AppState) {
             };
             let full = (y0..y1).all(|y| (x0..x1).all(|x| sel.get(x, y) == 255));
             if !full {
-                app.alert = Some(
-                    "Could not complete the Define Pattern command because the selected area \
-                     must be rectangular and not feathered."
-                        .into(),
-                );
+                app.alert = Some("无法完成“定义图案”命令，因为所选区域必须为矩形且未羽化。".into());
                 return;
             }
             (x0, y0, x1, y1)
@@ -2299,7 +2290,7 @@ fn define_pattern(app: &mut AppState) {
     }
     let name = format!("Pattern {}", app.patterns.len());
     app.define_pattern = Some((
-        crate::dialogs::new_preset::NewPresetDialog::new("Pattern Name", name),
+        crate::dialogs::new_preset::NewPresetDialog::new("图案名称", name),
         image,
     ));
 }

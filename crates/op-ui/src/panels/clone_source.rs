@@ -63,7 +63,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                 };
                 if ui
                     .selectable_label(state.clone_slot == k, label)
-                    .on_hover_text("Clone Source")
+                    .on_hover_text("仿制源")
                     .clicked()
                 {
                     state.choose_clone_slot(k);
@@ -72,7 +72,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         });
         // The active source's offset (once painting has fixed it)
         ui.horizontal(|ui| {
-            ui.label("Offset:");
+            ui.label("偏移：");
             let mut offset = state.clone_offset.unwrap_or_default();
             let enabled = state.clone_source.is_some();
             let x = ui.add_enabled(
@@ -102,7 +102,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         );
         if ui
             .selectable_label(panel.linked, "🔗")
-            .on_hover_text("Maintain aspect ratio")
+            .on_hover_text("保持长宽比")
             .clicked()
         {
             panel.linked = !panel.linked;
@@ -128,13 +128,13 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                 .range(-360.0..=360.0)
                 .suffix("°"),
         );
-        if ui.button("Reset Transform").clicked() {
+        if ui.button("复位变换").clicked() {
             panel.scale = (100.0, 100.0);
             panel.angle = 0.0;
         }
     });
     ui.separator();
-    ui.checkbox(&mut panel.show_overlay, "Show Overlay");
+    ui.checkbox(&mut panel.show_overlay, "显示叠加");
     ui.add_enabled_ui(panel.show_overlay, |ui| {
         ui.horizontal(|ui| {
             let mut pct = panel.opacity * 100.0;
@@ -142,7 +142,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                 .add(
                     egui::DragValue::new(&mut pct)
                         .range(0.0..=100.0)
-                        .prefix("Opacity: ")
+                        .prefix("不透明度：")
                         .suffix("%"),
                 )
                 .changed()
@@ -150,9 +150,9 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                 panel.opacity = pct / 100.0;
             }
         });
-        ui.checkbox(&mut panel.clipped, "Clipped");
-        ui.checkbox(&mut panel.auto_hide, "Auto Hide");
-        ui.checkbox(&mut panel.invert, "Invert");
+        ui.checkbox(&mut panel.clipped, "剪切");
+        ui.checkbox(&mut panel.auto_hide, "自动隐藏");
+        ui.checkbox(&mut panel.invert, "反相");
     });
     app.clone_panel = panel;
 }

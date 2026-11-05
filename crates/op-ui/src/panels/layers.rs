@@ -195,7 +195,7 @@ fn filter_row(ui: &mut Ui, full: Rect) {
     painter.text(
         at(25.5, 18.0),
         Align2::LEFT_CENTER,
-        "Kind",
+        "种类",
         theme::body(),
         TEXT_OFF,
     );
@@ -223,7 +223,14 @@ fn filter_row(ui: &mut Ui, full: Rect) {
             ui.id().with(tip),
             Sense::hover(),
         )
-        .on_hover_text(tip);
+        .on_hover_text(match tip {
+            "Filter for pixel layers" => "按像素图层筛选",
+            "Filter for adjustment layers" => "按调整图层筛选",
+            "Filter for type layers" => "按文字图层筛选",
+            "Filter for shape layers" => "按形状图层筛选",
+            "Filter for smart objects" => "按智能对象筛选",
+            _ => tip,
+        });
     }
     // The filtering on/off switch (off)
     let switch = Rect::from_center_size(at(232.0, 18.0), Vec2::new(pt(10.0), pt(18.0)));
@@ -399,17 +406,13 @@ fn blend_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
     };
     let mode = Rect::from_min_max(at(3.0, 36.5), at(134.5, 55.5));
     ui.scope_builder(egui::UiBuilder::new().max_rect(mode), |ui| {
-        let label = layer.blend_mode.label();
+        let label = super::localized_label(layer.blend_mode.label());
         let is_group = layer.is_group();
         widgets::dropdown_with(ui, "blend-mode", mode.width(), label, editable, |ui| {
             // A group can also pass through
             if is_group
                 && ui
-                    .selectable_value(
-                        &mut layer.blend_mode,
-                        BlendMode::PassThrough,
-                        "Pass Through",
-                    )
+                    .selectable_value(&mut layer.blend_mode, BlendMode::PassThrough, "穿透")
                     .changed()
             {
                 edits.changed = true;
@@ -421,7 +424,11 @@ fn blend_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
                 }
                 for &m in *group {
                     if ui
-                        .selectable_value(&mut layer.blend_mode, m, m.label())
+                        .selectable_value(
+                            &mut layer.blend_mode,
+                            m,
+                            super::localized_label(m.label()),
+                        )
                         .changed()
                     {
                         edits.changed = true;
@@ -434,7 +441,7 @@ fn blend_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
     ui.painter().text(
         at(177.0, 46.0),
         Align2::RIGHT_CENTER,
-        "Opacity:",
+        "不透明度：",
         theme::body(),
         text_color(editable),
     );
@@ -453,7 +460,7 @@ fn lock_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
     ui.painter().text(
         at(6.0, 73.5),
         Align2::LEFT_CENTER,
-        "Lock:",
+        "锁定：",
         theme::body(),
         text_color(editable),
     );
@@ -500,7 +507,16 @@ fn lock_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
             ui.painter().rect_filled(rect, pt(2.0), color::HOVER);
         }
         icon(ui.painter(), center, i, active, color::PANEL);
-        let response = response.on_hover_text(tip);
+        let response = response.on_hover_text(match tip {
+            "Lock transparent pixels" => "锁定透明像素",
+            "Lock image pixels" => "锁定图像像素",
+            "Lock position" => "锁定位置",
+            "Prevent auto-nesting into and out of Artboards and Frames" => {
+                "防止自动嵌入或移出画板和画框"
+            }
+            "Lock all" => "锁定全部",
+            _ => tip,
+        });
         // Photoshop records every lock button as "Lock Layer"
         if active && response.clicked() {
             *flag = !*flag;
@@ -510,7 +526,7 @@ fn lock_row(ui: &mut Ui, state: &mut DocState, full: Rect) {
     ui.painter().text(
         at(177.0, 73.5),
         Align2::RIGHT_CENTER,
-        "Fill:",
+        "填充：",
         theme::body(),
         text_color(editable && !all),
     );
@@ -633,7 +649,7 @@ fn crop_preview_list(ui: &mut Ui, state: &mut DocState) {
 }
 
 /// The temporary layer's name while cropping.
-pub const CROP_PREVIEW: &str = "Crop Preview";
+pub const CROP_PREVIEW: &str = "裁剪预览";
 
 fn layer_list(ui: &mut Ui, state: &mut DocState) -> (bool, Option<FooterDrop>) {
     state.layer_panel_hover = None;
@@ -754,7 +770,7 @@ fn layer_list(ui: &mut Ui, state: &mut DocState) -> (bool, Option<FooterDrop>) {
                     egui::WidgetType::Button,
                     true,
                     format!(
-                        "Toggle mask link: {}",
+                        "切换蒙版链接：{}",
                         state.doc.layer(id).expect("listed layer").name
                     ),
                 )
@@ -1378,29 +1394,24 @@ fn bottom_bar(ui: &mut Ui, state: &mut DocState, rect: Rect) -> (bool, bool, boo
     let can_link = op_core::link::can_link(&state.doc) || op_core::link::can_unlink(&state.doc);
     let buttons = [
         (222.5, Icon::FooterBrush, "", false),
-        (196.5, Icon::LinkLayers, "Link layers", can_link),
+        (196.5, Icon::LinkLayers, "链接图层", can_link),
         // A style or a mask goes on one layer at a time
         (
             169.5,
             Icon::LayerStyle,
-            "Add a layer style",
+            "添加图层样式",
             !is_background && selected == 1 && !in_locked_group,
         ),
         (
             139.75,
             Icon::LayerMask,
-            "Add a mask",
+            "添加蒙版",
             can_mask && selected == 1,
         ),
-        (
-            113.5,
-            Icon::NewAdjustment,
-            "Create new fill or adjustment layer",
-            true,
-        ),
-        (86.5, Icon::NewGroup, "Create a new group", true),
-        (58.25, Icon::NewLayer, "Create a new layer", true),
-        (30.25, Icon::DeleteLayer, "Delete layer", can_delete),
+        (113.5, Icon::NewAdjustment, "创建新的填充或调整图层", true),
+        (86.5, Icon::NewGroup, "创建新组", true),
+        (58.25, Icon::NewLayer, "创建新图层", true),
+        (30.25, Icon::DeleteLayer, "删除图层", can_delete),
     ];
     for (x, i, tip, enabled) in buttons {
         let hit = footer_button_rect(rect, x);

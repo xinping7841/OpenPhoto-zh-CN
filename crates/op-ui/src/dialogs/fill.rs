@@ -43,15 +43,15 @@ impl Contents {
 
     fn label(self) -> &'static str {
         match self {
-            Self::Foreground => "Foreground Color",
-            Self::Background => "Background Color",
-            Self::Color => "Color...",
-            Self::ContentAware => "Content-Aware",
-            Self::Pattern => "Pattern",
-            Self::History => "History",
-            Self::Black => "Black",
-            Self::Gray => "50% Gray",
-            Self::White => "White",
+            Self::Foreground => "前景色",
+            Self::Background => "背景色",
+            Self::Color => "颜色...",
+            Self::ContentAware => "内容识别",
+            Self::Pattern => "图案",
+            Self::History => "历史记录",
+            Self::Black => "黑色",
+            Self::Gray => "50% 灰色",
+            Self::White => "白色",
         }
     }
 
@@ -190,12 +190,12 @@ impl FillDialog {
     ) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Fill", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "填充", theme::dialog_bold(pt(13.0)));
         let label = |ui: &Ui, cy: f32, text: &str| {
             appkit::text(ui, at(112.5, cy), Align2::RIGHT_CENTER, text, appkit::TEXT);
         };
 
-        label(ui, 48.5, "Contents:");
+        label(ui, 48.5, "内容:");
         let mut entries = Vec::new();
         let mut kinds = Vec::new();
         for (i, c) in Contents::ALL.into_iter().enumerate() {
@@ -225,7 +225,7 @@ impl FillDialog {
 
         // The two group boxes, their titles breaking the top edge 5 pt
         // either side
-        for (top, bottom, title) in [(116.0, 166.0, "Options"), (184.0, 282.0, "Blending")] {
+        for (top, bottom, title) in [(116.0, 166.0, "选项"), (184.0, 282.0, "混合")] {
             let t = appkit::text(
                 ui,
                 at(30.5, top - 1.5),
@@ -241,7 +241,7 @@ impl FillDialog {
         }
         if self.contents == Contents::Pattern && !patterns.is_empty() {
             // Custom Pattern: the pattern, its chevron the picker
-            label(ui, 141.5, "Custom Pattern:");
+            label(ui, 141.5, "自定图案:");
             let k = (*pattern).min(patterns.len() - 1);
             let image = &patterns[k].image;
             let swatch = r(118.0, 128.5, 148.0, 155.5);
@@ -300,25 +300,25 @@ impl FillDialog {
                 ui,
                 at(20.0, 141.5),
                 (12.0, 11.0),
-                "Color Adaptation",
+                "颜色适应",
                 &mut false,
                 false,
             );
         }
 
-        label(ui, 208.5, "Mode:");
+        label(ui, 208.5, "模式:");
         let (entries, modes) = appkit::blend_modes(self.mode);
         if let Some(k) = appkit::popup(
             ui,
             r(118.0, 198.0, 253.0, 219.0),
             "fill-mode",
-            self.mode.label(),
+            crate::dialogs::common::display_label(self.mode.label()),
             &entries,
         ) {
             self.mode = modes[k].unwrap_or(self.mode);
         }
 
-        label(ui, 236.5, "Opacity:");
+        label(ui, 236.5, "不透明度:");
         appkit::field(
             ui,
             r(117.0, 227.0, 169.0, 246.0),
@@ -334,7 +334,7 @@ impl FillDialog {
             ui,
             at(20.0, 257.5),
             (12.0, 11.0),
-            "Preserve Transparency",
+            "保留透明区域",
             &mut self.preserve_transparency,
             true,
         );
@@ -343,11 +343,11 @@ impl FillDialog {
         let ok = appkit::button(
             ui,
             r(278.5, 38.5, 338.5, 64.5),
-            "OK",
+            "确定",
             true,
             opacity.is_some(),
         );
-        let cancel = appkit::button(ui, r(278.5, 73.5, 338.5, 99.5), "Cancel", false, true);
+        let cancel = appkit::button(ui, r(278.5, 73.5, 338.5, 99.5), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

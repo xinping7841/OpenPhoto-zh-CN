@@ -72,6 +72,7 @@ mod tests {
             app.tool_settings.get("brush.mode").map(String::as_str),
             Some("5")
         );
-        assert_eq!(suggested_name(&app, Tool::Brush), "Brush Tool 1");
+        assert_eq!(suggested_name(&app, Tool::Brush), "画笔工具 1");
+        assert_eq!(preset.name, "Big multiply");
     }
 }

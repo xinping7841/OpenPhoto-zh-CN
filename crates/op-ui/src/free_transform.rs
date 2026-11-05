@@ -700,12 +700,12 @@ pub fn turn_box(t: &mut FreeTransform, how: transform::FixedTransform) {
 /// then turning and flipping the box.
 pub fn context_menu(ui: &mut Ui, t: &mut FreeTransform) {
     let modes = [
-        ("Free Transform", TransformMode::Free),
-        ("Scale", TransformMode::Free),
-        ("Rotate", TransformMode::Free),
-        ("Skew", TransformMode::Skew),
-        ("Distort", TransformMode::Distort),
-        ("Perspective", TransformMode::Perspective),
+        ("自由变换", TransformMode::Free),
+        ("缩放", TransformMode::Free),
+        ("旋转", TransformMode::Free),
+        ("斜切", TransformMode::Skew),
+        ("扭曲", TransformMode::Distort),
+        ("透视", TransformMode::Perspective),
     ];
     for (label, mode) in modes {
         if ui.button(label).clicked() {
@@ -713,19 +713,19 @@ pub fn context_menu(ui: &mut Ui, t: &mut FreeTransform) {
             ui.close();
         }
     }
-    if ui.button("Warp").clicked() {
+    if ui.button("变形").clicked() {
         set_mode(t, TransformMode::Warp);
         ui.close();
     }
     ui.separator();
-    ui.add_enabled(false, egui::Button::new("Content-Aware Scale"));
-    ui.add_enabled(false, egui::Button::new("Puppet Warp"));
+    ui.add_enabled(false, egui::Button::new("内容识别缩放"));
+    ui.add_enabled(false, egui::Button::new("操控变形"));
     ui.separator();
     use transform::FixedTransform as F;
     for (label, how) in [
-        ("Rotate 180°", F::Rotate180),
-        ("Rotate 90° Clockwise", F::Rotate90Clockwise),
-        ("Rotate 90° Counter Clockwise", F::Rotate90CounterClockwise),
+        ("旋转 180°", F::Rotate180),
+        ("顺时针旋转 90°", F::Rotate90Clockwise),
+        ("逆时针旋转 90°", F::Rotate90CounterClockwise),
     ] {
         if ui.button(label).clicked() {
             turn_box(t, how);
@@ -734,8 +734,8 @@ pub fn context_menu(ui: &mut Ui, t: &mut FreeTransform) {
     }
     ui.separator();
     for (label, how) in [
-        ("Flip Horizontal", F::FlipHorizontal),
-        ("Flip Vertical", F::FlipVertical),
+        ("水平翻转", F::FlipHorizontal),
+        ("垂直翻转", F::FlipVertical),
     ] {
         if ui.button(label).clicked() {
             turn_box(t, how);

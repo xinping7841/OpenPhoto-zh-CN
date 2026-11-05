@@ -1,5 +1,11 @@
 # dialogs/adjust/lens_blur.rs: the Lens Blur dialog
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Responsibilities
 
 Blur › Lens Blur...'s dialog, laid out as Photoshop 2026's: a window nearly the screen's size with the preview on the left and the settings in a column on the right. It is part of `AdjustDialog` (`adjust.md`): its settings are `Kind::LensBlur`'s parameters, in this order (the constants `MODE` … `MONOCHROMATIC`): Preview mode (Faster, More Accurate), Depth Map Source (None, Transparency, Layer Mask), Blur Focal Distance (0–255), Invert, Iris Shape (Triangle (3) … Octagon (8), Hexagon at first), Radius (0–100, 15), Blade Curvature (0–100), Rotation (0–360), Brightness (0–100), Threshold (0–255, 255), Noise Amount (0–100), Distribution (Uniform, Gaussian) and Monochromatic. The effect is `Filter::LensBlur` (`op-core`'s `more_filters.md`).

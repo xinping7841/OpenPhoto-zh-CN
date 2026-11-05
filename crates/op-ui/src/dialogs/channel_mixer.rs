@@ -156,7 +156,7 @@ impl Dialog {
 
     fn preset(&self) -> &'static str {
         if self.rows == Self::default().rows && !self.monochrome {
-            return "Default";
+            return "默认";
         }
         super::adjust_presets::CHANNEL_MIXER
             .iter()
@@ -169,7 +169,7 @@ impl Dialog {
                         .zip([*r, *g, *b, 0])
                         .all(|(t, v)| parse(t) == Some(v))
             })
-            .map_or("Custom", |(name, _)| name)
+            .map_or("自定", |(name, _)| name)
     }
 
     pub fn ui(
@@ -183,7 +183,7 @@ impl Dialog {
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let painter = ui.painter().clone();
 
-        uxp::label(ui, at(20.0, 61.0), "Preset");
+        uxp::label(ui, at(20.0, 61.0), "预设");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::CHANNEL_MIXER, encoded.as_deref());
@@ -206,10 +206,10 @@ impl Dialog {
                 );
             },
             |ui| {
-                if ui.button("Default").clicked() {
+                if ui.button("默认").clicked() {
                     reset = true;
                 }
-                ui.add_enabled(false, egui::Button::new("Custom"));
+                ui.add_enabled(false, egui::Button::new("自定"));
                 ui.separator();
                 for (k, (name, _)) in super::adjust_presets::CHANNEL_MIXER.iter().enumerate() {
                     if ui.selectable_label(preset == *name, *name).clicked() {
@@ -253,7 +253,7 @@ impl Dialog {
             self.load_preset(&bytes);
         }
 
-        uxp::label(ui, at(20.0, 97.0), "Output channel");
+        uxp::label(ui, at(20.0, 97.0), "输出通道");
         if self.monochrome {
             swatch(&painter, at(121.0, 96.0), [128, 128, 128], true);
         } else {
@@ -269,7 +269,7 @@ impl Dialog {
                 swatch(&painter, center, fill, self.output == i);
             }
         }
-        uxp::checkbox(ui, at(20.0, 127.0), "Monochrome", &mut self.monochrome);
+        uxp::checkbox(ui, at(20.0, 127.0), "单色", &mut self.monochrome);
 
         let row = if self.monochrome {
             &mut self.gray
@@ -279,10 +279,10 @@ impl Dialog {
         let tracks: [&'static [[u8; 3]]; 4] =
             [&RED_TRACK, &GREEN_TRACK, &BLUE_TRACK, &CONSTANT_TRACK];
         for (k, (name, y)) in [
-            ("Red", 156.0),
-            ("Green", 211.0),
-            ("Blue", 266.0),
-            ("Constant", 363.0),
+            ("红色", 156.0),
+            ("绿色", 211.0),
+            ("蓝色", 266.0),
+            ("常数", 363.0),
         ]
         .into_iter()
         .enumerate()
@@ -313,7 +313,7 @@ impl Dialog {
         }
         // Total of the three sources, then a rule above Constant
         let total: i32 = (0..3).map(|k| parse(&row[k]).unwrap_or(0)).sum();
-        uxp::label(ui, at(20.0, 330.0), "Total");
+        uxp::label(ui, at(20.0, 330.0), "总计");
         painter.text(
             at(238.5, 330.75),
             Align2::RIGHT_CENTER,
@@ -401,9 +401,9 @@ mod tests {
             gray: ["-70", "200", "-30", "0"].map(String::from),
             ..Default::default()
         };
-        assert_eq!(d.preset(), "Black & White Infrared");
+        assert_eq!(d.preset(), "黑白红外线");
         d.gray[3] = "5".into();
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
     }
 
     #[test]
@@ -416,9 +416,9 @@ mod tests {
                 monochrome: false
             })
         );
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         d.rows[1][0] = "-40".into();
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         d.monochrome = true;
         assert_eq!(
             d.adjustment(),

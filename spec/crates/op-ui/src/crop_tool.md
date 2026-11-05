@@ -73,3 +73,7 @@ While the box isn't turned, View › Snap pulls a moved box's edges or middle, a
 - `ui_tests::crop_rotation_and_straighten`: holding Shift and turning a quarter turn clockwise outside the box gives an angle of −90°; Esc resets; a 10° straighten line makes the angle 10°, shrinks the box and exits straighten mode; after commit the canvas is about the size of the box and none of the four corners is the background color (the box is inside the image).
 
 Size and resolution inputs reject non-finite values, including overflow during physical-unit conversion. A sized preset with only resolution specified updates the document resolution without resampling pixels, records Crop, and participates in undo.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries. `CropPreset::label` adapts canonical built-in preset names, and the empty-fields suggested name is localized. The preset tests cover localized labels and the unchanged physical-unit fields.

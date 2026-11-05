@@ -12,6 +12,12 @@ Uses egui_kittest to run the whole application (including the wgpu canvas) witho
 - `reference_document(harness)`: closes all documents and opens a document with the same size and file name as the one in the Photoshop reference screenshots (734×811, no embedded profile), used for screenshot comparison.
 - `click(harness, pos)`: simulates one left click at a position. `at_pt(x, y)` converts Photoshop points to egui coordinates.
 
+## Simplified Chinese regression contract
+
+The windowless harness selects built-in dialog, panel, menu and tool controls by their Simplified Chinese accessible labels. Displayed status text and document-tab mode fragments use the localized wording. User-supplied document titles, layer names and saved preset names remain verbatim. Assertions against raw history operation names retain the original English keys; localization maps those keys only when displaying history.
+
+The Gradients and Patterns panel interaction test measures the localized tab text with the actual panel font to click each tab's center, because tab widths follow their labels. Move-bar separators retain strict pixel comparison against the measured Chinese content-flow positions (351, 469, 586 and 621 points); the first alignment click follows the first separator plus the documented icon-center offset. The flyout test compares the rendered border width with the content-derived toolbar size and samples inside the narrower Chinese flyout. Border detection requires the original vertical coverage plus matching endpoint pixels so Chinese text strokes are not misclassified as control borders. Pixel, selection, undo and applied-state assertions retain their original strength. Screenshot helpers render the same Chinese interface without launching a native window. The ignored `screenshot_chinese_workspace_dialogs_and_psd` entry captures the default workspace, New Document and New Layer dialogs, then a reopened PSD with Chinese layer and group names, writing `chinese_workspace`, `chinese_new_document`, `chinese_new_layer` and `chinese_psd_reopened` images through the existing screenshot helper.
+
 ## Tests
 
 - `move_auto_select_group_and_shift_select_layers`: selects Group and Layer

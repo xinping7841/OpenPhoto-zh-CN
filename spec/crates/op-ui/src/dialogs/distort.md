@@ -1,5 +1,11 @@
 # dialogs/distort.rs: Plug-in style distort dialogs
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Component responsibilities
 
 Twirl..., Pinch..., Spherize..., Polar Coordinates... under Filter › Distort, Stylize › Wind... Distort › Ripple... and ZigZag..., Pixelate › Crystallize..., Pointillize... and Mezzotint..., Blur › Smart Blur..., and Render › Fibers... and Lens Flare... are "plug-in style" dialogs in Photoshop 2026 and look different from the classic filter dialogs. This module records their layout (measured point by point from Photoshop screenshots) and provides the drawing parts; settings, memory, preview and the OK/Cancel logic live in `distort_ui` of the host `adjust.rs` (see `adjust.md`). Coordinates are Photoshop points from the dialog's top-left corner (including the title bar).

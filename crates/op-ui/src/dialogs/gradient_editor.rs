@@ -55,11 +55,11 @@ pub struct GradientEditor {
 /// Foreground to Background and Foreground to Transparent follow the
 /// colors given.
 pub fn presets(fg: [u8; 3], bg: [u8; 3]) -> Vec<Gradient> {
-    let mut list = vec![Gradient::two("Foreground to Background", fg, bg)];
-    let mut clear = Gradient::two("Foreground to Transparent", fg, fg);
+    let mut list = vec![Gradient::two("前景色到背景色", fg, bg)];
+    let mut clear = Gradient::two("前景色到透明", fg, fg);
     clear.opacities[1].opacity = 0.0;
     list.push(clear);
-    list.push(Gradient::two("Black, White", [0; 3], [255; 3]));
+    list.push(Gradient::two("黑、白", [0; 3], [255; 3]));
     let three = |name: &str, a: [u8; 3], b: [u8; 3], c: [u8; 3]| {
         let mut g = Gradient::two(name, a, c);
         g.colors.insert(
@@ -72,27 +72,22 @@ pub fn presets(fg: [u8; 3], bg: [u8; 3]) -> Vec<Gradient> {
         );
         g
     };
-    list.push(Gradient::two("Blue, Red", [10, 0, 178], [255, 0, 0]));
-    list.push(Gradient::two("Violet, Orange", [41, 10, 89], [255, 124, 0]));
+    list.push(Gradient::two("蓝、红", [10, 0, 178], [255, 0, 0]));
+    list.push(Gradient::two("紫、橙", [41, 10, 89], [255, 124, 0]));
     list.push(three(
-        "Yellow, Violet, Orange, Blue",
+        "黄、紫、橙、蓝",
         [255, 230, 0],
         [128, 0, 128],
         [0, 70, 255],
     ));
+    list.push(three("铜色", [151, 70, 26], [251, 216, 197], [108, 46, 22]));
     list.push(three(
-        "Copper",
-        [151, 70, 26],
-        [251, 216, 197],
-        [108, 46, 22],
-    ));
-    list.push(three(
-        "Chrome",
+        "铬色",
         [41, 137, 204],
         [255, 255, 255],
         [144, 106, 0],
     ));
-    list.push(Gradient::two("Spectrum", [255, 0, 0], [255, 0, 255]));
+    list.push(Gradient::two("色谱", [255, 0, 0], [255, 0, 255]));
     if let Some(s) = list.last_mut() {
         s.colors = [
             [255, 0, 0],
@@ -264,11 +259,11 @@ impl GradientEditor {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Gradient Editor", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "渐变编辑器", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
 
         // Presets
-        appkit::label(ui, at(20.0, 48.0), "Presets");
+        appkit::label(ui, at(20.0, 48.0), "预设");
         let mut picked = None;
         for (k, g) in self.presets.iter().enumerate() {
             let (col, row) = (k % PRESET_COLUMNS, k / PRESET_COLUMNS);
@@ -302,7 +297,7 @@ impl GradientEditor {
             ui,
             at(65.0, 199.5),
             Align2::RIGHT_CENTER,
-            "Name:",
+            "名称:",
             appkit::TEXT,
         );
         let name = appkit::field(
@@ -318,10 +313,10 @@ impl GradientEditor {
         if name.changed() {
             self.gradient.name = self.name.clone();
         }
-        if appkit::button(ui, r(340.0, 186.5, 400.0, 212.5), "New", false, true).clicked() {
+        if appkit::button(ui, r(340.0, 186.5, 400.0, 212.5), "新建", false, true).clicked() {
             let mut g = self.gradient.clone();
             if g.name.trim().is_empty() {
-                g.name = "Custom".into();
+                g.name = "自定".into();
             }
             self.presets.push(g);
         }
@@ -331,21 +326,21 @@ impl GradientEditor {
             ui,
             at(105.0, 235.5),
             Align2::RIGHT_CENTER,
-            "Gradient Type:",
+            "渐变类型:",
             appkit::TEXT,
         );
         appkit::popup(
             ui,
             r(110.0, 225.0, 200.0, 246.0),
             "gradient-type",
-            "Solid",
-            &[crate::native_popup::Entry::item("Solid", true)],
+            "实色",
+            &[crate::native_popup::Entry::item("实色", true)],
         );
         appkit::text(
             ui,
             at(295.0, 235.5),
             Align2::RIGHT_CENTER,
-            "Smoothness:",
+            "平滑度:",
             appkit::TEXT,
         );
         let smooth = appkit::field(
@@ -369,12 +364,12 @@ impl GradientEditor {
         self.stop_fields(ui, frame);
 
         // OK, Cancel, Import..., Export...
-        let ok = appkit::button(ui, r(420.0, 38.5, 500.0, 64.5), "OK", true, true);
-        let cancel = appkit::button(ui, r(420.0, 73.5, 500.0, 99.5), "Cancel", false, true);
-        if appkit::button(ui, r(420.0, 115.0, 500.0, 141.0), "Import...", false, true).clicked() {
+        let ok = appkit::button(ui, r(420.0, 38.5, 500.0, 64.5), "确定", true, true);
+        let cancel = appkit::button(ui, r(420.0, 73.5, 500.0, 99.5), "取消", false, true);
+        if appkit::button(ui, r(420.0, 115.0, 500.0, 141.0), "导入...", false, true).clicked() {
             self.import();
         }
-        if appkit::button(ui, r(420.0, 150.0, 500.0, 176.0), "Export...", false, true).clicked() {
+        if appkit::button(ui, r(420.0, 150.0, 500.0, 176.0), "导出...", false, true).clicked() {
             self.export();
         }
         if cancel.clicked() {
@@ -606,7 +601,7 @@ impl GradientEditor {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let painter = ui.painter().clone();
-        let title = appkit::label(ui, at(35.0, 350.5), "Stops");
+        let title = appkit::label(ui, at(35.0, 350.5), "色标");
         appkit::group(
             &painter,
             r(20.0, 350.5, 496.0, 456.0),
@@ -634,28 +629,28 @@ impl GradientEditor {
             ui,
             at(85.0, 381.5),
             Align2::RIGHT_CENTER,
-            "Opacity:",
+            "不透明度:",
             ink(opacity_row),
         );
         appkit::text(
             ui,
             at(85.0, 423.5),
             Align2::RIGHT_CENTER,
-            "Color:",
+            "颜色:",
             ink(color_row),
         );
         appkit::text(
             ui,
             at(265.0, 381.5),
             Align2::RIGHT_CENTER,
-            "Location:",
+            "位置:",
             ink(opacity_row),
         );
         appkit::text(
             ui,
             at(265.0, 423.5),
             Align2::RIGHT_CENTER,
-            "Location:",
+            "位置:",
             ink(color_row),
         );
         let row_y = if opacity_row { 372.0 } else { 414.0 };
@@ -729,7 +724,7 @@ impl GradientEditor {
             if appkit::button(
                 ui,
                 r(400.0, row_y - 3.5, 480.0, row_y + 22.5),
-                "Delete",
+                "删除",
                 false,
                 can_delete,
             )
@@ -743,7 +738,7 @@ impl GradientEditor {
     /// Import...: a gradient saved by Export... (OpenPhoto's text form).
     fn import(&mut self) {
         let Some(path) = rfd::FileDialog::new()
-            .add_filter("Gradient", &["opgrd"])
+            .add_filter("渐变", &["opgrd"])
             .pick_file()
         else {
             return;
@@ -756,7 +751,7 @@ impl GradientEditor {
     /// Export...: the gradient as text (stops, method, smoothness).
     fn export(&self) {
         let Some(path) = rfd::FileDialog::new()
-            .add_filter("Gradient", &["opgrd"])
+            .add_filter("渐变", &["opgrd"])
             .set_file_name(format!("{}.opgrd", self.gradient.name))
             .save_file()
         else {

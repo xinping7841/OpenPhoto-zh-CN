@@ -39,3 +39,12 @@ Measured from a 2x capture of Photoshop 2026's Info panel. Positions are in poin
 - `ui_tests::info_panel_sections`: the height with one row of samplers and Document Sizes, and with the Color Sampler's hint. Screenshot `info_panel.png` (compared side by side with Photoshop's capture).
 - `panel_options::tests::opacity_reads_the_alpha`: a half-transparent color reads Op 50%.
 - `lengths_in_the_rulers_unit`: 36.6 px reads 36 in pixels; at 72 ppi 36 px are 0.500 in and 1.27 cm; 50 px are 25.0% of a 200 px width and 50.0% of a 100 px height. (The size format is covered by `status_info::tests::sizes_read_like_photoshops`.)
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+The Color Sampler hint and bit-depth suffix use Simplified Chinese; Cmd remains the shortcut name. Unit-menu labels are localized at the display boundary. RGB/CMYK/HSB/Lab component notation, coordinates and numerical values are unchanged. Status text supplied by the status-info module is not rewritten here.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

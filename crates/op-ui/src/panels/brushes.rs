@@ -10,11 +10,11 @@ use crate::state::AppState;
 pub fn brushes(ui: &mut Ui, app: &mut AppState) {
     let tool = app.tool;
     let Some(options) = app.paint_options(tool) else {
-        ui.label("Brushes need a painting tool.");
+        ui.label("请先选择绘画工具。");
         return;
     };
     ui.horizontal(|ui| {
-        ui.label("Size:");
+        ui.label("大小：");
         ui.add(
             egui::Slider::new(
                 &mut options.size,
@@ -26,10 +26,10 @@ pub fn brushes(ui: &mut Ui, app: &mut AppState) {
         );
     });
     ui.separator();
-    ui.label("General Brushes");
+    ui.label("常规画笔");
     for (k, p) in crate::brush_presets::GENERAL.iter().enumerate() {
         if ui
-            .selectable_label(options.preset == Some(k), p.name)
+            .selectable_label(options.preset == Some(k), p.display_name())
             .clicked()
         {
             crate::brush_presets::apply(options, k);
@@ -42,12 +42,12 @@ pub fn brushes(ui: &mut Ui, app: &mut AppState) {
 pub fn brush_settings(ui: &mut Ui, app: &mut AppState) {
     let tool = app.tool;
     let Some(options) = app.paint_options(tool) else {
-        ui.label("Brush Settings need a painting tool.");
+        ui.label("请先选择绘画工具以设置画笔。");
         return;
     };
-    ui.strong("Brush Tip Shape");
+    ui.strong("画笔笔尖形状");
     ui.horizontal(|ui| {
-        ui.label("Size:");
+        ui.label("大小：");
         ui.add(
             egui::Slider::new(
                 &mut options.size,
@@ -59,13 +59,13 @@ pub fn brush_settings(ui: &mut Ui, app: &mut AppState) {
         );
     });
     ui.horizontal(|ui| {
-        ui.label("Angle:");
+        ui.label("角度：");
         ui.add(
             egui::DragValue::new(&mut options.angle)
                 .range(-180.0..=180.0)
                 .suffix("°"),
         );
-        ui.label("Roundness:");
+        ui.label("圆度：");
         let mut pct = options.roundness * 100.0;
         if ui
             .add(
@@ -80,7 +80,7 @@ pub fn brush_settings(ui: &mut Ui, app: &mut AppState) {
         }
     });
     ui.horizontal(|ui| {
-        ui.label("Hardness:");
+        ui.label("硬度：");
         let mut pct = options.hardness * 100.0;
         if ui
             .add(
@@ -94,7 +94,7 @@ pub fn brush_settings(ui: &mut Ui, app: &mut AppState) {
         }
     });
     ui.horizontal(|ui| {
-        ui.label("Spacing:");
+        ui.label("间距：");
         let mut pct = options.spacing * 100.0;
         if ui
             .add(
@@ -109,16 +109,10 @@ pub fn brush_settings(ui: &mut Ui, app: &mut AppState) {
         }
     });
     ui.separator();
-    ui.checkbox(
-        &mut options.pressure.size,
-        "Shape Dynamics: Size Jitter — Pen Pressure",
-    );
+    ui.checkbox(&mut options.pressure.size, "形状动态：大小抖动 — 钢笔压力");
     ui.checkbox(
         &mut options.pressure.opacity,
-        "Transfer: Opacity Jitter — Pen Pressure",
+        "传递：不透明度抖动 — 钢笔压力",
     );
-    ui.checkbox(
-        &mut options.pressure.flow,
-        "Transfer: Flow Jitter — Pen Pressure",
-    );
+    ui.checkbox(&mut options.pressure.flow, "传递：流量抖动 — 钢笔压力");
 }

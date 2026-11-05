@@ -113,11 +113,17 @@ pub const PRESET_GROUPS: [&[CropPreset]; 4] = [
 impl CropPreset {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Ratio => "Ratio",
-            Self::SizeResolution => "W x H x Resolution",
-            Self::OriginalRatio => "Original Ratio",
+            Self::Ratio => "比例",
+            Self::SizeResolution => "宽 × 高 × 分辨率",
+            Self::OriginalRatio => "原始比例",
+            Self::FixedRatio("1 : 1 (Square)", ..) => "1 : 1（正方形）",
+            Self::Size("4 x 5 in 300 ppi", ..) => "4 × 5 英寸 300 像素/英寸",
+            Self::Size("8.5 x 11 in 300 ppi", ..) => "8.5 × 11 英寸 300 像素/英寸",
+            Self::Size("1024 x 768 px 92 ppi", ..) => "1024 × 768 像素 92 像素/英寸",
+            Self::Size("1280 x 800 px 113 ppi", ..) => "1280 × 800 像素 113 像素/英寸",
+            Self::Size("1366 x 768 px 135 ppi", ..) => "1366 × 768 像素 135 像素/英寸",
             Self::FixedRatio(name, ..) | Self::Size(name, ..) => name,
-            Self::FrontImage => "Front Image",
+            Self::FrontImage => "前面的图像",
         }
     }
 
@@ -154,12 +160,12 @@ impl Overlay {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::RuleOfThirds => "Rule of Thirds",
-            Self::Grid => "Grid",
-            Self::Diagonal => "Diagonal",
-            Self::Triangle => "Triangle",
-            Self::GoldenRatio => "Golden Ratio",
-            Self::GoldenSpiral => "Golden Spiral",
+            Self::RuleOfThirds => "三等分",
+            Self::Grid => "网格",
+            Self::Diagonal => "对角线",
+            Self::Triangle => "三角形",
+            Self::GoldenRatio => "黄金比例",
+            Self::GoldenSpiral => "黄金螺线",
         }
     }
 }
@@ -184,9 +190,9 @@ pub enum CropFill {
 impl CropFill {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Background => "Background (default)",
-            Self::GenerativeExpand => "Generative Expand",
-            Self::ContentAware => "Content-Aware Fill",
+            Self::Background => "背景（默认）",
+            Self::GenerativeExpand => "生成式扩展",
+            Self::ContentAware => "内容识别填充",
         }
     }
 }
@@ -422,7 +428,7 @@ impl CropOptions {
     pub fn preset_name(&self) -> String {
         let (w, h) = (self.width.trim(), self.height.trim());
         if w.is_empty() && h.is_empty() {
-            return "Unconstrained".into();
+            return "无约束".into();
         }
         if !self.preset.sized() {
             return format!("{w} : {h}");
@@ -1399,6 +1405,9 @@ mod tests {
     fn presets_ratios_and_sizes() {
         let mut o = CropOptions::default();
         assert_eq!(o.preset, CropPreset::SizeResolution);
+        assert_eq!(o.preset.label(), "宽 × 高 × 分辨率");
+        assert_eq!(o.preset_name(), "无约束");
+        assert_eq!(PRESET_GROUPS[2][0].label(), "1 : 1（正方形）");
         assert_eq!(o.aspect((734, 811)), None);
         o.choose(PRESET_GROUPS[2][4]);
         assert_eq!((o.width.as_str(), o.height.as_str()), ("16", "9"));

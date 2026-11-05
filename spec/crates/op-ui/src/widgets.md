@@ -1,5 +1,9 @@
 # widgets.rs: Common Widgets
 
+## Simplified Chinese interface fork
+
+Shared widgets display caller-provided Simplified Chinese labels and tooltips; the Chinese-only fork overrides English wording parity with Photoshop. These rendering primitives do not translate arbitrary strings, editable text, font family names or document data. Widget IDs, popup keys, shortcuts and input values remain caller-owned and unchanged. This module has no built-in English product UI literals requiring translation. Chinese font fallback belongs to the theme, and callers verify clipping in fixed measured layouts.
+
 ## Responsibilities
 
 Small widgets shared by the panels, giving them a consistent Photoshop-style appearance.

@@ -35,3 +35,12 @@ The view box's color (`AppState::navigator_box`), picked from `VIEW_BOX_COLORS`:
 
 - `readouts`.
 - `ui_tests::info_and_navigator_panel_options` (see `info.md`).
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Color-readout names, named view-box colors, readout section headings, mouse-coordinate and status headings, unit/status choices and the tool-hint checkbox use Simplified Chinese. Color-space acronyms and readout component notation remain unchanged. Color RGB triplets, enum values, unit values and dropdown ID salts retain their original semantics. Tests cover localized readout labels and unchanged view-box color data.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

@@ -19,23 +19,19 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     if ui.selectable_label(false, &p.name).clicked() {
                         picked = Some(k);
                     }
-                    if ui
-                        .small_button("🗑")
-                        .on_hover_text("Delete Tool Preset")
-                        .clicked()
-                    {
+                    if ui.small_button("🗑").on_hover_text("删除工具预设").clicked() {
                         deleted = Some(k);
                     }
                 });
             }
             if app.tool_presets.is_empty() {
-                ui.weak("No tool presets.");
+                ui.weak("没有工具预设。");
             }
         });
     ui.separator();
     ui.horizontal(|ui| {
-        ui.checkbox(&mut app.tool_presets_current_only, "Current Tool Only");
-        if ui.button("New Tool Preset...").clicked() {
+        ui.checkbox(&mut app.tool_presets_current_only, "仅限当前工具");
+        if ui.button("新建工具预设...").clicked() {
             open_new(app);
         }
     });
@@ -52,7 +48,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
 pub fn open_new(app: &mut AppState) {
     let name = crate::tool_presets::suggested_name(app, app.tool);
     app.new_tool_preset = Some(crate::dialogs::new_preset::NewPresetDialog::new(
-        "New Tool Preset",
+        "新建工具预设",
         name,
     ));
 }

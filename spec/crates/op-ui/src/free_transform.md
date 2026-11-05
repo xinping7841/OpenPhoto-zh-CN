@@ -84,3 +84,7 @@ Select › Transform Selection (`start_selection`, available when there is a sel
 - `rotating_and_alt_scaling_pivot_on_the_reference_point`: with the reference point at the top left, a quarter turn and an ⌥ corner drag to twice the size keep that corner; the reference point dragged to the bottom-right corner becomes the custom point and a turn keeps it in place.
 - `ui_tests::warp_splits_grids_and_styles`: Split Crosswise and a click make 2 × 2 patches at about (0.5, 0.25) without moving the surface; Grid 4 x 4; Warp › Arc raises the top's middle, Bend 100 raises it more, dragging the Bend handle down lowers the bend; committing records "Warp".
 - `ui_tests::warp_pulls_the_surface`: after Edit › Transform › Warp, dragging the bottom-right control point out 30 pixels and pulling the middle of the surface up, committing records "Warp", and the stretched corner now has pixels.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries.

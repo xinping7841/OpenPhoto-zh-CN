@@ -1,5 +1,12 @@
 # commands.rs: Commands and shortcuts
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+Command operation names used by algorithms/history remain English identifiers and are localized by the shared display adapter only when shown. Define Pattern validation, missing-file and unavailable-command messages use Chinese prose; the Pattern Name dialog title and flattened-source display label are localized.
+
+
 ## Responsibilities
 
 Unifies menu items and shortcuts into `Command`, executed in one place by `run()`. Menus are only responsible for issuing commands, and shortcuts only for recognizing keys.

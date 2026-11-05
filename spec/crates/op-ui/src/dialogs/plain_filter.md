@@ -1,5 +1,11 @@
 # dialogs/plain_filter.rs: Filter dialogs without a preview
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Responsibilities
 
 The layouts of Photoshop 2026's small filter dialogs that have no preview: Stylize › Tiles..., Pixelate › Color Halftone..., Other › HSB/HSL ("HSB/HSL Parameters"), Blur › Radial Blur..., Distort › Shear..., Distort › Displace... and Stylize › Extrude.... They are drawn by `AdjustDialog::plain_ui` (`adjust.md`): the title bar, the items in order, and OK and Cancel at `buttons_x` with the layout's `buttons` (width, OK's and Cancel's tops, height, label size; the plug-in style ones are 89 × 26 pt at y 41 and 77 with 13 pt labels). Labels, units and radio labels are in the layout's `text_size` (11 pt in all), field values 12 pt. Measured on Photoshop 2026: Tiles' and Color Halftone's labels and fields within half a point, HSB/HSL's within about a point (Source Sans 3 runs a little wider than Photoshop's font there).

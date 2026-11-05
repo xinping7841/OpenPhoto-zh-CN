@@ -146,9 +146,9 @@ impl NewLayerDialog {
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let font = theme::uxp(FONT);
         let title = match self.kind {
-            Kind::Layer | Kind::FromBackground => "New Layer",
-            Kind::Group => "New Group",
-            Kind::GroupFromLayers => "New Group from Layers",
+            Kind::Layer | Kind::FromBackground => "新建图层",
+            Kind::Group => "新建组",
+            Kind::GroupFromLayers => "从图层新建组",
         };
         common::frame(ui, frame, title, theme::dialog_bold(pt(13.0)));
         // The group dialogs have no clipping-mask row: the mode row is
@@ -159,7 +159,7 @@ impl NewLayerDialog {
             painter.text(at(right, cy), Align2::RIGHT_CENTER, text, font.clone(), c);
         };
 
-        label(49.0, 61.0, "Name", TEXT);
+        label(49.0, 61.0, "名称", TEXT);
         common::text_field(
             ui,
             r(59.0, 49.0, 243.0, 71.0),
@@ -170,7 +170,7 @@ impl NewLayerDialog {
             self.first_frame,
         );
 
-        label(282.0, 61.0, "Color", TEXT);
+        label(282.0, 61.0, "颜色", TEXT);
         let color_box = r(290.0, 48.0, 450.0, 72.0);
         let mut chosen = self.color;
         let shown = chosen;
@@ -183,7 +183,11 @@ impl NewLayerDialog {
             },
             |ui| {
                 for c in LayerColor::ALL {
-                    ui.selectable_value(&mut chosen, c, c.label());
+                    ui.selectable_value(
+                        &mut chosen,
+                        c,
+                        crate::dialogs::common::display_label(c.label()),
+                    );
                 }
             },
         );
@@ -194,13 +198,13 @@ impl NewLayerDialog {
             common::ps_checkbox(
                 ui,
                 at(58.0, 83.0),
-                "Use previous layer to create clipping mask",
+                "使用前一图层创建剪贴蒙版",
                 &mut false,
                 false,
             );
         }
 
-        label(49.5, 125.5 + dy, "Mode", TEXT);
+        label(49.5, 125.5 + dy, "模式", TEXT);
         let mut mode = self.mode;
         let shown = mode;
         let is_group = self.is_group();
@@ -212,7 +216,7 @@ impl NewLayerDialog {
                 painter.text(
                     rect.left_center() + vec2(pt(9.0), 0.0),
                     Align2::LEFT_CENTER,
-                    shown.label(),
+                    crate::dialogs::common::display_label(shown.label()),
                     theme::uxp(FONT),
                     TEXT,
                 );
@@ -220,21 +224,25 @@ impl NewLayerDialog {
             |ui| {
                 // Groups can also pass through
                 if is_group {
-                    ui.selectable_value(&mut mode, BlendMode::PassThrough, "Pass Through");
+                    ui.selectable_value(&mut mode, BlendMode::PassThrough, "穿透");
                 }
                 for (gi, group) in BlendMode::GROUPS.iter().enumerate() {
                     if gi > 0 {
                         ui.separator();
                     }
                     for &m in *group {
-                        ui.selectable_value(&mut mode, m, m.label());
+                        ui.selectable_value(
+                            &mut mode,
+                            m,
+                            crate::dialogs::common::display_label(m.label()),
+                        );
                     }
                 }
             },
         );
         self.mode = mode;
 
-        label(281.5, 125.5 + dy, "Opacity", TEXT);
+        label(281.5, 125.5 + dy, "不透明度", TEXT);
         let opacity_box = r(290.0, 113.0 + dy, 340.0, 137.0 + dy);
         let chevron_box = r(339.0, 113.0 + dy, 358.0, 137.0 + dy);
         ui.painter().rect(
@@ -278,14 +286,17 @@ impl NewLayerDialog {
 
         let neutral = neutral_color(self.mode).filter(|_| self.kind == Kind::Layer);
         if self.kind == Kind::Layer {
-            let neutral_label = format!("Fill with {}-neutral color", self.mode.label());
+            let neutral_label = format!(
+                "用 {} 中性色填充",
+                crate::dialogs::common::display_label(self.mode.label())
+            );
             common::ps_checkbox(
                 ui,
                 at(58.0, 148.0),
                 if neutral.is_some() {
                     &neutral_label
                 } else {
-                    "Fill with neutral color"
+                    "用中性色填充"
                 },
                 &mut self.fill_neutral,
                 neutral.is_some(),
@@ -322,19 +333,12 @@ impl NewLayerDialog {
         let ok = common::ps_button(
             ui,
             r(462.0, 48.0, 532.0, 72.0),
-            "OK",
+            "确定",
             true,
             layer.is_some(),
             true,
         );
-        let cancel = common::ps_button(
-            ui,
-            r(462.0, 84.0, 532.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let cancel = common::ps_button(ui, r(462.0, 84.0, 532.0, 108.0), "取消", false, true, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }
@@ -376,7 +380,7 @@ fn color_label(painter: &egui::Painter, rect: Rect, c: LayerColor) {
     painter.text(
         Pos2::new(rect.left() + pt(31.0), rect.center().y),
         Align2::LEFT_CENTER,
-        c.label(),
+        crate::dialogs::common::display_label(c.label()),
         theme::uxp(FONT),
         TEXT,
     );

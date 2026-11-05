@@ -2,6 +2,10 @@
 
 `op-ui` is OpenPhoto's UI layer, built on egui 0.36 (eframe + wgpu). It is only responsible for turning user input into operations on `op-core` documents and drawing the state; pixel data, layers and history all live in `op-core`.
 
+## Simplified Chinese interface
+
+This fork uses Simplified Chinese UI copy by default. Chinese menu, panel, dialog and tool labels take precedence over the upstream English-copy parity requirement below. Original keyboard shortcuts, widget ID salts, command/protocol identifiers, serialized presets, document data and user-supplied names keep their existing semantics. History operation keys remain English internally and are translated only for display. The bundled Noto Sans CJK SC fallback supplies Chinese glyphs offline; icon and Latin font behavior are retained. Unknown dynamic labels remain visible rather than being discarded.
+
 ## Product goal: a 1:1 replica of Photoshop
 
 The UI follows Photoshop 2026's default "Medium Gray" theme, and layout, sizes, colors, copy, menu structure and shortcuts all match Photoshop. When judging whether some piece of UI is "right", the running Photoshop is the only reference, not personal taste or egui's default style.

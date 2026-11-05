@@ -35,14 +35,14 @@ impl Readout {
 
     pub fn label(self) -> &'static str {
         match self {
-            Readout::Actual => "Actual Color",
-            Readout::Rgb => "RGB Color",
-            Readout::Web => "Web Color",
-            Readout::Hsb => "HSB Color",
-            Readout::Grayscale => "Grayscale",
-            Readout::Cmyk => "CMYK Color",
-            Readout::Lab => "Lab Color",
-            Readout::Opacity => "Opacity",
+            Readout::Actual => "实际颜色",
+            Readout::Rgb => "RGB 颜色",
+            Readout::Web => "Web 颜色",
+            Readout::Hsb => "HSB 颜色",
+            Readout::Grayscale => "灰度",
+            Readout::Cmyk => "CMYK 颜色",
+            Readout::Lab => "Lab 颜色",
+            Readout::Opacity => "不透明度",
         }
     }
 
@@ -138,12 +138,12 @@ pub const STATUS: [crate::status_info::StatusInfo; 3] = [
 
 /// The Navigator's view box colors, Light Red (Photoshop's) first.
 pub const VIEW_BOX_COLORS: [(&str, [u8; 3]); 6] = [
-    ("Light Red", [0xff, 0x00, 0x00]),
-    ("Cyan", [0x00, 0xff, 0xff]),
-    ("Green", [0x4a, 0xff, 0x4a]),
-    ("Light Blue", [0x4a, 0x9c, 0xff]),
-    ("Yellow", [0xff, 0xff, 0x4a]),
-    ("Magenta", [0xff, 0x4a, 0xff]),
+    ("浅红色", [0xff, 0x00, 0x00]),
+    ("青色", [0x00, 0xff, 0xff]),
+    ("绿色", [0x4a, 0xff, 0x4a]),
+    ("浅蓝色", [0x4a, 0x9c, 0xff]),
+    ("黄色", [0xff, 0xff, 0x4a]),
+    ("洋红色", [0xff, 0x4a, 0xff]),
 ];
 
 /// The Info Panel Options' controls.
@@ -152,7 +152,11 @@ pub fn info_options_ui(ui: &mut Ui, o: &mut InfoOptions) {
         ("First Color Readout", &mut o.first),
         ("Second Color Readout", &mut o.second),
     ] {
-        ui.strong(title);
+        ui.strong(if title == "First Color Readout" {
+            "第一颜色读数"
+        } else {
+            "第二颜色读数"
+        });
         egui::ComboBox::from_id_salt(title)
             .selected_text(readout.label())
             .show_ui(ui, |ui| {
@@ -161,20 +165,23 @@ pub fn info_options_ui(ui: &mut Ui, o: &mut InfoOptions) {
                 }
             });
     }
-    ui.strong("Mouse Coordinates");
+    ui.strong("鼠标坐标");
     egui::ComboBox::from_id_salt("info-units")
-        .selected_text(o.units.map_or("Rulers' Units", |u| u.label()))
+        .selected_text(
+            o.units
+                .map_or("标尺单位", |u| super::localized_label(u.label())),
+        )
         .show_ui(ui, |ui| {
-            ui.selectable_value(&mut o.units, None, "Rulers' Units");
+            ui.selectable_value(&mut o.units, None, "标尺单位");
             for u in RulerUnit::ALL {
-                ui.selectable_value(&mut o.units, Some(u), u.label());
+                ui.selectable_value(&mut o.units, Some(u), super::localized_label(u.label()));
             }
         });
-    ui.strong("Status Information");
+    ui.strong("状态信息");
     for (k, s) in STATUS.iter().enumerate() {
-        ui.checkbox(&mut o.status[k], s.label());
+        ui.checkbox(&mut o.status[k], super::localized_label(s.label()));
     }
-    ui.checkbox(&mut o.tool_hints, "Show Tool Hints");
+    ui.checkbox(&mut o.tool_hints, "显示工具提示");
 }
 
 #[cfg(test)]
@@ -189,6 +196,13 @@ mod tests {
             vec![("Op:", "50%".to_string())]
         );
         assert_eq!(Readout::Opacity.lines(None), vec![("Op:", String::new())]);
+    }
+
+    #[test]
+    fn localized_option_labels_preserve_readout_values() {
+        assert_eq!(Readout::Actual.label(), "实际颜色");
+        assert_eq!(Readout::Opacity.label(), "不透明度");
+        assert_eq!(VIEW_BOX_COLORS[0], ("浅红色", [0xff, 0x00, 0x00]));
     }
 
     #[test]

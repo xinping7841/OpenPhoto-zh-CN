@@ -57,7 +57,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
     let mut apply_k: Option<Option<usize>> = None;
     let current = state.comp_applied;
     if ui
-        .selectable_label(current.is_none(), "Last Document State")
+        .selectable_label(current.is_none(), "上次文档状态")
         .clicked()
     {
         apply_k = Some(None);
@@ -79,30 +79,30 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
     ui.horizontal(|ui| {
         if ui
             .add_enabled(n > 0, egui::Button::new("◀"))
-            .on_hover_text("Apply Previous Selected Layer Comp")
+            .on_hover_text("应用上一个选定的图层复合")
             .clicked()
         {
             apply_k = Some(Some(current.map_or(n - 1, |c| (c + n - 1) % n)));
         }
         if ui
             .add_enabled(n > 0, egui::Button::new("▶"))
-            .on_hover_text("Apply Next Selected Layer Comp")
+            .on_hover_text("应用下一个选定的图层复合")
             .clicked()
         {
             apply_k = Some(Some(current.map_or(0, |c| (c + 1) % n)));
         }
         if ui
-            .add_enabled(current.is_some(), egui::Button::new("Update"))
+            .add_enabled(current.is_some(), egui::Button::new("更新"))
             .clicked()
             && let Some(c) = current
         {
             state.layer_comps[c].layers = layer_comps::record(&state.doc);
         }
-        if ui.button("New...").clicked() {
+        if ui.button("新建...").clicked() {
             new = true;
         }
         if ui
-            .add_enabled(current.is_some(), egui::Button::new("Delete"))
+            .add_enabled(current.is_some(), egui::Button::new("删除"))
             .clicked()
             && let Some(c) = current
         {
@@ -133,22 +133,22 @@ pub fn new_comp_dialog(ctx: &egui::Context, app: &mut AppState) {
     let mut done = None;
     egui::Modal::new(egui::Id::new("new-layer-comp")).show(ctx, |ui| {
         ui.set_min_width(300.0);
-        ui.heading("New Layer Comp");
+        ui.heading("新建图层复合");
         ui.horizontal(|ui| {
-            ui.label("Name:");
+            ui.label("名称：");
             ui.text_edit_singleline(&mut fields.name);
         });
-        ui.label("Apply To Layers:");
-        ui.checkbox(&mut fields.visibility, "Visibility");
-        ui.checkbox(&mut fields.position, "Position");
-        ui.checkbox(&mut fields.appearance, "Appearance (Layer Style)");
-        ui.label("Comment:");
+        ui.label("应用于图层：");
+        ui.checkbox(&mut fields.visibility, "可见性");
+        ui.checkbox(&mut fields.position, "位置");
+        ui.checkbox(&mut fields.appearance, "外观（图层样式）");
+        ui.label("注释：");
         ui.text_edit_multiline(&mut fields.comment);
         ui.horizontal(|ui| {
-            if ui.button("OK").clicked() {
+            if ui.button("确定").clicked() {
                 done = Some(true);
             }
-            if ui.button("Cancel").clicked() {
+            if ui.button("取消").clicked() {
                 done = Some(false);
             }
         });

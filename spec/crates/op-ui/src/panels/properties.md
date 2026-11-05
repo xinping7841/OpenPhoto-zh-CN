@@ -35,3 +35,12 @@ When no document is open, the panel shows "No Properties" in the center.
 - `properties_sections_toggle_views_and_run_quick_actions` in `ui_tests.rs`: after collapsing Canvas, clicking the rulers and grid buttons turns on rulers and grid; after collapsing Rulers & Grids, clicking lock guides; after collapsing Guides, clicking Crop switches to the Crop tool and clicking Trim opens the Trim dialog. `screenshot_properties_sections` (`#[ignore]`) captures the top, middle and bottom of the panel for side-by-side comparison with Photoshop.
 
 When the active layer retains adjustment settings, the panel shows editable values for that kind instead of document geometry. These generic slider controls are functional but their native styling/history grouping remain unverified.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Document and section headings, units, mode and fill choices, resolution text, view-toggle tooltips, quick-action buttons and the empty state use Simplified Chinese. Enum and command values, numerical data, coordinates, section IDs and quick-action ID salts remain unchanged. Adjustment properties delegated to the adjustment-tool module retain that module's wording.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

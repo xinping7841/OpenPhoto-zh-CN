@@ -80,17 +80,17 @@ pub const TILES: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Field {
-            label: ("Number Of Tiles:", 17.0),
+            label: ("拼贴数:", 17.0),
             rect: [117.0, 44.0, 146.0, 65.0],
             unit: None,
         },
         Item::Field {
-            label: ("Maximum Offset:", 17.0),
+            label: ("最大位移:", 17.0),
             rect: [118.0, 81.0, 147.0, 102.0],
             unit: Some(("%", 156.0)),
         },
         Item::Text {
-            text: "Fill Empty Area With:",
+            text: "空白区域填充:",
             at: (23.0, 116.75),
         },
         Item::Radios {
@@ -108,31 +108,31 @@ pub const COLOR_HALFTONE: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Field {
-            label: ("Max. Radius:", 9.0),
+            label: ("最大半径:", 9.0),
             rect: [87.0, 36.5, 150.5, 56.5],
-            unit: Some(("(Pixels)", 160.5)),
+            unit: Some(("(像素)", 160.5)),
         },
         Item::Text {
-            text: "Screen Angles (Degrees):",
+            text: "网屏角度 (度):",
             at: (13.0, 76.0),
         },
         Item::Field {
-            label: ("Channel 1:", 17.0),
+            label: ("通道 1:", 17.0),
             rect: [83.5, 95.5, 146.5, 115.5],
             unit: None,
         },
         Item::Field {
-            label: ("Channel 2:", 17.0),
+            label: ("通道 2:", 17.0),
             rect: [83.5, 132.5, 146.5, 152.5],
             unit: None,
         },
         Item::Field {
-            label: ("Channel 3:", 17.0),
+            label: ("通道 3:", 17.0),
             rect: [83.5, 169.5, 146.5, 189.5],
             unit: None,
         },
         Item::Field {
-            label: ("Channel 4:", 17.0),
+            label: ("通道 4:", 17.0),
             rect: [83.5, 206.5, 146.5, 226.5],
             unit: None,
         },
@@ -148,7 +148,7 @@ pub const HSB_HSL: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Text {
-            text: "Input mode",
+            text: "输入模式",
             at: (20.0, 60.5),
         },
         Item::Radios {
@@ -156,7 +156,7 @@ pub const HSB_HSL: Layout = Layout {
             gap: 15.0,
         },
         Item::Text {
-            text: "Row order",
+            text: "行顺序",
             at: (101.0, 60.5),
         },
         Item::Radios {
@@ -175,7 +175,7 @@ pub const RADIAL_BLUR: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Field {
-            label: ("Amount", 19.5),
+            label: ("数量", 19.5),
             rect: [83.0, 48.5, 117.0, 67.0],
             unit: None,
         },
@@ -186,7 +186,7 @@ pub const RADIAL_BLUR: Layout = Layout {
             pins: (17.75, 116.75),
         },
         Item::Group {
-            title: "Blur Method:",
+            title: "模糊方法:",
             rect: [12.0, 113.0, 117.5, 175.5],
             title_x: 31.0,
         },
@@ -195,7 +195,7 @@ pub const RADIAL_BLUR: Layout = Layout {
             gap: 13.5,
         },
         Item::Group {
-            title: "Quality:",
+            title: "品质:",
             rect: [12.0, 184.0, 117.5, 266.5],
             title_x: 31.0,
         },
@@ -204,7 +204,7 @@ pub const RADIAL_BLUR: Layout = Layout {
             gap: 13.5,
         },
         Item::Text {
-            text: "Blur Center",
+            text: "模糊中心",
             at: (133.0, 125.0),
         },
         Item::CenterBox {
@@ -225,7 +225,7 @@ pub const SHEAR: Layout = Layout {
             rect: [8.0, 34.0, 138.0, 164.0],
         },
         Item::Group {
-            title: "Undefined Areas:",
+            title: "未定义区域:",
             rect: [8.0, 181.0, 143.5, 222.5],
             title_x: 27.0,
         },
@@ -248,17 +248,17 @@ pub const DISPLACE: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Field {
-            label: ("Horizontal Scale", 9.0),
+            label: ("水平比例", 9.0),
             rect: [143.0, 37.5, 205.0, 56.5],
             unit: None,
         },
         Item::Field {
-            label: ("Vertical Scale", 9.0),
+            label: ("垂直比例", 9.0),
             rect: [143.0, 66.5, 205.0, 85.5],
             unit: None,
         },
         Item::Group {
-            title: "Displacement Map:",
+            title: "置换图:",
             rect: [9.0, 101.0, 205.0, 149.0],
             title_x: 23.0,
         },
@@ -267,7 +267,7 @@ pub const DISPLACE: Layout = Layout {
             gap: 13.5,
         },
         Item::Group {
-            title: "Undefined Areas:",
+            title: "未定义区域:",
             rect: [9.0, 158.0, 205.0, 206.0],
             title_x: 23.0,
         },
@@ -287,7 +287,7 @@ pub const EXTRUDE: Layout = Layout {
     text_size: 11.0,
     items: &[
         Item::Text {
-            text: "Type:",
+            text: "类型:",
             at: (9.0, 46.0),
         },
         Item::Radios {
@@ -295,12 +295,12 @@ pub const EXTRUDE: Layout = Layout {
             gap: 13.0,
         },
         Item::Field {
-            label: ("Size:", 9.0),
+            label: ("大小:", 9.0),
             rect: [43.0, 65.5, 77.0, 84.5],
-            unit: Some(("Pixels", 83.0)),
+            unit: Some(("像素", 83.0)),
         },
         Item::Field {
-            label: ("Depth:", 9.0),
+            label: ("深度:", 9.0),
             rect: [53.0, 96.5, 87.0, 115.5],
             unit: None,
         },
@@ -309,13 +309,13 @@ pub const EXTRUDE: Layout = Layout {
             gap: 12.5,
         },
         Item::Check {
-            label: "Solid Front Faces",
+            label: "实心正面",
             min: (11.0, 129.5),
             size: 11.0,
             gap: 7.0,
         },
         Item::Check {
-            label: "Mask Incomplete Blocks",
+            label: "蒙版不完整块",
             min: (11.0, 145.5),
             size: 11.0,
             gap: 7.0,

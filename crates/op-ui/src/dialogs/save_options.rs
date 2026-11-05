@@ -19,24 +19,13 @@ pub enum Format {
 
 /// JPEG's Matte choices with their colors (None flattens onto white;
 /// Foreground and Background are filled in by `new`).
-const MATTES: [&str; 6] = [
-    "None",
-    "Foreground",
-    "Background",
-    "White",
-    "Black",
-    "50% Gray",
-];
+const MATTES: [&str; 6] = ["无", "前景色", "背景色", "白色", "黑色", "50% 灰色"];
 
 /// Quality's named steps and the quality each picks.
-const QUALITY_NAMES: [(&str, u8); 4] = [("Low", 3), ("Medium", 5), ("High", 8), ("Maximum", 10)];
+const QUALITY_NAMES: [(&str, u8); 4] = [("低", 3), ("中", 5), ("高", 8), ("最大值", 10)];
 
 /// JPEG's Format Options.
-const FORMATS: [&str; 3] = [
-    "Baseline (\"Standard\")",
-    "Baseline Optimized",
-    "Progressive",
-];
+const FORMATS: [&str; 3] = ["基线 (\"标准\")", "基线优化", "连续"];
 
 pub enum Outcome {
     Open,
@@ -61,10 +50,10 @@ pub struct SaveOptionsDialog {
 /// The name of the step a quality falls in.
 fn quality_name(q: u8) -> &'static str {
     match q {
-        0..=4 => "Low",
-        5..=7 => "Medium",
-        8..=9 => "High",
-        _ => "Maximum",
+        0..=4 => "低",
+        5..=7 => "中",
+        8..=9 => "高",
+        _ => "最大值",
     }
 }
 
@@ -130,8 +119,8 @@ impl SaveOptionsDialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let title = match self.format {
-            Format::Jpeg => "JPEG Options",
-            Format::Png => "PNG Format Options",
+            Format::Jpeg => "JPEG 选项",
+            Format::Png => "PNG 格式选项",
         };
         common::frame(ui, frame, title, theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
@@ -146,11 +135,11 @@ impl SaveOptionsDialog {
 
         let valid = match self.format {
             Format::Png => {
-                group(ui, "File Size", r(18.0, 45.0, 330.0, 138.0));
+                group(ui, "文件大小", r(18.0, 45.0, 330.0, 138.0));
                 for (k, (label, size)) in [
-                    ("Large file size (fastest saving)", PngSize::Large),
-                    ("Medium file size", PngSize::Medium),
-                    ("Smallest file size (slowest saving)", PngSize::Smallest),
+                    ("大文件 (保存最快)", PngSize::Large),
+                    ("中等文件", PngSize::Medium),
+                    ("最小文件 (保存最慢)", PngSize::Smallest),
                 ]
                 .into_iter()
                 .enumerate()
@@ -166,8 +155,8 @@ impl SaveOptionsDialog {
         };
 
         let x0 = frame.width() / pt(1.0) - 88.0;
-        let ok = appkit::button(ui, r(x0, 38.5, x0 + 70.0, 64.5), "OK", true, valid);
-        let cancel = appkit::button(ui, r(x0, 73.5, x0 + 70.0, 99.5), "Cancel", false, true);
+        let ok = appkit::button(ui, r(x0, 38.5, x0 + 70.0, 64.5), "确定", true, valid);
+        let cancel = appkit::button(ui, r(x0, 73.5, x0 + 70.0, 99.5), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }
@@ -188,7 +177,7 @@ impl SaveOptionsDialog {
             ui,
             at(70.0, 56.5),
             Align2::RIGHT_CENTER,
-            "Matte:",
+            "杂边:",
             appkit::TEXT,
         );
         if let Some(k) = appkit::popup(
@@ -203,12 +192,12 @@ impl SaveOptionsDialog {
         }
 
         // Image Options: Quality
-        group(ui, "Image Options", r(18.0, 90.0, 340.0, 176.0));
+        group(ui, "图像选项", r(18.0, 90.0, 340.0, 176.0));
         appkit::text(
             ui,
             at(84.0, 116.5),
             Align2::RIGHT_CENTER,
-            "Quality:",
+            "品质:",
             appkit::TEXT,
         );
         let field = appkit::field(
@@ -266,15 +255,15 @@ impl SaveOptionsDialog {
         }
         let small = theme::dialog(pt(10.0));
         for (x, align, label) in [
-            (x0, Align2::LEFT_CENTER, "small file"),
-            (x1, Align2::RIGHT_CENTER, "large file"),
+            (x0, Align2::LEFT_CENTER, "小文件"),
+            (x1, Align2::RIGHT_CENTER, "大文件"),
         ] {
             ui.painter()
                 .text(at(x, 162.0), align, label, small.clone(), appkit::TEXT);
         }
 
         // Format Options
-        group(ui, "Format Options", r(18.0, 196.0, 340.0, 306.0));
+        group(ui, "格式选项", r(18.0, 196.0, 340.0, 306.0));
         for (k, label) in FORMATS.into_iter().enumerate() {
             let y = 219.0 + k as f32 * 24.0;
             if appkit::radio(ui, at(36.0, y), label, self.jpeg_format == k) {
@@ -285,7 +274,7 @@ impl SaveOptionsDialog {
             ui,
             at(84.0, 291.5),
             Align2::RIGHT_CENTER,
-            "Scans:",
+            "扫描次数:",
             appkit::TEXT,
         );
         let scans: Vec<String> = (3..=5).map(|n| n.to_string()).collect();
@@ -325,9 +314,9 @@ mod tests {
 
     #[test]
     fn quality_names_and_mattes() {
-        assert_eq!(quality_name(3), "Low");
-        assert_eq!(quality_name(8), "High");
-        assert_eq!(quality_name(12), "Maximum");
+        assert_eq!(quality_name(3), "低");
+        assert_eq!(quality_name(8), "高");
+        assert_eq!(quality_name(12), "最大值");
         let colors = ([10, 20, 30], [200, 210, 220]);
         let options = ExportOptions {
             matte: colors.1,

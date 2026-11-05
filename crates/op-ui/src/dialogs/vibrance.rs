@@ -50,8 +50,8 @@ impl Vibrance {
     ) -> Option<uxp::Button> {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         for (k, (name, text, y)) in [
-            ("Vibrance", &mut self.vibrance, 48.0),
-            ("Saturation", &mut self.saturation, 103.0),
+            ("自然饱和度", &mut self.vibrance, 48.0),
+            ("饱和度", &mut self.saturation, 103.0),
         ]
         .into_iter()
         .enumerate()
@@ -109,7 +109,7 @@ impl Posterize {
         preview: &mut bool,
     ) -> Option<uxp::Button> {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
-        uxp::label(ui, at(20.0, 60.5), "Levels");
+        uxp::label(ui, at(20.0, 60.5), "色阶");
         uxp::number_box(
             ui,
             Rect::from_min_max(at(220.0, 48.0), at(260.0, 72.0)),

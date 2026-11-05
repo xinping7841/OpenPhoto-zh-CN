@@ -353,7 +353,10 @@ pub fn blend_modes(chosen: op_core::BlendMode) -> (Vec<Entry>, Vec<Option<op_cor
             modes.push(None);
         }
         for &m in *group {
-            entries.push(Entry::item(m.label(), m == chosen));
+            entries.push(Entry::item(
+                crate::dialogs::common::display_label(m.label()),
+                m == chosen,
+            ));
             modes.push(Some(m));
         }
     }

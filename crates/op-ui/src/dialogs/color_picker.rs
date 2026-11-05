@@ -365,7 +365,7 @@ impl ColorPicker {
         ui.painter().text(
             frame.min + vec2(pt(32.0), pt(336.5)),
             Align2::LEFT_CENTER,
-            "Only Web Colors",
+            "仅 Web 颜色",
             font.clone(),
             color::TEXT,
         );
@@ -373,16 +373,10 @@ impl ColorPicker {
         // Buttons
         let button = |y: f32| Rect::from_min_size(frame.min + vec2(BUTTON_X, pt(y)), BUTTON_SIZE);
         let button_font = theme::dialog(pt(13.0));
-        let ok = common::pill_button(ui, button(39.0), "OK", button_font.clone(), true);
-        let cancel = common::pill_button(ui, button(73.0), "Cancel", button_font.clone(), true);
-        let add = common::pill_button(
-            ui,
-            button(116.0),
-            "Add to Swatches",
-            button_font.clone(),
-            true,
-        );
-        common::pill_button(ui, button(158.0), "Color Libraries", button_font, false);
+        let ok = common::pill_button(ui, button(39.0), "确定", button_font.clone(), true);
+        let cancel = common::pill_button(ui, button(73.0), "取消", button_font.clone(), true);
+        let add = common::pill_button(ui, button(116.0), "添加到色板", button_font.clone(), true);
+        common::pill_button(ui, button(158.0), "颜色库", button_font, false);
 
         if add.clicked() {
             self.added_swatches.push(self.color());
@@ -539,14 +533,14 @@ impl ColorPicker {
         painter.text(
             rect.center_top() - vec2(0.0, pt(9.0)),
             Align2::CENTER_CENTER,
-            "new",
+            "新的",
             font.clone(),
             color::TEXT,
         );
         painter.text(
             rect.center_bottom() + vec2(0.0, pt(10.0)),
             Align2::CENTER_CENTER,
-            "current",
+            "当前",
             font.clone(),
             color::TEXT,
         );
@@ -583,7 +577,7 @@ impl ColorPicker {
             let hit = Rect::from_min_max(pos2(safe.left(), cube.y - pt(8.0)), safe.max);
             let r = ui
                 .interact(hit, ui.id().with("web-safe"), Sense::click())
-                .on_hover_text("Click to select web safe color");
+                .on_hover_text("单击以选择 Web 安全色");
             if r.clicked() {
                 let mut m = self.model;
                 m.set_color(web_safe(self.color()));

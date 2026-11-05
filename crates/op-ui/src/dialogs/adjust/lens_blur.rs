@@ -53,7 +53,7 @@ impl AdjustDialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let rt = |x: f32, y: f32| Pos2::new(frame.right() - pt(x), frame.top() + pt(y));
         let rr = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(rt(x0, y0), rt(x1, y1));
-        let title = format!("Lens Blur ({})", super::zoom_label(self.pane_zoom));
+        let title = format!("镜头模糊 ({})", super::zoom_label(self.pane_zoom));
         common::frame(ui, frame, &title, theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
 
@@ -75,8 +75,8 @@ impl AdjustDialog {
 
         // OK and Cancel
         let valid = self.effect().is_some();
-        let ok = appkit::button(ui, rr(187.5, 42.0, 63.5, 68.0), "OK", true, valid);
-        let cancel = appkit::button(ui, rr(187.5, 78.0, 63.5, 104.0), "Cancel", false, true);
+        let ok = appkit::button(ui, rr(187.5, 42.0, 63.5, 68.0), "确定", true, valid);
+        let cancel = appkit::button(ui, rr(187.5, 78.0, 63.5, 104.0), "取消", false, true);
 
         let group = |ui: &Ui, title: &str, x_title: f32, rect: Rect| {
             let galley = theme::tracked_galley(ui.painter(), title, appkit::font(), appkit::TEXT);
@@ -95,24 +95,21 @@ impl AdjustDialog {
         // Preview: the checkbox on the group's edge, Faster or More Accurate
         let g = rr(238.0, 123.5, 13.5, 160.5);
         appkit::group(&painter, g, (rt(222.0, 0.0).x, rt(146.0, 0.0).x));
-        appkit::checkbox(ui, rt(223.5, 116.0), "Preview", &mut self.preview);
+        appkit::checkbox(ui, rt(223.5, 116.0), "预览", &mut self.preview);
         let mode = self.value(MODE).unwrap_or(0.0) as usize;
-        for (k, (x, label)) in [(218.0, "Faster"), (150.0, "More Accurate")]
-            .into_iter()
-            .enumerate()
-        {
+        for (k, (x, label)) in [(218.0, "较快"), (150.0, "较准确")].into_iter().enumerate() {
             if radio(ui, rt(x, 145.0), label, mode == k) {
                 self.values[MODE] = k.to_string();
             }
         }
 
         // Depth Map
-        group(ui, "Depth Map", 218.0, rr(238.0, 172.5, 13.5, 316.0));
+        group(ui, "深度图", 218.0, rr(238.0, 172.5, 13.5, 316.0));
         let source = self.value(SOURCE).unwrap_or(0.0) as usize;
         self.popup_row(
             ui,
             SOURCE,
-            "Source:",
+            "源:",
             rt(154.5, 193.0),
             rr(143.5, 184.5, 26.5, 201.5),
         );
@@ -144,20 +141,14 @@ impl AdjustDialog {
             egui::StrokeKind::Inside,
         );
         focal_icon(&painter, button.center(), ink);
-        appkit::text(
-            ui,
-            rt(198.0, 227.0),
-            Align2::LEFT_CENTER,
-            "Set Focal Point",
-            ink,
-        );
-        self.slider_row(ui, FOCAL, "Blur Focal Distance", 257.0, depth);
+        appkit::text(ui, rt(198.0, 227.0), Align2::LEFT_CENTER, "设置焦点", ink);
+        self.slider_row(ui, FOCAL, "模糊焦距", 257.0, depth);
         let mut invert = self.value(INVERT) == Some(1.0);
         appkit::checkbox_with(
             ui,
             rt(228.5, 292.5),
             (13.0, 10.5),
-            "Invert",
+            "反相",
             &mut invert,
             depth,
         );
@@ -166,34 +157,29 @@ impl AdjustDialog {
         }
 
         // Iris
-        group(ui, "Iris", 218.0, rr(238.0, 328.5, 13.5, 485.0));
+        group(ui, "光圈", 218.0, rr(238.0, 328.5, 13.5, 485.0));
         self.popup_row(
             ui,
             SHAPE,
-            "Shape:",
+            "形状:",
             rt(154.5, 349.0),
             rr(143.5, 341.5, 26.5, 357.5),
         );
-        self.slider_row(ui, RADIUS, "Radius", 378.0, true);
-        self.slider_row(ui, CURVATURE, "Blade Curvature", 416.0, true);
-        self.slider_row(ui, ROTATION, "Rotation", 454.0, true);
+        self.slider_row(ui, RADIUS, "半径", 378.0, true);
+        self.slider_row(ui, CURVATURE, "叶片弯度", 416.0, true);
+        self.slider_row(ui, ROTATION, "旋转", 454.0, true);
 
         // Specular Highlights
-        group(
-            ui,
-            "Specular Highlights",
-            218.0,
-            rr(238.0, 497.5, 13.5, 587.0),
-        );
-        self.slider_row(ui, BRIGHTNESS, "Brightness", 518.0, true);
-        self.slider_row(ui, THRESHOLD, "Threshold", 556.0, true);
+        group(ui, "镜面高光", 218.0, rr(238.0, 497.5, 13.5, 587.0));
+        self.slider_row(ui, BRIGHTNESS, "亮度", 518.0, true);
+        self.slider_row(ui, THRESHOLD, "阈值", 556.0, true);
 
         // Noise
-        group(ui, "Noise", 218.0, rr(238.0, 599.5, 13.5, 729.0));
-        self.slider_row(ui, AMOUNT, "Amount", 620.0, true);
-        group(ui, "Distribution", 212.0, rr(232.0, 657.0, 19.5, 704.5));
+        group(ui, "杂色", 218.0, rr(238.0, 599.5, 13.5, 729.0));
+        self.slider_row(ui, AMOUNT, "数量", 620.0, true);
+        group(ui, "分布", 212.0, rr(232.0, 657.0, 19.5, 704.5));
         let distribution = self.value(DISTRIBUTION).unwrap_or(0.0) as usize;
-        for (k, (y, label)) in [(676.0, "Uniform"), (692.0, "Gaussian")]
+        for (k, (y, label)) in [(676.0, "平均分布"), (692.0, "高斯分布")]
             .into_iter()
             .enumerate()
         {
@@ -202,7 +188,7 @@ impl AdjustDialog {
             }
         }
         let mut mono = self.value(MONOCHROMATIC) == Some(1.0);
-        appkit::checkbox(ui, rt(230.5, 710.5), "Monochromatic", &mut mono);
+        appkit::checkbox(ui, rt(230.5, 710.5), "单色", &mut mono);
         self.values[MONOCHROMATIC] = (mono as u8).to_string();
 
         if cancel.clicked() {

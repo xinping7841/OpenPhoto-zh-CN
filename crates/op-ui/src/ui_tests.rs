@@ -553,9 +553,9 @@ fn move_shift_constraints_gear_hover_and_canvas_alignment() {
     h.run_steps(3);
     assert_eq!(active(&h).move_hover_target, Some(id));
     let history_len = active(&h).history.states().len();
-    h.get_by_label("Set additional options").click();
+    h.get_by_label("设置其他选项").click();
     h.run_steps(3);
-    h.get_by_label("Show layer bounds on hover").click();
+    h.get_by_label("悬停时显示图层边界").click();
     h.run_steps(3);
     assert!(!h.state().state.move_options.show_hover_bounds);
     h.key_press(egui::Key::Escape);
@@ -563,14 +563,14 @@ fn move_shift_constraints_gear_hover_and_canvas_alignment() {
     h.run_steps(3);
     assert_eq!(active(&h).move_hover_target, None);
     assert_eq!(active(&h).history.states().len(), history_len);
-    h.get_by_label("More options").click();
+    h.get_by_label("更多选项").click();
     h.run_steps(3);
-    h.get_by_label("Canvas").click();
+    h.get_by_label("画布").click();
     h.run_steps(3);
     assert!(h.state().state.move_options.align_canvas);
-    h.get_by_label("More options").click();
+    h.get_by_label("更多选项").click();
     h.run_steps(3);
-    h.get_by_label("Align Right Edges").click();
+    h.get_by_label("对齐右边缘").click();
     h.run_steps(3);
     assert_eq!(
         active(&h)
@@ -656,7 +656,7 @@ fn move_auto_select_group_and_shift_select_layers() {
     h.run_steps(3);
     // Pick the actual dropdown entry rather than changing its state directly.
     click(&mut h, at_pt(220.0, 45.0));
-    h.get_by_label("Group").click();
+    h.get_by_label("组").click();
     h.run_steps(3);
     assert!(h.state().state.move_options.auto_select_group);
     let a = doc_point(&h, 120.0, 120.0);
@@ -672,7 +672,7 @@ fn move_auto_select_group_and_shift_select_layers() {
     assert_eq!(composite_pixel(&mut h, 320, 120), [0, 0, 255, 255]);
 
     click(&mut h, at_pt(220.0, 45.0));
-    h.get_by_label("Layer").click();
+    h.get_by_label("图层").click();
     h.run_steps(3);
     assert!(!h.state().state.move_options.auto_select_group);
     let red_point = doc_point(&h, 120.0, 120.0);
@@ -1536,7 +1536,7 @@ fn jpeg_and_png_saves_ask_for_their_options() {
     // The quality's name: Low gives quality 3
     let corner = h.ctx.content_rect().center() - egui::vec2(pt(440.0), pt(318.0)) / 2.0;
     click(&mut h, corner + egui::vec2(pt(190.0), pt(116.5)));
-    h.get_by_label("Low").click();
+    h.get_by_label("低").click();
     h.run_steps(2);
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
@@ -1925,7 +1925,7 @@ fn warp_splits_grids_and_styles() {
     shot(&mut h, "warp_grid");
     // Grid: Custom... asks for rows and columns; Enter there doesn't commit
     click(&mut h, at_pt(349.0, 45.25));
-    h.get_by_label("Custom...").click();
+    h.get_by_label("自定...").click();
     h.run_steps(2);
     let corner = h.ctx.content_rect().center() - crate::dialogs::grid_size::SIZE / 2.0;
     let at = |x: f32, y: f32| corner + egui::vec2(crate::theme::pt(x), crate::theme::pt(y));
@@ -1942,7 +1942,7 @@ fn warp_splits_grids_and_styles() {
     assert_eq!((mesh(&h).cols, mesh(&h).rows), (6, 2));
     // Warp: Arc at 50% Bend bows the top; typing Bend 100 bows it more
     click(&mut h, at_pt(473.5, 45.25));
-    h.get_by_label("Arc").click();
+    h.get_by_label("弧形").click();
     h.run_steps(2);
     let style = mesh(&h).style.unwrap();
     assert_eq!(style.style, op_core::transform::WarpStyle::Arc);
@@ -2077,8 +2077,8 @@ fn crop_tool_crops_to_the_box() {
         "{r:?}"
     );
     assert_eq!(r.min, egui::Pos2::ZERO);
-    // Photoshop shows its temporary "Crop Preview" layer meanwhile
-    assert!(crate::doc_tabs::title(active(&h)).contains("(Crop Preview, RGB/8"));
+    // Photoshop shows its temporary "裁剪预览" layer meanwhile
+    assert!(crate::doc_tabs::title(active(&h)).contains("(裁剪预览，RGB/8"));
     shot(&mut h, "crop_preview");
     // ...and the view follows: the box is centered
     let state = active(&h);
@@ -2101,7 +2101,7 @@ fn crop_tool_crops_to_the_box() {
     let d = &active(&h).doc;
     assert!((d.width as i32 - 500).abs() <= 2 && (d.height as i32 - 500).abs() <= 2);
     assert_eq!(last_history(&h), "Crop");
-    assert!(!crate::doc_tabs::title(active(&h)).contains("Crop Preview"));
+    assert!(!crate::doc_tabs::title(active(&h)).contains("裁剪预览"));
     // The box covers the new canvas again
     let r = active(&h).crop.unwrap().rect;
     assert_eq!(r.size(), egui::vec2(d.width as f32, d.height as f32));
@@ -2138,7 +2138,7 @@ fn crop_presets_front_image_and_shield_color() {
         h.run_steps(3);
     };
     // Front Image: the front document's size and resolution
-    menu(&mut h, "Front Image");
+    menu(&mut h, "前面的图像");
     let o = options(&h);
     assert_eq!(o.preset, CropPreset::FrontImage);
     assert_eq!(
@@ -2147,7 +2147,7 @@ fn crop_presets_front_image_and_shield_color() {
     );
     // 16 : 9, then New Crop Preset... suggests "16 : 9"; OK saves it
     menu(&mut h, "16 : 9");
-    menu(&mut h, "New Crop Preset...");
+    menu(&mut h, "新建裁剪预设...");
     let name = h
         .state()
         .state
@@ -2165,7 +2165,7 @@ fn crop_presets_front_image_and_shield_color() {
     assert_eq!(h.state().state.crop_presets.list()[0].name, "Wide");
     assert_eq!(options(&h).user, Some(0));
     // Another preset, then the saved one from the menu brings 16 : 9 back
-    menu(&mut h, "1 : 1 (Square)");
+    menu(&mut h, "1 : 1（正方形）");
     assert_eq!(options(&h).user, None);
     menu(&mut h, "Wide");
     let o = options(&h);
@@ -2176,7 +2176,7 @@ fn crop_presets_front_image_and_shield_color() {
     let r = active(&h).crop.unwrap().rect;
     assert!((r.width() / r.height() - 16.0 / 9.0).abs() < 0.01);
     // Delete Crop Preset...: Delete, then Yes
-    menu(&mut h, "Delete Crop Preset...");
+    menu(&mut h, "删除裁剪预设...");
     assert!(h.state().state.delete_crop_preset.is_some());
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
@@ -2660,7 +2660,7 @@ fn quick_mask_mode() {
     h.run_steps(2);
     assert!(active(&h).doc.quick_mask.is_some());
     assert_eq!(last_history(&h), "Quick Mask");
-    assert!(crate::doc_tabs::title(active(&h)).contains("(Quick Mask/8"));
+    assert!(crate::doc_tabs::title(active(&h)).contains("(快速蒙版/8"));
     // Outside the old selection is tinted red
     let tinted = active_canvas_pixel(&mut h, 50, 50);
     assert!(tinted[0] > tinted[1] + 50, "{tinted:?}");
@@ -3124,7 +3124,7 @@ fn cmd_slash_toggles_lock_all() {
     h.run_steps(2);
     assert_eq!(
         h.state().state.alert.as_deref(),
-        Some("The command \u{201c}Set\u{201d} is not currently available.")
+        Some("命令“设置”当前不可用。")
     );
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
@@ -3199,7 +3199,7 @@ fn image_size_auto_resolution() {
     let at = |x: f32, y: f32| at_pt(342.5 + x, 221.0 + y);
     // Fit To › Auto Resolution... opens the sheet 15 pt in from the corner
     click(&mut h, at(541.5, 107.5));
-    h.get_by_label("Auto Resolution...").click();
+    h.get_by_label("自动分辨率...").click();
     h.run_steps(3);
     let dialog = |h: &Harness<'_, OpenPhotoApp>| {
         h.state()
@@ -3229,7 +3229,7 @@ fn image_size_auto_resolution() {
     assert_eq!(m.result(), Some((2712, 2996, 266.0)));
     // Escape closes the sheet but not Image Size; the sheet remembers Best
     click(&mut h, at(541.5, 107.5));
-    h.get_by_label("Auto Resolution...").click();
+    h.get_by_label("自动分辨率...").click();
     h.run_steps(3);
     let quality = h
         .state()
@@ -3282,7 +3282,7 @@ fn image_size_presets() {
     };
     // Back to Original Size, then the saved preset from the menu
     click(&mut h, at(541.5, 107.5));
-    h.get_by_label("Original Size").click();
+    h.get_by_label("原始大小").click();
     h.run_steps(2);
     assert_eq!(model(&h).result(), Some((734, 811, 72.0)));
     click(&mut h, at(541.5, 107.5));
@@ -3292,7 +3292,7 @@ fn image_size_presets() {
     assert_eq!(model(&h).fit, FitTo::User(0));
     // Delete Preset...: the sheet, Delete, then Yes in the alert
     click(&mut h, at(541.5, 107.5));
-    h.get_by_label("Delete Preset...").click();
+    h.get_by_label("删除预设...").click();
     h.run_steps(3);
     assert!(
         h.state()
@@ -3538,7 +3538,7 @@ fn duplicate_layer_and_layer_from_background_dialogs() {
     run_command(&mut h, crate::commands::Command::DuplicateLayer);
     let (x0, y0) = center(447.0, 208.0);
     click(&mut h, at_pt(x0 + 200.0, y0 + 121.5));
-    h.get_by_label("New").click();
+    h.get_by_label("新建").click();
     h.run_steps(2);
     click(&mut h, at_pt(x0 + 408.0, y0 + 51.0));
     h.run_steps(2);
@@ -3731,7 +3731,7 @@ fn align_buttons_line_up_selected_layers() {
     h.run_steps(2);
     assert!(Command::Align(op_core::align::Align::Left).enabled(&h.state().state));
     // The options bar's "Align left edges" (the first align button)
-    click(&mut h, at_pt(423.0, 45.0));
+    click(&mut h, at_pt(368.75, 45.0));
     assert_eq!(last_history(&h), "Align Left Edges");
     let lefts: Vec<i64> = active(&h).doc.layers[1..]
         .iter()
@@ -4158,14 +4158,8 @@ fn deleting_a_group_asks_what_to_delete() {
     // the layers stay
     run_command(&mut h, Command::DeleteLayer);
     let prompt = h.state().state.delete_group_prompt.clone().expect("asked");
-    assert_eq!(
-        prompt.message,
-        "Delete the group \u{201c}Group 1\u{201d} and its contents or delete only the group?"
-    );
-    assert_eq!(
-        prompt.choices,
-        ["Group and Contents", "Group Only", "Cancel"]
-    );
+    assert_eq!(prompt.message, "要删除组“Group 1”及其内容，还是仅删除组？");
+    assert_eq!(prompt.choices, ["组及其内容", "仅组", "取消"]);
     // Three lines of message: buttons from 164 pt in a 276 pt alert
     let (x0, y0) = (675.0 - 130.0, 400.0 - 138.0);
     click(&mut h, at_pt(x0 + 130.0, y0 + 164.0 + 34.0 + 14.0));
@@ -4818,7 +4812,7 @@ fn screenshot_tool_flyout() {
 fn flyout_frame(image: &image::RgbaImage) -> (Vec<u32>, Vec<u32>) {
     let frame = |x: u32, y: u32| image.get_pixel(x, y).0[..3] == [0x3e, 0x3e, 0x3e];
     let xs = (60..400).filter(|&x| frame(x, 230)).collect();
-    let ys = (150..300).filter(|&y| frame(300, y)).collect();
+    let ys = (150..300).filter(|&y| frame(200, y)).collect();
     (xs, ys)
 }
 
@@ -4838,7 +4832,12 @@ fn tool_flyout_matches_photoshop_and_switches_tools() {
         "{left}, {top}"
     );
     assert!(
-        (right - left - 130.0).abs() <= 1.5,
+        (right
+            - left
+            - crate::toolbar::flyout_size(&h.ctx.debug_painter(), op_tools::TOOLBAR[0]).x
+                / crate::theme::pt(1.0))
+        .abs()
+            <= 1.5,
         "width {}",
         right - left
     );
@@ -5481,7 +5480,7 @@ const PS_BAR_MARKS: &[BarMarks] = &[
     ),
     (
         "Move",
-        &[253.5, 404.5, 521.5, 638.5, 673.5],
+        &[253.5, 351.0, 469.0, 586.0, 621.0],
         &[195.0, 248.5],
     ),
     ("SelectionBrush", &[], &[108.0, 157.0, 288.0, 331.5, 346.0]),
@@ -5523,10 +5522,13 @@ fn bar_marks(bar: &image::RgbaImage) -> (Vec<f32>, Vec<f32>) {
     };
     let seps = runs(&|x| (14..54).all(|y| (gray(x, y) - 62).abs() <= 3));
     let edges = runs(&|x| {
-        (20..46)
-            .filter(|&y| (91..=105).contains(&gray(x, y)))
-            .count()
-            >= 20
+        [24, 45]
+            .into_iter()
+            .all(|y| (91..=105).contains(&gray(x, y)))
+            && (20..46)
+                .filter(|&y| (91..=105).contains(&gray(x, y)))
+                .count()
+                >= 20
     });
     (seps, edges)
 }
@@ -5634,7 +5636,7 @@ fn brush_presets_pressure_and_smoothing() {
     h.run_steps(2);
     // The picker's General Brushes: Hard Round Pressure Size
     click(&mut h, at_pt(124.0, 45.25));
-    h.get_by_label("Hard Round Pressure Size").click();
+    h.get_by_label("硬边圆 压力大小").click();
     h.run_steps(2);
     let brush = h.state().state.brush;
     assert!(brush.pressure.size && brush.hardness == 1.0 && brush.size == 30.0);
@@ -5753,7 +5755,7 @@ fn mixer_brush_loads_mixes_and_keeps_its_paint() {
     assert_eq!(h.state().state.mixer_load, Some([255, 0, 0]));
     // Dry: paints the load
     click(&mut h, at_pt(354.0, 45.25));
-    h.get_by_label("Dry").click();
+    h.get_by_label("干燥").click();
     h.run_steps(2);
     assert_eq!(
         h.state()
@@ -7228,7 +7230,7 @@ fn layer_comps_record_and_apply() {
     run_command(&mut h, Command::ToggleLayerComps);
     h.run_steps(2);
     // New... records the layers as "Layer Comp 1"
-    h.get_by_label("New...").click();
+    h.get_by_label("新建...").click();
     h.run_steps(2);
     assert!(h.state().state.new_layer_comp.is_some());
     h.key_press(egui::Key::Enter);
@@ -7250,7 +7252,7 @@ fn layer_comps_record_and_apply() {
     assert_eq!(last_history(&h), "Apply Layer Comp");
     shot(&mut h, "layer_comps_panel");
     // Last Document State puts back the hidden layer
-    h.get_by_label("Last Document State").click();
+    h.get_by_label("上次文档状态").click();
     h.run_steps(2);
     assert!(!active(&h).doc.layer(id).unwrap().visible);
 }
@@ -7266,13 +7268,13 @@ fn tool_presets_save_and_pick() {
     h.run_steps(2);
     // The options bar's picker: New Tool Preset..., OK
     click(&mut h, at_pt(68.5, 45.25));
-    h.get_by_label("New Tool Preset...").click();
+    h.get_by_label("新建工具预设...").click();
     h.run_steps(2);
     assert!(h.state().state.new_tool_preset.is_some());
     h.key_press(egui::Key::Enter);
     h.run_steps(2);
     assert_eq!(h.state().state.tool_presets.len(), 1);
-    assert_eq!(h.state().state.tool_presets[0].name, "Brush Tool 1");
+    assert_eq!(h.state().state.tool_presets[0].name, "画笔工具 1");
     // From another tool, Window › Tool Presets with Current Tool Only off
     // picks it: the Brush comes back at 77 px
     h.state_mut().state.brush.size = 10.0;
@@ -7281,7 +7283,7 @@ fn tool_presets_save_and_pick() {
     run_command(&mut h, Command::ToggleToolPresets);
     h.run_steps(2);
     shot(&mut h, "tool_presets_panel");
-    h.get_by_label("Brush Tool 1").click();
+    h.get_by_label("画笔工具 1").click();
     h.run_steps(2);
     assert_eq!(h.state().state.tool, op_tools::Tool::Brush);
     assert_eq!(h.state().state.brush.size, 77.0);
@@ -7303,7 +7305,7 @@ fn info_and_navigator_panel_options() {
         .expect("the Info panel shows");
     let pt = crate::theme::pt;
     click(&mut h, area.right_top() + egui::vec2(-pt(36.0), pt(13.0)));
-    h.get_by_label("Panel Options...").click();
+    h.get_by_label("面板选项...").click();
     h.run_steps(2);
     assert!(h.state().state.panel_options.is_some());
     // HSB first, Web second, with the document's dimensions: OK keeps them
@@ -7340,14 +7342,13 @@ fn brushes_and_brush_settings_panels() {
     assert!(h.state().state.floating.brush_settings);
     shot(&mut h, "brush_settings_panel");
     // Its pen pressure switch reaches the brush
-    h.get_by_label("Shape Dynamics: Size Jitter — Pen Pressure")
-        .click();
+    h.get_by_label("形状动态：大小抖动 — 钢笔压力").click();
     h.run_steps(2);
     assert!(h.state().state.brush.pressure.size);
     // Window › Brushes: Hard Round
     run_command(&mut h, Command::ToggleBrushes);
     h.run_steps(2);
-    h.get_by_label("Hard Round").click();
+    h.get_by_label("硬边圆").click();
     h.run_steps(2);
     let brush = h.state().state.brush;
     assert_eq!((brush.hardness, brush.preset), (1.0, Some(1)));
@@ -7432,16 +7433,76 @@ fn channels_panel_targets_shows_and_loads() {
 }
 
 #[test]
+#[ignore]
+fn screenshot_chinese_workspace_dialogs_and_psd() {
+    let mut h = harness(Vec::new());
+    reference_document(&mut h);
+    shot(&mut h, "chinese_workspace");
+    h.key_press_modifiers(Modifiers::COMMAND, egui::Key::N);
+    h.run_steps(3);
+    shot(&mut h, "chinese_new_document");
+    h.key_press(egui::Key::Escape);
+    h.run_steps(2);
+    h.key_press_modifiers(Modifiers::COMMAND | Modifiers::SHIFT, egui::Key::N);
+    h.run_steps(3);
+    shot(&mut h, "chinese_new_layer");
+    h.key_press(egui::Key::Escape);
+    h.run_steps(2);
+    let mut document =
+        op_core::Document::new_with_background("中文图层交接", 320, 240, Color::WHITE);
+    let layer_id = document.new_layer_id();
+    let group_id = document.new_layer_id();
+    let mut image = op_core::TiledImage::new(320, 240);
+    for y in 60..150 {
+        for x in 80..220 {
+            image.set_pixel(x, y, [220, 70, 50, 180]);
+        }
+    }
+    let mut layer = op_core::Layer::raster(layer_id, "半透明素材", image);
+    layer.parent = Some(group_id);
+    document
+        .layers
+        .extend([layer, op_core::Layer::group(group_id, "产品素材组")]);
+    let path = std::env::temp_dir().join(format!("中文图层交接截图-{}.psd", document.id.0));
+    op_io::save(&document, &path).unwrap();
+    let reopened = op_io::open(&path).unwrap();
+    std::fs::remove_file(&path).unwrap();
+    let app = &mut h.state_mut().state;
+    crate::actions::close_all(app);
+    app.add_document(reopened, "Open");
+    h.run_steps(6);
+    shot(&mut h, "chinese_psd_reopened");
+}
+
+#[test]
 fn gradients_and_patterns_panels_pick() {
     let mut h = harness(Vec::new());
     reference_document(&mut h);
+    // Tabs size to their translated text; use the same font metrics to hit their centers.
+    let tab_center = |h: &Harness<'_, OpenPhotoApp>, index: usize| {
+        let mut x = crate::theme::pt(1350.0 - 322.0);
+        for (i, title) in ["颜色", "色板", "渐变", "图案"].iter().enumerate() {
+            let galley = h.ctx.debug_painter().layout_no_wrap(
+                (*title).into(),
+                crate::theme::semibold(crate::theme::font::BODY),
+                egui::Color32::PLACEHOLDER,
+            );
+            let width = (galley.size().x + crate::theme::pt(19.0)).round();
+            if i == index {
+                return egui::pos2(x + width / 2.0, crate::theme::pt(87.0));
+            }
+            x += width + crate::theme::pt(1.0);
+        }
+        unreachable!()
+    };
     // The Gradients tab, then its second swatch (Foreground to Transparent)
-    click(&mut h, at_pt(1175.0, 87.0));
+    let tab = tab_center(&h, 2);
+    click(&mut h, tab);
     h.run_steps(2);
     shot(&mut h, "gradients_panel");
     click(&mut h, at_pt(1098.0, 131.0));
     let g = h.state().state.gradient_preset.clone().expect("picked");
-    assert_eq!(g.name, "Foreground to Transparent");
+    assert_eq!(g.name, "前景色到透明");
     // The Patterns tab: a second pattern, then the first again
     h.state_mut().state.patterns.push(crate::state::Pattern {
         name: "Red".into(),
@@ -7455,7 +7516,8 @@ fn gradients_and_patterns_panels_pick() {
             i
         },
     });
-    click(&mut h, at_pt(1240.0, 87.0));
+    let tab = tab_center(&h, 3);
+    click(&mut h, tab);
     h.run_steps(2);
     click(&mut h, at_pt(1098.0, 131.0));
     assert_eq!(h.state().state.pattern, 1);
@@ -7897,34 +7959,31 @@ fn status_bar_menu_picks_what_it_shows() {
         text(&h, StatusInfo::DocumentDimensions),
         "64 px x 72 px (72 ppi)"
     );
-    assert_eq!(text(&h, StatusInfo::DocumentSizes), "Doc: 13.5K/13.5K");
-    assert_eq!(text(&h, StatusInfo::DocumentProfile), "Untagged RGB (8bpc)");
+    assert_eq!(text(&h, StatusInfo::DocumentSizes), "文档：13.5K/13.5K");
+    assert_eq!(
+        text(&h, StatusInfo::DocumentProfile),
+        "未标记的 RGB（8 位/通道）"
+    );
     assert_eq!(text(&h, StatusInfo::GpuMode), "Metal");
-    assert_eq!(text(&h, StatusInfo::CompositingMode), "Classic");
+    assert_eq!(text(&h, StatusInfo::CompositingMode), "经典");
     assert_eq!(
         text(&h, StatusInfo::MeasurementScale),
-        "1 pixel(s) = 1.0000 pixels"
+        "1 像素 = 1.0000 像素"
     );
-    assert_eq!(text(&h, StatusInfo::Efficiency), "Efficiency: 100%");
-    assert_eq!(
-        text(&h, StatusInfo::Exposure32),
-        "Exposure works in 32-bit only"
-    );
-    assert_eq!(
-        text(&h, StatusInfo::SmartObjects),
-        "Missing: 0 / Changed: 0"
-    );
-    assert_eq!(text(&h, StatusInfo::LayerCount), "1 Layer");
+    assert_eq!(text(&h, StatusInfo::Efficiency), "效率：100%");
+    assert_eq!(text(&h, StatusInfo::Exposure32), "曝光度仅适用于 32 位图像");
+    assert_eq!(text(&h, StatusInfo::SmartObjects), "缺失：0 / 已更改：0");
+    assert_eq!(text(&h, StatusInfo::LayerCount), "1 个图层");
     h.state_mut().state.select_tool(op_tools::Tool::Move);
-    assert_eq!(text(&h, StatusInfo::CurrentTool), "Move");
-    assert!(text(&h, StatusInfo::ScratchSizes).starts_with("Scratch: 13.5K/"));
+    assert_eq!(text(&h, StatusInfo::CurrentTool), "移动");
+    assert!(text(&h, StatusInfo::ScratchSizes).starts_with("暂存盘：13.5K/"));
     // More layers and a group
     run_command(&mut h, Command::NewLayerNoDialog);
     run_command(&mut h, Command::NewLayerNoDialog);
     run_command(&mut h, Command::GroupLayers);
-    assert_eq!(text(&h, StatusInfo::LayerCount), "3 Layers, 1 Group");
+    assert_eq!(text(&h, StatusInfo::LayerCount), "3 个图层，1 个组");
     // Timing: how long the last command that changed the document took
-    assert!(text(&h, StatusInfo::Timing).ends_with("s (100%)"));
+    assert!(text(&h, StatusInfo::Timing).ends_with(" 秒 (100%)"));
 
     // Clicking the arrow asks for the menu (native, after the frame)
     let vp = active(&h).view.viewport;
@@ -8673,7 +8732,7 @@ fn open_recent_reopens_files() {
             .alert
             .as_deref()
             .unwrap()
-            .contains("was not found")
+            .contains("找不到该文件")
     );
     h.state_mut().state.alert = None;
     // Items past the list are disabled; Clear empties it
@@ -9366,7 +9425,7 @@ fn move_cross_document_drop_and_mask_link_offline() {
     h.state_mut().state.active_doc = Some(source_id);
     h.state_mut().state.tool = op_tools::Tool::Move;
     h.run_steps(6);
-    h.get_by_label("Toggle mask link: Movable").click();
+    h.get_by_label("切换蒙版链接：Movable").click();
     h.run_steps(3);
     assert!(
         !active(&h)
@@ -9402,7 +9461,7 @@ fn move_cross_document_drop_and_mask_link_offline() {
     h.hover_at(start + egui::vec2(10.0, 0.0));
     h.step();
     assert!(active(&h).move_drag.is_some());
-    let tab = h.get_by_label("Document tab: Target").rect().center();
+    let tab = h.get_by_label("文档标签页：Target").rect().center();
     h.hover_at(tab);
     h.run_steps(2);
     assert_eq!(h.state().state.active_doc, Some(target_id));
@@ -9501,7 +9560,7 @@ fn artboard_create_resize_move_options_copy_cancel_and_undo_offline() {
         1
     );
     // Actual options-bar action swaps dimensions and records one state.
-    h.get_by_label("Portrait artboard").click();
+    h.get_by_label("纵向画板").click();
     h.run_steps(3);
     let board = active(&h).doc.layer(id).unwrap().artboard.unwrap();
     assert_eq!((board.width, board.height), (110, 130));
@@ -9528,7 +9587,7 @@ fn artboard_create_resize_move_options_copy_cancel_and_undo_offline() {
     });
     h.run_steps(2);
     // Plus control creates an adjacent board of the same dimensions.
-    h.get_by_label("Add artboard right").click();
+    h.get_by_label("在右侧添加画板").click();
     h.run_steps(3);
     assert_eq!(
         active(&h)
@@ -9693,7 +9752,7 @@ fn artboard_all_eight_resize_handles_and_custom_background_offline() {
         crate::artboard_tool::options(&h.state().state).background,
         Some([20, 30, 40])
     );
-    h.get_by_label("Portrait artboard").click();
+    h.get_by_label("纵向画板").click();
     h.run_steps(3);
     assert_eq!(
         active(&h)
@@ -9706,9 +9765,9 @@ fn artboard_all_eight_resize_handles_and_custom_background_offline() {
         Some([20, 30, 40])
     );
     let history = last_history(&h);
-    h.get_by_label("Artboard background color").click();
+    h.get_by_label("画板背景色").click();
     h.run_steps(2);
-    h.get_by_label("Cancel").click();
+    h.get_by_label("取消").click();
     h.run_steps(2);
     assert_eq!(last_history(&h), history);
     assert_eq!(

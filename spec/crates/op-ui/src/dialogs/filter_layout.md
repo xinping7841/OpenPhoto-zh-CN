@@ -1,5 +1,11 @@
 # dialogs/filter_layout.rs: Layout of the classic filter dialogs
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Component responsibilities
 
 Records the sizes, per-row control positions and slider scales of Photoshop 2026's classic filter dialogs (Gaussian Blur, Box Blur, Unsharp Mask, Add Noise, Median, Minimum, Maximum, High Pass, Offset, Mosaic, Motion Blur, Emboss, Surface Blur, Dust & Scratches, Trace Contour). It contains data only and draws nothing; drawing and interaction are in `adjust.rs`'s `classic_ui` (see "Classic filter dialogs" in `adjust.md`).

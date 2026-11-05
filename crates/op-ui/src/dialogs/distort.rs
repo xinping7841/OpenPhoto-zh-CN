@@ -135,7 +135,7 @@ pub const LENS_FLARE: Layout = Layout {
     randomize: None,
     view: Some([8.0, 36.0, 266.0, 293.5]),
     after: Some(RadioGroup {
-        title: Some(("Lens Type", 365.0)),
+        title: Some(("镜头类型", 365.0)),
         rect: [8.0, 363.0, 266.0, 440.0],
         x: 20.0,
         ys: &[380.0, 396.0, 412.0, 428.0],
@@ -339,13 +339,13 @@ pub const WIND: Layout = Layout {
     popups: &[],
     control: Control::Radios(&[
         RadioGroup {
-            title: Some(("Method", 334.0)),
+            title: Some(("方法", 334.0)),
             rect: [8.0, 332.0, 281.0, 396.0],
             x: 20.0,
             ys: &[349.0, 365.0, 381.0],
         },
         RadioGroup {
-            title: Some(("Direction", 405.75)),
+            title: Some(("方向", 405.75)),
             rect: [8.0, 404.0, 281.0, 452.0],
             x: 20.0,
             ys: &[421.0, 437.0],

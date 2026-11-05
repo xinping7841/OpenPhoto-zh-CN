@@ -1,5 +1,12 @@
 # state.rs: Application State and Document State
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+`display_name` converts known operation/tool names at the presentation boundary and returns unknown names unchanged. History records retain their original identifiers, including the `Open` marker used to determine untagged documents. `display_error` translates known command/tool error templates without altering user data.
+
+
 ## Responsibilities
 
 Holds all mutable state of the UI layer. `AppState` is the state of the whole application; `DocState` is the state of a single open document (the document itself, history, view, caches).

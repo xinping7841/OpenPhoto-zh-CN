@@ -24,3 +24,12 @@ The Tool Presets panel (Window › Tool Presets) is a floating panel (`floating.
 - New Tool Preset... from the options bar's picker saves "Brush Tool 1";
 - from the Eraser, with Current Tool Only off, the panel picks it, bringing back the Brush at 77 px;
 - screenshot `tool_presets_panel.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Empty state, current-tool filter, create action, delete tooltip and name-dialog title use Simplified Chinese. Preset names remain verbatim user data; creation, filtering, application and deletion keep their existing behavior.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

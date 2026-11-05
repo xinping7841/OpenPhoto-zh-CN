@@ -40,3 +40,12 @@ Without a painting tool, each panel says so.
 - its size pressure switch reaches the brush;
 - Window › Brushes' Hard Round sets the hardness and preset, and resets the dynamics;
 - screenshot `brush_settings_panel.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+The empty-tool messages, size, angle, roundness, hardness, spacing, General Brushes, tip-shape heading and pen-pressure controls use Simplified Chinese. Known built-in brush names are translated for display only; the preset index and stored name are unchanged.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

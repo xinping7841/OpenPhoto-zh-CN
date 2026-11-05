@@ -22,3 +22,12 @@ The Histogram panel (Window › Histogram) shows the merged image's histogram, i
 
 - `statistics_of_a_histogram`.
 - `ui_tests::histogram_expands_and_navigator_zooms`: the expanded view's red statistics of a flat gray image (every pixel, no spread). Screenshot `histogram_expanded.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+The channel menu, compact/expanded tooltips and statistics labels use Simplified Chinese. RGB, channel ordering, statistic calculations and graph IDs are unchanged. The channel-label unit test verifies the localized names in algorithm order.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

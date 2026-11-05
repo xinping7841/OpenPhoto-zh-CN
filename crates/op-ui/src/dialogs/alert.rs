@@ -55,11 +55,12 @@ impl Alert {
     /// that have it (Learn More just closes it: there is no help site).
     pub fn for_message(message: impl Into<String>) -> Self {
         let message = message.into();
-        let learn_more = message == crate::selection_brush::NO_LAYER;
+        let learn_more = message == crate::selection_brush::NO_LAYER
+            || message == crate::state::display_error(crate::selection_brush::NO_LAYER);
         let mut alert = Self::error(message);
         if learn_more {
             alert.cancel = true;
-            alert.cancel_label = "Learn More";
+            alert.cancel_label = "了解更多";
         }
         alert
     }
@@ -72,8 +73,8 @@ impl Alert {
             cancel: false,
             dont_show_again: None,
             choices: Vec::new(),
-            ok_label: "OK",
-            cancel_label: "Cancel",
+            ok_label: "确定",
+            cancel_label: "取消",
         }
     }
 
@@ -85,8 +86,8 @@ impl Alert {
             cancel: true,
             dont_show_again: Some(false),
             choices: Vec::new(),
-            ok_label: "OK",
-            cancel_label: "Cancel",
+            ok_label: "确定",
+            cancel_label: "取消",
         }
     }
 
@@ -99,8 +100,8 @@ impl Alert {
             cancel: true,
             dont_show_again: None,
             choices: choices.iter().map(|c| c.to_string()).collect(),
-            ok_label: "OK",
-            cancel_label: "Cancel",
+            ok_label: "确定",
+            cancel_label: "取消",
         }
     }
 }
@@ -234,7 +235,7 @@ fn draw(
             at(pt(22.0), content_end + pt(13.0)),
             vec2(pt(16.0), pt(16.0)),
         );
-        let label = "Don\u{2019}t show again";
+        let label = "不再显示";
         let text = theme::tracked_galley(&painter, label, theme::dialog(pt(13.0)), TEXT);
         let hit = Rect::from_min_max(
             b.min,
@@ -309,7 +310,7 @@ fn draw(
         if button(row(134.0, 244.0), alert.ok_label, OK, Color32::WHITE, "ok") {
             answer = Some(ok);
         }
-    } else if button(row(16.0, 244.0), "OK", OK, Color32::WHITE, "ok") {
+    } else if button(row(16.0, 244.0), "确定", OK, Color32::WHITE, "ok") {
         answer = Some(ok);
     }
     answer
@@ -424,6 +425,18 @@ fn caution(painter: &egui::Painter, rect: Rect) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn localized_no_layer_errors_keep_the_learn_more_button() {
+        for message in [
+            crate::selection_brush::NO_LAYER.to_owned(),
+            crate::state::display_error(crate::selection_brush::NO_LAYER),
+        ] {
+            let alert = Alert::for_message(message);
+            assert!(alert.cancel);
+            assert_eq!(alert.cancel_label, "了解更多");
+        }
+    }
 
     #[test]
     fn constructors() {

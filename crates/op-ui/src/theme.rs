@@ -240,6 +240,18 @@ pub fn install_fonts(ctx: &egui::Context) {
         egui_phosphor::Variant::Regular.font_bytes(),
     );
 
+    fonts.font_data.insert(
+        "noto-sans-cjk-sc".into(),
+        FontData::from_static(include_bytes!("../assets/fonts/NotoSansCJKsc-Regular.otf")).into(),
+    );
+    for family in [FontFamily::Proportional, FontFamily::Monospace] {
+        fonts
+            .families
+            .entry(family)
+            .or_default()
+            .push("noto-sans-cjk-sc".into());
+    }
+
     let mut semibold = vec!["source-sans-semibold".to_owned()];
     semibold.extend(
         fonts.families[&FontFamily::Proportional]
@@ -365,6 +377,27 @@ mod tests {
     /// bearings) measured on Photoshop 2026's dialogs. They catch a lost
     /// optical size (opsz 17), lost tracking, or the wrong font for UXP
     /// dialogs.
+    #[test]
+    fn chinese_glyphs_render_in_every_text_family() {
+        let ctx = egui::Context::default();
+        install_fonts(&ctx);
+        let mut output = ctx.run_ui(Default::default(), |_| {});
+        output.textures_delta.clear();
+        for family in [
+            FontFamily::Proportional,
+            FontFamily::Monospace,
+            FontFamily::Name(SEMIBOLD.into()),
+            FontFamily::Name(DIALOG.into()),
+            FontFamily::Name(DIALOG_BOLD.into()),
+        ] {
+            ctx.fonts_mut(|fonts| {
+                for character in "简体中文图层文件保存对齐".chars() {
+                    assert!(fonts.has_glyph(&FontId::new(16.0, family.clone()), character));
+                }
+            });
+        }
+    }
+
     #[test]
     fn dialog_text_is_as_wide_as_photoshops() {
         if !std::path::Path::new(SYSTEM_FONT).exists() {

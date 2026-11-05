@@ -12,7 +12,7 @@ use crate::theme::{color, pt};
 const ROW: f32 = pt(37.0);
 const EYE_W: f32 = pt(29.5);
 const THUMB: f32 = pt(28.0);
-const NAMES: [&str; 4] = ["RGB", "Red", "Green", "Blue"];
+const NAMES: [&str; 4] = ["RGB", "红", "绿", "蓝"];
 const SHORTCUTS: [&str; 4] = ["⌘2", "⌘3", "⌘4", "⌘5"];
 
 /// Row `k` (0 the composite) targeted alone, shown alone in gray; the

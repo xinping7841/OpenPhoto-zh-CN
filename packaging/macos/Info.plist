@@ -5,9 +5,13 @@
 	<key>CFBundleName</key>
 	<string>OpenPhoto</string>
 	<key>CFBundleDisplayName</key>
-	<string>OpenPhoto</string>
+	<string>OpenPhoto 简体中文版</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yuanzhixiang.openphoto</string>
+	<string>com.xinping7841.openphoto.zh-cn</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>zh_CN</string>
+	<key>CFBundleLocalizations</key>
+	<array><string>zh_CN</string></array>
 	<key>CFBundleExecutable</key>
 	<string>openphoto</string>
 	<key>CFBundleIconFile</key>

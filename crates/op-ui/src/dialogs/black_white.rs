@@ -15,14 +15,7 @@ const HUE: (f32, f32) = (0.0, 360.0);
 const SATURATION: (f32, f32) = (0.0, 100.0);
 /// Photoshop's Default preset.
 const DEFAULTS: [i32; 6] = [40, 60, 40, 60, 20, 80];
-const NAMES: [&str; 6] = [
-    "Reds:",
-    "Yellows:",
-    "Greens:",
-    "Cyans:",
-    "Blues:",
-    "Magentas:",
-];
+const NAMES: [&str; 6] = ["红色:", "黄色:", "绿色:", "青色:", "蓝色:", "洋红色:"];
 /// The color each track passes through at its middle (between black at
 /// −200% and white at 300%).
 const COLORS: [[u8; 3]; 6] = [
@@ -166,7 +159,7 @@ impl Dialog {
             .all(|(t, d)| parse(t, WEIGHT) == Some(d))
             && !self.tint;
         if untouched {
-            return "Default";
+            return "默认";
         }
         super::adjust_presets::BLACK_WHITE
             .iter()
@@ -178,7 +171,7 @@ impl Dialog {
                         .zip(w)
                         .all(|(t, d)| parse(t, WEIGHT) == Some(*d))
             })
-            .map_or("Custom", |(name, _)| name)
+            .map_or("自定", |(name, _)| name)
     }
 
     pub fn ui(
@@ -192,7 +185,7 @@ impl Dialog {
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let painter = ui.painter().clone();
 
-        uxp::label(ui, at(20.0, 61.0), "Preset:");
+        uxp::label(ui, at(20.0, 61.0), "预设:");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::BLACK_WHITE, encoded.as_deref());
@@ -215,10 +208,10 @@ impl Dialog {
                 );
             },
             |ui| {
-                if ui.button("Default").clicked() {
+                if ui.button("默认").clicked() {
                     reset = true;
                 }
-                ui.add_enabled(false, egui::Button::new("Custom"));
+                ui.add_enabled(false, egui::Button::new("自定"));
                 ui.separator();
                 for (k, (name, _)) in super::adjust_presets::BLACK_WHITE.iter().enumerate() {
                     if ui.selectable_label(preset == *name, *name).clicked() {
@@ -314,7 +307,7 @@ impl Dialog {
         }
 
         // Tint: its swatch, then hue and saturation (dimmed while off)
-        uxp::checkbox(ui, at(20.0, 420.5), "Tint", &mut self.tint);
+        uxp::checkbox(ui, at(20.0, 420.5), "着色", &mut self.tint);
         let hue = parse(&self.hue, HUE).unwrap_or(42);
         let saturation = parse(&self.saturation, SATURATION).unwrap_or(20);
         let [tr, tg, tb] = tint_color(hue, saturation);
@@ -338,8 +331,8 @@ impl Dialog {
             }
         };
         for (k, (name, y, range, suffix)) in [
-            ("Hue", 450.0, HUE, "°"),
-            ("Saturation", 505.0, SATURATION, "%"),
+            ("色相", 450.0, HUE, "°"),
+            ("饱和度", 505.0, SATURATION, "%"),
         ]
         .into_iter()
         .enumerate()
@@ -412,7 +405,7 @@ impl Dialog {
         uxp::buttons(
             ui,
             frame,
-            Some(("Auto", true)),
+            Some(("自动", true)),
             self.adjustment().is_some(),
             false,
         )
@@ -446,9 +439,9 @@ mod tests {
                 .map(|w| w.to_string()),
             ..Default::default()
         };
-        assert_eq!(d.preset(), "Blue Filter");
+        assert_eq!(d.preset(), "蓝色滤镜");
         d.tint = true;
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
     }
 
     #[test]
@@ -471,7 +464,7 @@ mod tests {
                 tint: Some([225, 211, 180])
             })
         );
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         d.hue = "361".into();
         assert_eq!(d.adjustment(), None);
     }

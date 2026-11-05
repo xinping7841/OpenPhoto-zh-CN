@@ -1,5 +1,12 @@
 # rulers.rs: Rulers, guides and grid
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+All seven ruler units have Chinese display labels. Unit conversions, tick ladders, numeric labels and guide history identifiers are unchanged.
+
+
 ## Component responsibilities
 
 The rulers (View › Rulers, ⌘R), guides (dragging out, moving, deleting, drawing) and grid (View › Show › Grid, ⌘') in the document window. Guide data is stored in the document (`op_core::Guide`, see `document.md`) and can be undone.
@@ -41,7 +48,7 @@ Measured on Photoshop 2026 (probe document at nine zoom levels and in every unit
 ## Known limitations
 
 - No artboard guides, and no default guide color or grid settings (Preferences, P3 #28); guides dragged from the rulers take the default cyan. Smart guides are in `smart_guides.md`, guide layouts in `dialogs/guide_layout.md`.
-- The only ruler unit is pixels; double-clicking a ruler does not change the unit, and the origin cannot be changed by dragging the top-left corner.
+- Double-clicking a ruler does not change its unit. All seven units and dragging/resetting the corner origin are implemented as described above.
 
 ## Test coverage
 

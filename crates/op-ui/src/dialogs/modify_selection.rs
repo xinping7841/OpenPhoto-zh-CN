@@ -24,21 +24,21 @@ pub enum ModifyKind {
 impl ModifyKind {
     fn title(self) -> &'static str {
         match self {
-            Self::Border => "Border Selection",
-            Self::Smooth => "Smooth Selection",
-            Self::Expand => "Expand Selection",
-            Self::Contract => "Contract Selection",
-            Self::Feather => "Feather Selection",
+            Self::Border => "边界选区",
+            Self::Smooth => "平滑选区",
+            Self::Expand => "扩展选区",
+            Self::Contract => "收缩选区",
+            Self::Feather => "羽化选区",
         }
     }
 
     fn label(self) -> &'static str {
         match self {
-            Self::Border => "Width",
-            Self::Smooth => "Sample Radius",
-            Self::Expand => "Expand By",
-            Self::Contract => "Contract By",
-            Self::Feather => "Feather Radius",
+            Self::Border => "宽度",
+            Self::Smooth => "取样半径",
+            Self::Expand => "扩展量",
+            Self::Contract => "收缩量",
+            Self::Feather => "羽化半径",
         }
     }
 
@@ -138,11 +138,11 @@ impl ModifyDialog {
             pt(11.5),
             self.first_frame,
         );
-        uxp::label(ui, field.right_center() + vec2(pt(5.5), 0.0), "pixels");
+        uxp::label(ui, field.right_center() + vec2(pt(5.5), 0.0), "像素");
         common::ps_checkbox(
             ui,
             at(20.0, 90.0),
-            "Apply effect at canvas bounds",
+            "在画布边界应用效果",
             &mut self.at_bounds,
             true,
         );
@@ -151,19 +151,12 @@ impl ModifyDialog {
         let ok = common::ps_button(
             ui,
             r(205.0, 48.0, 275.0, 72.0),
-            "OK",
+            "确定",
             true,
             value.is_some(),
             true,
         );
-        let cancel = common::ps_button(
-            ui,
-            r(205.0, 84.0, 275.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let cancel = common::ps_button(ui, r(205.0, 84.0, 275.0, 108.0), "取消", false, true, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

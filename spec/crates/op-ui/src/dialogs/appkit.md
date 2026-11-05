@@ -1,5 +1,9 @@
 # dialogs/appkit.rs: Controls for the classic adjustment dialogs
 
+## Simplified Chinese interface fork
+
+The Chinese-only fork displays built-in blend-mode menu entries in Simplified Chinese through the dialog-local `common::display_label` adapter. This overrides English wording parity with Photoshop: English control names below identify layout and behavior, not required display text. Enum values, menu group order, selection indices, shortcuts, user-supplied strings and serialized data remain unchanged. Shared drawing functions otherwise render the Chinese labels supplied by their callers without translating user data. Chinese glyph coverage and clipping require visual verification.
+
 ## Component responsibilities
 
 Controls shared by the classic adjustment dialogs that Photoshop 2026 draws with AppKit (Levels, Curves); sizes are measured from Photoshop's 2x screenshots (in Photoshop points).

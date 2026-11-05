@@ -11,3 +11,7 @@ Four plus controls create adjacent boards with a 20-pixel gap and the selected b
 Canvas expansion at negative coordinates compensates the view origin, so the dragged board stays beneath its document-space pointer. Auto-nesting is applied to whole-layer Move release and cross-document copies; pixel selections and mask-only editing do not reparent layers.
 
 Custom imported backgrounds synchronize as Other plus an RGB setting, so changing dimensions or orientation retains their color. The background swatch opens an egui RGB picker with OK/Cancel; the color is staged until OK, then one options history state is recorded. Exact Photoshop color-dialog styling remains unverified.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries.

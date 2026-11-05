@@ -210,7 +210,7 @@ impl OpenPhotoApp {
         let outcome = dialog.show(ctx, fg, bg, active);
         if let Some(color) = dialog.take_color_picker_request(fg, bg) {
             self.state.color_picker = Some(state::PickerSession {
-                picker: dialogs::ColorPicker::new("Color Picker", color),
+                picker: dialogs::ColorPicker::new("拾色器", color),
                 target: state::PickerTarget::CanvasExtension,
             });
         }
@@ -244,7 +244,7 @@ impl OpenPhotoApp {
         self.state.pattern = pattern;
         if let Some(color) = dialog.take_color_picker_request() {
             self.state.color_picker = Some(state::PickerSession {
-                picker: dialogs::ColorPicker::new("Color Picker (Fill Color)", color),
+                picker: dialogs::ColorPicker::new("拾色器（填充颜色）", color),
                 target: state::PickerTarget::FillColor,
             });
         }
@@ -1465,7 +1465,7 @@ impl eframe::App for OpenPhotoApp {
         }
 
         if let Some(msg) = self.state.alert.clone() {
-            let mut alert = dialogs::alert::Alert::for_message(msg);
+            let mut alert = dialogs::alert::Alert::for_message(state::display_error(&msg));
             if dialogs::alert::show(&ctx, &mut alert).is_some() {
                 self.state.alert = None;
             }
@@ -1561,9 +1561,9 @@ fn pane_texture(
 /// registered for the filter (`op_core::more_filters::register_map`).
 fn displacement_map() -> Option<u32> {
     let path = rfd::FileDialog::new()
-        .set_title("Choose a displacement map.")
+        .set_title("选择置换图。")
         .add_filter("Photoshop", &["psd"])
-        .add_filter("Images", &["png", "jpg", "jpeg", "tif", "tiff"])
+        .add_filter("图像", &["png", "jpg", "jpeg", "tif", "tiff"])
         .pick_file()?;
     let doc = op_io::open(&path).ok()?;
     let pixels: Vec<[u8; 4]> = doc.composite_rgba8().as_chunks::<4>().0.to_vec();

@@ -47,6 +47,21 @@ pub enum PanelKind {
 impl PanelKind {
     fn title(self) -> &'static str {
         match self {
+            Self::Color => "颜色",
+            Self::Swatches => "色板",
+            Self::Gradients => "渐变",
+            Self::Patterns => "图案",
+            Self::Properties => "属性",
+            Self::Adjustments => "调整",
+            Self::Libraries => "库",
+            Self::Layers => "图层",
+            Self::Channels => "通道",
+            Self::Paths => "路径",
+        }
+    }
+
+    fn id(self) -> &'static str {
+        match self {
             Self::Color => "Color",
             Self::Swatches => "Swatches",
             Self::Gradients => "Gradients",
@@ -294,7 +309,7 @@ impl Panels {
             let mut moved = Vec2::ZERO;
             let mut dropped = None;
             let mut close = false;
-            egui::Area::new(egui::Id::new(("docked-floating", kind.title())))
+            egui::Area::new(egui::Id::new(("docked-floating", kind.id())))
                 .fixed_pos(pos)
                 .order(egui::Order::Foreground)
                 .show(ctx, |ui| {
@@ -379,7 +394,7 @@ impl Panels {
                     );
                     let r = ui.interact(
                         rect,
-                        ui.id().with(("strip-panel", kind.title())),
+                        ui.id().with(("strip-panel", kind.id())),
                         Sense::click(),
                     );
                     let on = self.flyout == Some(kind);
@@ -389,7 +404,7 @@ impl Panels {
                         ui.painter().rect_filled(rect, 4, color::HOVER);
                     }
                     // (the panel's initials, where Photoshop draws its icon)
-                    let short: String = kind.title().chars().take(2).collect();
+                    let short: String = kind.id().chars().take(2).collect();
                     ui.painter().text(
                         rect.center(),
                         Align2::CENTER_CENTER,
@@ -473,7 +488,7 @@ fn placeholder(ui: &mut Ui, kind: PanelKind) {
     ui.painter().text(
         ui.max_rect().center(),
         Align2::CENTER_CENTER,
-        format!("{} — not implemented yet", kind.title()),
+        format!("{} — 尚未实现", kind.title()),
         theme::small(),
         color::TEXT_DISABLED,
     );
@@ -534,7 +549,11 @@ fn icon_strip(ui: &mut Ui, app: &mut AppState) -> (Rect, bool) {
             painter.rect_filled(rect, 4, color::HOVER);
         }
         crate::ps_icons::paint(&painter, center, icon, color::OPTIONS_ICON, color::PANEL);
-        response.on_hover_text(tip)
+        response.on_hover_text(if tip == "History" {
+            "历史记录"
+        } else {
+            "注释"
+        })
     };
     let history = strip_button(
         ui,
@@ -556,4 +575,93 @@ fn icon_strip(ui: &mut Ui, app: &mut AppState) -> (Rect, bool) {
         color::DIVIDER_DARK,
     );
     (history.rect, expand)
+}
+
+fn localized_label(label: &str) -> &str {
+    match label {
+        "Normal" => "正常",
+        "Dissolve" => "溶解",
+        "Darken" => "变暗",
+        "Multiply" => "正片叠底",
+        "Color Burn" => "颜色加深",
+        "Linear Burn" => "线性加深",
+        "Darker Color" => "深色",
+        "Lighten" => "变亮",
+        "Screen" => "滤色",
+        "Color Dodge" => "颜色减淡",
+        "Linear Dodge (Add)" | "Linear Dodge" => "线性减淡（添加）",
+        "Lighter Color" => "浅色",
+        "Overlay" => "叠加",
+        "Soft Light" => "柔光",
+        "Hard Light" => "强光",
+        "Vivid Light" => "亮光",
+        "Linear Light" => "线性光",
+        "Pin Light" => "点光",
+        "Hard Mix" => "实色混合",
+        "Difference" => "差值",
+        "Exclusion" => "排除",
+        "Subtract" => "减去",
+        "Divide" => "划分",
+        "Hue" => "色相",
+        "Saturation" => "饱和度",
+        "Color" => "颜色",
+        "Luminosity" => "明度",
+        "Pass Through" => "穿透",
+        "Bitmap" => "位图",
+        "Grayscale" => "灰度",
+        "Duotone" => "双色调",
+        "Indexed Color" => "索引颜色",
+        "RGB Color" => "RGB 颜色",
+        "CMYK Color" => "CMYK 颜色",
+        "Lab Color" => "Lab 颜色",
+        "Multichannel" => "多通道",
+        "8 Bits/Channel" => "8 位/通道",
+        "16 Bits/Channel" => "16 位/通道",
+        "32 Bits/Channel" => "32 位/通道",
+        "Pixels" => "像素",
+        "Inches" => "英寸",
+        "Centimeters" => "厘米",
+        "Millimeters" => "毫米",
+        "Points" => "点",
+        "Picas" => "派卡",
+        "Percent" => "百分比",
+        "Document Sizes" => "文档大小",
+        "Document Dimensions" => "文档尺寸",
+        "Current Tool" => "当前工具",
+        _ => label,
+    }
+}
+
+#[cfg(test)]
+mod localization_tests {
+    use super::*;
+
+    #[test]
+    fn panel_titles_keep_their_stable_ids() {
+        assert_eq!(PanelKind::Layers.title(), "图层");
+        assert_eq!(PanelKind::Layers.id(), "Layers");
+        assert_eq!(floating::Floating::BrushSettings.title(), "画笔设置");
+    }
+
+    #[test]
+    fn every_layer_blend_mode_has_a_translated_display_label() {
+        for mode in op_core::BlendMode::GROUPS
+            .iter()
+            .flat_map(|group| group.iter())
+        {
+            assert_ne!(localized_label(mode.label()), mode.label());
+        }
+        assert_eq!(
+            localized_label(op_core::BlendMode::PassThrough.label()),
+            "穿透"
+        );
+    }
+
+    #[test]
+    fn display_labels_do_not_rewrite_unknown_names() {
+        assert_eq!(localized_label("Multiply"), "正片叠底");
+        assert_eq!(localized_label("RGB Color"), "RGB 颜色");
+        assert_eq!(localized_label("My brush"), "My brush");
+        assert_eq!(localized_label("⌘2"), "⌘2");
+    }
 }

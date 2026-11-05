@@ -67,12 +67,12 @@ impl RotateCanvasDialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let font = theme::uxp(pt(12.0));
-        common::frame(ui, frame, "Rotate Canvas", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "旋转画布", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         painter.text(
             at(20.0, 60.0),
             Align2::LEFT_CENTER,
-            "Angle",
+            "角度",
             font.clone(),
             TEXT,
         );
@@ -96,10 +96,7 @@ impl RotateCanvasDialog {
             TEXT,
         );
 
-        for (cy, label, value) in [
-            (59.75, "Clockwise", true),
-            (83.75, "Counter Clockwise", false),
-        ] {
+        for (cy, label, value) in [(59.75, "顺时针", true), (83.75, "逆时针", false)] {
             let center = at(142.75, cy);
             let hit = Rect::from_min_max(center - vec2(pt(7.0), pt(9.0)), at(260.0, cy + 9.0));
             if ui
@@ -122,19 +119,12 @@ impl RotateCanvasDialog {
         let ok = common::ps_button(
             ui,
             r(260.0, 48.0, 330.0, 72.0),
-            "OK",
+            "确定",
             true,
             degrees.is_some(),
             true,
         );
-        let cancel = common::ps_button(
-            ui,
-            r(260.0, 84.0, 330.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let cancel = common::ps_button(ui, r(260.0, 84.0, 330.0, 108.0), "取消", false, true, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

@@ -27,7 +27,7 @@ pub struct Dialog {
 impl Dialog {
     pub fn new(colors: ([u8; 3], [u8; 3])) -> Self {
         Self {
-            gradient: Gradient::two("Foreground to Background", colors.0, colors.1),
+            gradient: Gradient::two("前景色到背景色", colors.0, colors.1),
             dither: false,
             reverse: false,
             method: Method::Smooth,
@@ -81,7 +81,7 @@ impl Dialog {
             r(11.0, 46.5, 309.0, 97.0),
             (at(25.5, 0.0).x, at(246.0, 0.0).x),
         );
-        appkit::label(ui, at(30.5, 46.0), "Gradient Used for Grayscale Mapping");
+        appkit::label(ui, at(30.5, 46.0), "用于灰度映射的渐变");
         let field = r(20.0, 67.5, 300.0, 87.5);
         painter.rect(
             field,
@@ -140,10 +140,10 @@ impl Dialog {
             r(11.0, 121.0, 309.0, 219.0),
             (at(25.5, 0.0).x, at(130.0, 0.0).x),
         );
-        appkit::label(ui, at(30.5, 120.5), "Gradient Options");
-        appkit::checkbox(ui, at(20.0, 139.0), "Dither", &mut self.dither);
-        appkit::checkbox(ui, at(20.0, 166.0), "Reverse", &mut self.reverse);
-        appkit::label(ui, at(20.5, 200.0), "Method:");
+        appkit::label(ui, at(30.5, 120.5), "渐变选项");
+        appkit::checkbox(ui, at(20.0, 139.0), "仿色", &mut self.dither);
+        appkit::checkbox(ui, at(20.0, 166.0), "反向", &mut self.reverse);
+        appkit::label(ui, at(20.5, 200.0), "方法:");
         let chosen = Method::ALL
             .iter()
             .position(|&m| m == self.method)
@@ -152,15 +152,20 @@ impl Dialog {
             ui,
             r(72.0, 189.5, 157.0, 210.5),
             "gradient-map-method",
-            self.method.label(),
-            &appkit::choices(Method::ALL.iter().map(|m| m.label()), chosen),
+            crate::dialogs::common::display_label(self.method.label()),
+            &appkit::choices(
+                Method::ALL
+                    .iter()
+                    .map(|m| crate::dialogs::common::display_label(m.label())),
+                chosen,
+            ),
         ) {
             self.method = Method::ALL[k];
         }
 
-        let ok = appkit::button(ui, r(325.5, 45.0, 385.5, 71.0), "OK", true, true);
-        let cancel = appkit::button(ui, r(325.5, 80.0, 385.5, 106.0), "Cancel", false, true);
-        appkit::checkbox(ui, at(325.0, 124.5), "Preview", preview);
+        let ok = appkit::button(ui, r(325.5, 45.0, 385.5, 71.0), "确定", true, true);
+        let cancel = appkit::button(ui, r(325.5, 80.0, 385.5, 106.0), "取消", false, true);
+        appkit::checkbox(ui, at(325.0, 124.5), "预览", preview);
         if cancel.clicked() {
             return Some(Button::Cancel);
         }

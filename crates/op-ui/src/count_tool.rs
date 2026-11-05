@@ -276,16 +276,16 @@ pub fn editor(ui: &mut Ui, state: &mut DocState) {
     let mut open = true;
     let mut done = false;
     let mut cancel = false;
-    egui::Window::new("Rename Count Group")
+    egui::Window::new("重命名计数组")
         .id(ui.id().with("rename-count-group"))
         .open(&mut open)
         .show(ui.ctx(), |ui| {
             ui.text_edit_singleline(name);
             ui.horizontal(|ui| {
                 done = ui
-                    .add_enabled(!name.trim().is_empty(), egui::Button::new("OK"))
+                    .add_enabled(!name.trim().is_empty(), egui::Button::new("确定"))
                     .clicked();
-                cancel = ui.button("Cancel").clicked();
+                cancel = ui.button("取消").clicked();
             });
         });
     if cancel || !open {

@@ -24,8 +24,8 @@ pub enum ScreenUnit {
 impl ScreenUnit {
     pub fn label(self) -> &'static str {
         match self {
-            Self::LinesPerInch => "Lines/Inch",
-            Self::LinesPerCentimeter => "Lines/Centimeter",
+            Self::LinesPerInch => "线/英寸",
+            Self::LinesPerCentimeter => "线/厘米",
         }
     }
 }
@@ -43,9 +43,9 @@ impl Quality {
 
     pub fn label(self) -> &'static str {
         match self {
-            Self::Draft => "Draft",
-            Self::Good => "Good",
-            Self::Best => "Best",
+            Self::Draft => "草稿",
+            Self::Good => "好",
+            Self::Best => "最佳",
         }
     }
 
@@ -172,13 +172,13 @@ impl AutoResolutionDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Auto Resolution", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "自动分辨率", theme::dialog_bold(pt(13.0)));
 
         appkit::text(
             ui,
             at(61.5, 48.5),
             Align2::RIGHT_CENTER,
-            "Screen:",
+            "网屏:",
             appkit::TEXT,
         );
         let field = appkit::field(
@@ -215,7 +215,7 @@ impl AutoResolutionDialog {
         }
 
         // Quality, in a group box titled over its top edge
-        let title = appkit::label(ui, at(30.5, 74.5), "Quality");
+        let title = appkit::label(ui, at(30.5, 74.5), "品质");
         appkit::group(
             ui.painter(),
             r(10.5, 75.5, 262.5, 124.5),
@@ -233,8 +233,8 @@ impl AutoResolutionDialog {
             .trim()
             .parse::<f64>()
             .is_ok_and(|v| v > 0.0 && v.is_finite());
-        let ok = appkit::button(ui, r(278.0, 38.5, 338.5, 64.5), "OK", true, valid);
-        let cancel = appkit::button(ui, r(278.0, 73.5, 338.5, 99.5), "Cancel", false, true);
+        let ok = appkit::button(ui, r(278.0, 38.5, 338.5, 64.5), "确定", true, valid);
+        let cancel = appkit::button(ui, r(278.0, 73.5, 338.5, 99.5), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

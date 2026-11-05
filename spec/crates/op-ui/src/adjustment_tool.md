@@ -1,5 +1,9 @@
 # adjustment_tool.rs: Adjustment Brush and retained properties
 
+## Simplified Chinese interface fork
+
+The Properties panel's built-in adjustment-kind heading and parameter labels use direct Simplified Chinese UI literals. This Chinese-only requirement overrides English wording parity with Photoshop. Adjustment enum variants, setting keys, numerical ranges/defaults, brush algorithms, masks, user layer names and raw history names remain unchanged. User-supplied data is not translated. Chinese font coverage and slider-label clipping require visual verification.
+
 Adjustment Brush adds a retained adjustment layer with a black mask when the active layer does not match the selected adjustment kind. It reuses a matching adjustment layer. Add paints white and Subtract paints black; Alt reverses the latched operation. Subtract without a matching layer, zero opacity/flow and Quick Mask produce no changes. Strokes honor selection, soft brush diameter, opacity, flow and pressure options through the common paint engine. Locked/hidden targets reject edits. Idle airbrush buildup reuses the existing paint engine.
 
 One changed release records Adjustment Brush Tool. Escape/tool departure restores the original snapshot and mask target; empty new-layer strokes restore without creating history. Optional pink display overlay shows mask coverage through rotation/flip and never changes pixels.

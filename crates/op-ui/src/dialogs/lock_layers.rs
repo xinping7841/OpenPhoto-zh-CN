@@ -49,7 +49,7 @@ impl LockLayersDialog {
 
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
-        common::frame(ui, frame, "Lock Layers", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "锁定图层", theme::dialog_bold(pt(13.0)));
         let all = self.locks.all;
         // Rows: center, icon (x, y offset, scale), label; "All" ticks (and
         // greys) the rest
@@ -60,7 +60,7 @@ impl LockLayersDialog {
                 0.0,
                 Icon::LockTransparent,
                 0.5,
-                "Transparency",
+                "透明度",
                 Some(&mut self.locks.transparency),
             ),
             (
@@ -69,7 +69,7 @@ impl LockLayersDialog {
                 1.0,
                 Icon::LockPixels,
                 0.5,
-                "Image",
+                "图像",
                 Some(&mut self.locks.pixels),
             ),
             (
@@ -78,7 +78,7 @@ impl LockLayersDialog {
                 0.0,
                 Icon::LockPosition,
                 0.45,
-                "Position",
+                "位置",
                 Some(&mut self.locks.position),
             ),
             (
@@ -87,10 +87,10 @@ impl LockLayersDialog {
                 0.75,
                 Icon::LockArtboards,
                 0.45,
-                "Prevent auto-nest",
+                "防止自动嵌套",
                 Some(&mut self.locks.nesting),
             ),
-            (174.0, 28.0, 0.0, Icon::LockAll, 0.5, "All", None),
+            (174.0, 28.0, 0.0, Icon::LockAll, 0.5, "全部", None),
         ];
         let mut toggle_all = false;
         for (cy, icon_x, icon_dy, icon, scale, label, flag) in rows {
@@ -128,13 +128,13 @@ impl LockLayersDialog {
         let ok = common::ps_focused_button(
             ui,
             Rect::from_min_max(at(179.0, 48.0), at(249.0, 72.0)),
-            "OK",
+            "确定",
             theme::semibold(pt(12.0)),
         );
         let cancel = common::ps_button_with(
             ui,
             Rect::from_min_max(at(179.0, 84.0), at(249.0, 108.0)),
-            "Cancel",
+            "取消",
             false,
             true,
             theme::semibold(pt(12.0)),

@@ -94,3 +94,12 @@ Layer rows report their hovered layer ID through `DocState::layer_panel_hover`, 
 
 
 Clicking the gap between layer/folder and mask thumbnails toggles mask linkage, changes chain visibility and records Link Layer Mask or Unlink Layer Mask. The toggle does not change selection or mask target and exposes a per-layer accessibility label.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Filter, opacity, lock, fill, footer and mask-link accessibility copy use Simplified Chinese, as does the temporary Crop Preview display name. Blend-mode labels are translated only at rendering, without changing enum values or history-operation identifiers. Layer names remain verbatim. Lock-control ID salts remain English even though their tooltips are localized.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

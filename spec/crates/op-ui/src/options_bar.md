@@ -57,3 +57,12 @@ The options bar frame, the options for all tools, and the Crop, Free Transform, 
 ## Move popups
 
 The additional-options gear toggles Show layer bounds on hover, Expand layer group on click, and Show hover bounds from Layers, all initially checked. More options exposes Selection/Canvas alignment targets, all six alignment commands and all eight distribution commands. Canvas alignment enables with one movable layer; Selection uses the existing Layer menu eligibility. Distribution requires three movable units. Commands record the normal alignment/distribution history names. Options persist across documents for this run. Buttons expose accessible labels for windowless interaction tests. Popup geometry is functional and has not passed pixel-level Photoshop comparison.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. Chinese display wording overrides upstream English-copy parity described above; the English names in this specification identify controls and behavior, rather than requiring English rendering. Specifications remain in English.
+
+The frame tooltips, preset picker empty state and creation action, measured selection controls, sample choices, crop controls and menus, transform and warp controls, Move controls and accessibility labels use Simplified Chinese. External enum labels are translated only at rendering through a scoped adapter; unknown labels pass through. Native popup ordering and command enum values are unchanged. Bar button/icon strings retained as helper ID inputs are localized by the options-kit display boundary. User crop/tool preset names, keyed settings, typed units, coordinates and shortcut names remain unchanged. Display-adapter regression coverage checks translated built-ins and unknown user-value passthrough. Numerical parsing tests remain unchanged.
+
+Chinese glyph coverage and clipping in upstream-derived fixed control dimensions require visual verification. Move's Auto-Select and Show Transform Controls checkboxes use content-width flow layout, so their Chinese text shifts later controls rather than overlapping the adjacent dropdown; this can differ from the upstream measured English positions. The measured selection, crop and transform bars keep their absolute rectangles, where longer Chinese labels or narrow interpolation boxes can clip and need screenshot verification. This change does not alter algorithm keys, identifiers, user data, shortcuts or icon artwork.

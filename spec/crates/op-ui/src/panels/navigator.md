@@ -14,3 +14,12 @@ A thumbnail of the document and the current view position, plus zoom controls.
 ## Known limitations
 
 - Navigator Panel Options offers named colors only (not Custom...).
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Zoom-in and zoom-out tooltips use Simplified Chinese. Percentage formatting, zoom values, icon artwork and interaction IDs remain unchanged.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

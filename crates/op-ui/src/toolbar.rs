@@ -177,7 +177,7 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
     };
 
     // Edit Toolbar
-    button_at(ui, p(38.5, 1227.5), "edit-toolbar").on_hover_text("Edit Toolbar");
+    button_at(ui, p(38.5, 1227.5), "edit-toolbar").on_hover_text("编辑工具栏");
     crate::ps_icons::paint(
         &painter,
         p(38.5, 1227.5),
@@ -196,10 +196,7 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
     painter.rect_filled(r(14.0, 1272.0, 28.0, 1286.0), 0, Color32::BLACK);
     painter.rect_filled(r(16.0, 1274.0, 26.0, 1284.0), 0, Color32::WHITE);
     painter.rect_filled(r(8.0, 1266.0, 22.0, 1280.0), 0, Color32::BLACK);
-    if reset
-        .on_hover_text("Default Foreground and Background Colors (D)")
-        .clicked()
-    {
+    if reset.on_hover_text("默认前景色和背景色 (D)").clicked() {
         reset_colors(app);
     }
 
@@ -224,10 +221,7 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
         icon_color,
         Stroke::NONE,
     ));
-    if swap
-        .on_hover_text("Switch Foreground and Background Colors (X)")
-        .clicked()
-    {
+    if swap.on_hover_text("切换前景色和背景色 (X)").clicked() {
         swap_colors(app);
     }
 
@@ -239,11 +233,11 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
     let fg = ui.interact(fg_rect, ui.id().with("fg"), Sense::click());
     swatch(&painter, bg_rect, app.background, true);
     swatch(&painter, fg_rect, app.foreground, false);
-    if fg.on_hover_text("Set foreground color").clicked() {
+    if fg.on_hover_text("设置前景色").clicked() {
         app.editing_background = false;
         app.open_color_picker(PickerTarget::Foreground);
     }
-    if bg.on_hover_text("Set background color").clicked() {
+    if bg.on_hover_text("设置背景色").clicked() {
         app.editing_background = true;
         app.open_color_picker(PickerTarget::Background);
     }
@@ -288,7 +282,7 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
             icon_color,
         );
     }
-    if qm.on_hover_text("Edit in Quick Mask Mode (Q)").clicked()
+    if qm.on_hover_text("以快速蒙版模式编辑 (Q)").clicked()
         && let Some(state) = app.active()
     {
         toggle_quick_mask(state);
@@ -296,16 +290,16 @@ fn bottom(ui: &mut Ui, app: &mut AppState, full: Rect, button: Vec2) {
 
     // Change Screen Mode: two overlapping windows, the back one on top
     let sm_center = p(36.0, 1443.0);
-    let screen = button_at(ui, sm_center, "screen-mode").on_hover_text("Change Screen Mode (F)");
+    let screen = button_at(ui, sm_center, "screen-mode").on_hover_text("更改屏幕模式 (F)");
     if screen.clicked() {
         app.set_screen_mode(app.screen_mode.cycle(false));
     }
     screen.context_menu(|ui| {
         use crate::state::ScreenMode;
         for (mode, label) in [
-            (ScreenMode::Standard, "Standard Screen Mode"),
-            (ScreenMode::FullWithMenus, "Full Screen Mode With Menu Bar"),
-            (ScreenMode::Full, "Full Screen Mode"),
+            (ScreenMode::Standard, "标准屏幕模式"),
+            (ScreenMode::FullWithMenus, "带菜单栏的全屏模式"),
+            (ScreenMode::Full, "全屏模式"),
         ] {
             if ui.radio(app.screen_mode == mode, label).clicked() {
                 app.set_screen_mode(mode);

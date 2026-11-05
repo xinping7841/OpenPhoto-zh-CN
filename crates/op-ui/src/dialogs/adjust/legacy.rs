@@ -67,7 +67,7 @@ impl AdjustDialog {
         let ok = appkit::button_with(
             ui,
             Rect::from_min_max(at(x, 37.0), at(x + 63.0, 66.0)),
-            "OK",
+            "确定",
             (true, valid),
             13.0,
             0.0,
@@ -75,7 +75,7 @@ impl AdjustDialog {
         let cancel = appkit::button_with(
             ui,
             Rect::from_min_max(at(x, 72.0), at(x + 63.0, 101.0)),
-            "Cancel",
+            "取消",
             (false, true),
             13.0,
             0.0,
@@ -102,7 +102,7 @@ impl AdjustDialog {
     /// The Preview checkbox, its 12 pt box at `min`, the label 9.5 pt after.
     pub(super) fn legacy_preview_check(&mut self, ui: &mut Ui, frame: Rect, min: (f32, f32)) {
         let at = frame.min + vec2(pt(min.0), pt(min.1));
-        appkit::checkbox_with(ui, at, (12.0, 9.5), "Preview", &mut self.preview, true);
+        appkit::checkbox_with(ui, at, (12.0, 9.5), "预览", &mut self.preview, true);
     }
 
     /// Setting `i`'s row (`Row`); `enabled` false dims it and keeps it from

@@ -51,3 +51,12 @@ The icons in the buttons are drawn in Photoshop's style by `tool_icons.rs` (see 
 The screen-mode control changes view/window state only, without editing the document or recording history. Toolbar customization and two-column collapse remain unimplemented.
 
 The header switches between one and two columns, storing toolbar.two_columns. Two columns place consecutive slots row-by-row, preserve slot memory/flyouts, and move auxiliary controls upward by the rows saved. width exposes the current panel width. Default one-column geometry is preserved. Exact two-column native measurements and auxiliary arrangement remain unverified.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. Chinese display wording overrides upstream English-copy parity described above; the English names in this specification identify controls and behavior, rather than requiring English rendering. Specifications remain in English.
+
+Auxiliary tooltips and screen-mode choices use Simplified Chinese. Tool button/flyout names follow the localized Tool.name display API while shortcuts remain verbatim; flyout widths continue to derive from the rendered name width. English ID salts, quick-mask history key, hold behavior, screen-mode enum values and all icon shapes remain unchanged.
+
+Chinese glyph coverage and clipping in upstream-derived fixed control dimensions require visual verification. This change does not alter algorithm keys, identifiers, user data, shortcuts or icon artwork.

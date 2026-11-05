@@ -26,3 +26,12 @@ Vector icons drawn in-house in the style of Photoshop 2026's toolbar icons (not 
 
 - `tool_icons_match_photoshops_extents` in `ui_tests.rs`: renders the icons of all 69 tools; each one's bright-pixel bounding box differs by at most 2 px from the bounding box measured in Photoshop (`PS_ICON_EXTENTS`, which stores only numbers).
 - `compare_tool_icons_with_photoshop` (`#[ignore]`; requires the environment variable `PS_ICONS` to point at a directory of icons captured from Photoshop's toolbar; `ICONS` can be used to compare only some tools): prints each icon's bright-pixel overlap with Photoshop and the best offset, and outputs a top/bottom comparison image `target/ui-shots/icon_compare.png`. Photoshop screenshots are used only locally and are not committed to the repository.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. Chinese display wording overrides upstream English-copy parity described above; the English names in this specification identify controls and behavior, rather than requiring English rendering. Specifications remain in English.
+
+This module contains vector artwork only and has no user-visible language literals to translate. Icon geometry, glyph-like marks, colors and tool-to-icon mappings remain unchanged; localized toolbar names are supplied separately by the tool display API.
+
+Chinese glyph coverage and clipping in upstream-derived fixed control dimensions require visual verification. This change does not alter algorithm keys, identifiers, user data, shortcuts or icon artwork.

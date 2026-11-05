@@ -1,5 +1,12 @@
 # actions.rs: File operations and single-key shortcuts
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+File-opening, placement, export and save failure prefixes are Chinese. File chooser category descriptions are localized independently of extension lists; errors from codecs or the operating system retain their diagnostic details. Generated document/layer names stay unchanged as document data.
+
+
 ## Responsibility
 
 Opening, creating, saving, reverting, exporting, and closing documents (including confirmation for unsaved changes) and quitting, running clipboard commands, and single-key shortcuts (tool switching, default colors, swapping colors). Shortcuts with modifier keys are commands; see `commands.md`.

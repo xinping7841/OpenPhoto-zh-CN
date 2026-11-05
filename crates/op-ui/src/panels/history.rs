@@ -100,7 +100,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) -> Action {
             ui.painter().text(
                 list.center(),
                 Align2::CENTER_CENTER,
-                "Comments — not implemented yet",
+                "注释 — 尚未实现",
                 egui::FontId::proportional(FONT),
                 color::TEXT_DISABLED,
             );
@@ -122,7 +122,12 @@ fn tab_bar(ui: &mut Ui, bar: Rect, active: &mut Tab) -> bool {
     let font = theme::semibold(FONT);
     let mut x = bar.left();
     for (tab, label) in [(Tab::History, "History"), (Tab::Comments, "Comments")] {
-        let galley = painter.layout_no_wrap(label.into(), font.clone(), Color32::WHITE);
+        let title = if tab == Tab::History {
+            "历史记录"
+        } else {
+            "注释"
+        };
+        let galley = painter.layout_no_wrap(title.into(), font.clone(), Color32::WHITE);
         let rect = Rect::from_min_size(
             pos2(x, bar.top()),
             vec2(galley.size().x + 2.0 * TAB_PAD, bar.height()),
@@ -177,9 +182,7 @@ fn tab_bar(ui: &mut Ui, bar: Rect, active: &mut Tab) -> bool {
         theme::icon(pt(12.0)),
         color::ICON,
     );
-    collapse_response
-        .on_hover_text("Collapse to Icons")
-        .clicked()
+    collapse_response.on_hover_text("折叠为图标").clicked()
 }
 
 fn history_list(ui: &mut Ui, list: Rect, app: &mut AppState) {
@@ -246,7 +249,7 @@ fn history_list(ui: &mut Ui, list: Rect, app: &mut AppState) {
                 let (row, pick) = state_row(
                     ui,
                     icons::FILE_TEXT,
-                    &h.name,
+                    &crate::state::display_name(&h.name),
                     (i == current, i > current),
                     source == Some(h.id),
                 );
@@ -432,17 +435,12 @@ fn bottom_bar(ui: &mut Ui, rect: Rect, app: &mut AppState) {
     let current = app.active().map(|s| s.history.current());
     let cy = rect.center().y;
     let buttons = [
-        (
-            pt(98.0),
-            icons::FILE_PLUS,
-            "Create new document from current state",
-            false,
-        ),
-        (pt(65.0), icons::CAMERA, "Create new snapshot", false),
+        (pt(98.0), icons::FILE_PLUS, "从当前状态创建新文档", false),
+        (pt(65.0), icons::CAMERA, "创建新快照", false),
         (
             pt(36.0),
             icons::TRASH,
-            "Delete current state",
+            "删除当前状态",
             current.is_some_and(|c| c > 0),
         ),
     ];

@@ -99,7 +99,7 @@ impl Kind {
     /// writes `bytes` there. Returns the preset's name.
     pub fn save(self, bytes: &[u8]) -> Option<String> {
         let mut dialog = rfd::FileDialog::new()
-            .add_filter(self.folder, &[self.ext])
+            .add_filter(super::common::display_label(self.folder), &[self.ext])
             .set_file_name(format!("Untitled.{}", self.ext));
         if let Some(dir) = self.dir() {
             let _ = std::fs::create_dir_all(&dir);
@@ -115,7 +115,8 @@ impl Kind {
 
     /// Load Preset...: a preset file anywhere. Returns its name and bytes.
     pub fn load(self) -> Option<(String, Vec<u8>)> {
-        let mut dialog = rfd::FileDialog::new().add_filter(self.folder, &[self.ext]);
+        let mut dialog = rfd::FileDialog::new()
+            .add_filter(super::common::display_label(self.folder), &[self.ext]);
         if let Some(dir) = self.dir() {
             dialog = dialog.set_directory(dir);
         }
@@ -141,9 +142,9 @@ pub fn gear_menu(
     can_delete: bool,
 ) -> Option<GearPick> {
     let entries = [
-        Entry::item("Save Preset...", false),
-        Entry::item("Load Preset...", false),
-        Entry::item("Delete Current Preset", false).enabled(can_delete),
+        Entry::item("保存预设...", false),
+        Entry::item("载入预设...", false),
+        Entry::item("删除当前预设", false).enabled(can_delete),
     ];
     match native_popup::dropdown(ui, response, response.id.with("gear"), &entries)? {
         0 => Some(GearPick::Save),

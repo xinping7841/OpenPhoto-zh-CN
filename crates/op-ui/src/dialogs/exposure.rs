@@ -94,11 +94,11 @@ impl Dialog {
 
     fn preset(&self) -> &'static str {
         if self.adjustment() == Self::default().adjustment() {
-            return "Default";
+            return "默认";
         }
         (0..super::adjust_presets::EXPOSURE.len())
             .find(|&k| self.adjustment() == Self::preset_dialog(k).adjustment())
-            .map_or("Custom", |k| super::adjust_presets::EXPOSURE[k].0)
+            .map_or("自定", |k| super::adjust_presets::EXPOSURE[k].0)
     }
 
     pub fn ui(
@@ -112,7 +112,7 @@ impl Dialog {
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
         let painter = ui.painter().clone();
 
-        uxp::label(ui, at(20.0, 61.0), "Preset");
+        uxp::label(ui, at(20.0, 61.0), "预设");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::EXPOSURE, encoded.as_deref());
@@ -135,10 +135,10 @@ impl Dialog {
                 );
             },
             |ui| {
-                if ui.button("Default").clicked() {
+                if ui.button("默认").clicked() {
                     reset = true;
                 }
-                ui.add_enabled(false, egui::Button::new("Custom"));
+                ui.add_enabled(false, egui::Button::new("自定"));
                 ui.separator();
                 for (k, (name, _)) in super::adjust_presets::EXPOSURE.iter().enumerate() {
                     if ui.selectable_label(preset == *name, *name).clicked() {
@@ -182,9 +182,9 @@ impl Dialog {
         // Label, top, range, decimals, slider step
         type Row = (&'static str, f32, (f32, f32), usize, f32);
         let rows: [Row; 3] = [
-            ("Exposure", 84.0, EXPOSURE, 2, 0.01),
-            ("Offset", 139.0, OFFSET, 4, 0.0001),
-            ("Gamma Correction", 194.0, GAMMA, 2, 0.01),
+            ("曝光度", 84.0, EXPOSURE, 2, 0.01),
+            ("位移", 139.0, OFFSET, 4, 0.0001),
+            ("灰度系数校正", 194.0, GAMMA, 2, 0.01),
         ];
         for (k, (name, y, range, decimals, step)) in rows.into_iter().enumerate() {
             let text = &mut self.values[k];
@@ -284,8 +284,8 @@ mod tests {
     fn photoshops_presets() {
         let d = Dialog::preset_dialog(2);
         assert_eq!(d.values, ["+1", "0", "+1"].map(String::from));
-        assert_eq!(d.preset(), "Plus 1.0");
-        assert_eq!(Dialog::preset_dialog(1).preset(), "Minus 2.0");
+        assert_eq!(d.preset(), "增加 1.0");
+        assert_eq!(Dialog::preset_dialog(1).preset(), "减少 2.0");
     }
 
     #[test]
@@ -299,7 +299,7 @@ mod tests {
                 gamma: 1.0
             })
         );
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         assert_eq!(
             (trimmed(1.50, 2), trimmed(-0.0, 2), trimmed(0.0123, 4)),
             ("1.5".into(), "0".into(), "0.0123".into())

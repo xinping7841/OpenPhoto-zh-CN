@@ -171,7 +171,7 @@ pub enum DeleteOutcome {
 
 impl DeletePresetDialog {
     pub fn new(names: Vec<String>) -> Self {
-        Self::titled("Delete Preset", names)
+        Self::titled("删除预设", names)
     }
 
     /// The same sheet for other presets (Delete Crop Preset).
@@ -223,7 +223,7 @@ impl DeletePresetDialog {
             ui,
             at(49.5, 48.5),
             Align2::RIGHT_CENTER,
-            "Preset:",
+            "预设:",
             appkit::TEXT,
         );
         let name = self.names.get(self.chosen).cloned().unwrap_or_default();
@@ -236,19 +236,18 @@ impl DeletePresetDialog {
         ) {
             self.chosen = k;
         }
-        let delete = appkit::button(ui, r(279.5, 38.5, 345.5, 64.5), "Delete", true, true);
-        let cancel = appkit::button(ui, r(279.5, 73.5, 345.5, 99.5), "Cancel", false, true);
+        let delete = appkit::button(ui, r(279.5, 38.5, 345.5, 64.5), "删除", true, true);
+        let cancel = appkit::button(ui, r(279.5, 73.5, 345.5, 99.5), "取消", false, true);
         if cancel.clicked() {
             return DeleteOutcome::Cancel;
         }
         let enter = self.confirm.is_none()
             && ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, Key::Enter));
         if delete.clicked() || enter {
-            let mut confirm =
-                Alert::error(format!("Do you really want to delete the preset '{name}'?"));
+            let mut confirm = Alert::error(format!("确定要删除预设“{name}”吗？"));
             confirm.cancel = true;
-            confirm.ok_label = "Yes";
-            confirm.cancel_label = "No";
+            confirm.ok_label = "是";
+            confirm.cancel_label = "否";
             self.confirm = Some(confirm);
         }
         DeleteOutcome::Open
@@ -283,7 +282,7 @@ mod tests {
         assert!(p.constrain && p.resample);
         assert_eq!(encode(&p), bytes(INCHES));
 
-        let p = decode("pixels", &bytes(PIXELS)).unwrap();
+        let p = decode("像素", &bytes(PIXELS)).unwrap();
         assert_eq!(p.unit, SizeUnit::Pixels);
         assert_eq!((p.width, p.height), (64.0, 72.0));
         assert_eq!(p.resolution_unit, ResolutionUnit::PerCentimeter);

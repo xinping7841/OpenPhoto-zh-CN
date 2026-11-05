@@ -37,7 +37,7 @@ impl AdjustDialog {
     pub(super) fn oil_paint_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Oil Paint", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "油画", theme::dialog_bold(pt(13.0)));
         self.legacy_preview(ui, frame, 261.5);
         let buttons = self.legacy_buttons(ui, frame, 232.0);
         self.legacy_preview_check(ui, frame, (233.5, 119.5));
@@ -50,12 +50,12 @@ impl AdjustDialog {
                 appkit::label(ui, egui::Pos2::new(at(x, 0.0).x, rect.top()), text);
             }
         };
-        title(ui, 30.5, brush, 40.0, "Brush");
+        title(ui, 30.5, brush, 40.0, "画笔");
         for (k, (label, y)) in [
-            ("Stylization:", 319.5),
-            ("Cleanliness:", 368.5),
-            ("Scale:", 417.5),
-            ("Bristle Detail:", 466.5),
+            ("样式化:", 319.5),
+            ("清洁度:", 368.5),
+            ("缩放:", 417.5),
+            ("画笔细节:", 466.5),
         ]
         .into_iter()
         .enumerate()
@@ -67,11 +67,11 @@ impl AdjustDialog {
         let lighting = r(11.0, 532.5, 299.0, 640.0);
         title(ui, 26.0, lighting, 66.0, "");
         let mut on = self.value(LIGHTING) == Some(1.0);
-        appkit::checkbox_with(ui, at(30.0, 526.5), (12.0, 10.0), "Lighting", &mut on, true);
+        appkit::checkbox_with(ui, at(30.0, 526.5), (12.0, 10.0), "光照", &mut on, true);
         self.values[LIGHTING] = (on as u8).to_string();
         let angle = Row {
             field: [110.0, 556.5, 154.0, 573.5],
-            ..row("Angle:", 565.0)
+            ..row("角度:", 565.0)
         };
         if on {
             let p = &self.kind.params()[ANGLE];
@@ -116,11 +116,11 @@ impl AdjustDialog {
             ui,
             at(104.0, 565.0),
             egui::Align2::RIGHT_CENTER,
-            "Angle:",
+            "角度:",
             ink,
         );
         appkit::text(ui, at(160.0, 562.0), egui::Align2::LEFT_CENTER, "°", ink);
-        self.legacy_row(ui, frame, SHINE, &row("Shine:", 599.5), on, false);
+        self.legacy_row(ui, frame, SHINE, &row("闪亮:", 599.5), on, false);
         self.legacy_outcome(ui, buttons)
     }
 }

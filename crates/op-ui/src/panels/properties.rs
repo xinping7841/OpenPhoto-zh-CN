@@ -104,7 +104,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         text(
             37.5,
             17.75,
-            "Document",
+            "文档",
             Align2::LEFT_CENTER,
             theme::body(),
             LABEL,
@@ -135,7 +135,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
             text(
                 21.0,
                 top + 16.25,
-                name,
+                ["画布", "标尺和网格", "参考线", "快速操作"][k],
                 Align2::LEFT_CENTER,
                 theme::semibold(theme::font::BODY),
                 VALUE,
@@ -156,9 +156,9 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                 1 => {
                     // Rulers, the grid and the pixel grid; the units
                     let toggles = [
-                        (23.0, view.rulers, "Toggle rulers"),
-                        (56.0, view.grid, "Toggle grid"),
-                        (89.0, false, "Toggle pixel grid"),
+                        (23.0, view.rulers, "切换标尺"),
+                        (56.0, view.grid, "切换网格"),
+                        (89.0, false, "切换像素网格"),
                     ];
                     for (i, (x, on, tip)) in toggles.into_iter().enumerate() {
                         let b = rect(x - 13.0, 289.75, x + 13.0, 315.75);
@@ -177,10 +177,10 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     }
                     let units = rect(119.5, 293.25, 196.5, 312.25);
                     ui.scope_builder(egui::UiBuilder::new().max_rect(units), |ui| {
-                        widgets::dropdown(ui, "ruler-units", units.width(), "Pixels", |ui| {
+                        widgets::dropdown(ui, "ruler-units", units.width(), "像素", |ui| {
                             for u in RULER_UNITS {
-                                ui.add_enabled_ui(u == "Pixels", |ui| {
-                                    let _ = ui.selectable_label(u == "Pixels", u);
+                                ui.add_enabled_ui(u == "像素", |ui| {
+                                    let _ = ui.selectable_label(u == "像素", u);
                                 });
                             }
                         });
@@ -190,9 +190,9 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     // Show guides (only with guides), lock guides, smart
                     // guides; the guides' line style
                     let toggles = [
-                        (23.0, view.guides && has_guides, "Toggle guides"),
-                        (56.0, view.lock_guides, "Lock guides"),
-                        (89.0, view.smart_guides, "Toggle smart guides"),
+                        (23.0, view.guides && has_guides, "切换参考线"),
+                        (56.0, view.lock_guides, "锁定参考线"),
+                        (89.0, view.smart_guides, "切换智能参考线"),
                     ];
                     for (i, (x, on, tip)) in toggles.into_iter().enumerate() {
                         let b = rect(x - 13.0, 358.25, x + 13.0, 384.25);
@@ -214,9 +214,9 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
                     let style = rect(119.5, 361.25, 196.5, 380.25);
                     ui.scope_builder(egui::UiBuilder::new().max_rect(style), |ui| {
                         widgets::dropdown(ui, "guide-style", style.width(), "", |ui| {
-                            let _ = ui.selectable_label(true, "Lines");
+                            let _ = ui.selectable_label(true, "实线");
                             ui.add_enabled_ui(false, |ui| {
-                                let _ = ui.selectable_label(false, "Dashed Lines");
+                                let _ = ui.selectable_label(false, "虚线");
                             });
                         });
                     });
@@ -320,7 +320,7 @@ fn canvas_section(
     text(
         64.5,
         156.75,
-        &format!("Resolution: {} pixels/inch", doc.resolution.round()),
+        &format!("分辨率：{} 像素/英寸", doc.resolution.round()),
         Align2::LEFT_CENTER,
         theme::body(),
         LABEL,
@@ -330,7 +330,7 @@ fn canvas_section(
     text(
         59.0,
         183.25,
-        "Mode",
+        "模式",
         Align2::RIGHT_CENTER,
         theme::body(),
         LABEL,
@@ -341,11 +341,15 @@ fn canvas_section(
             ui,
             "doc-mode",
             mode_rect.width(),
-            doc.color_mode.label(),
+            super::localized_label(doc.color_mode.label()),
             |ui| {
                 for m in ColorMode::ALL {
                     ui.add_enabled_ui(m == ColorMode::Rgb, |ui| {
-                        ui.selectable_value(&mut doc.color_mode, m, m.label());
+                        ui.selectable_value(
+                            &mut doc.color_mode,
+                            m,
+                            super::localized_label(m.label()),
+                        );
                     });
                 }
             },
@@ -357,11 +361,15 @@ fn canvas_section(
             ui,
             "doc-depth",
             depth_rect.width(),
-            doc.bit_depth.label(),
+            super::localized_label(doc.bit_depth.label()),
             |ui| {
                 for d in BitDepth::ALL {
                     ui.add_enabled_ui(d == BitDepth::U8, |ui| {
-                        ui.selectable_value(&mut doc.bit_depth, d, d.label());
+                        ui.selectable_value(
+                            &mut doc.bit_depth,
+                            d,
+                            super::localized_label(d.label()),
+                        );
                     });
                 }
             },
@@ -373,7 +381,7 @@ fn canvas_section(
     text(
         59.0,
         238.5,
-        "Fill",
+        "填充",
         Align2::RIGHT_CENTER,
         theme::body(),
         LABEL,
@@ -388,17 +396,11 @@ fn canvas_section(
         Stroke::new(pt(1.0), Color32::from_gray(0x36)),
         StrokeKind::Inside,
     );
-    let shown = if background { "White" } else { "Transparent" };
+    let shown = if background { "白色" } else { "透明" };
     let fill_rect = rect(86.5, 229.25, 196.5, 248.25);
     ui.scope_builder(egui::UiBuilder::new().max_rect(fill_rect), |ui| {
         widgets::dropdown(ui, "doc-fill", fill_rect.width(), shown, |ui| {
-            for f in [
-                "White",
-                "Black",
-                "Background Color",
-                "Transparent",
-                "Custom...",
-            ] {
+            for f in ["白色", "黑色", "背景色", "透明", "自定..."] {
                 ui.add_enabled_ui(f == shown, |ui| {
                     let _ = ui.selectable_label(f == shown, f);
                 });
@@ -407,15 +409,7 @@ fn canvas_section(
     });
 }
 
-const RULER_UNITS: [&str; 7] = [
-    "Pixels",
-    "Inches",
-    "Centimeters",
-    "Millimeters",
-    "Points",
-    "Picas",
-    "Percent",
-];
+const RULER_UNITS: [&str; 7] = ["像素", "英寸", "厘米", "毫米", "点", "派卡", "百分比"];
 
 /// A 26 pt icon button that's boxed when `on`; returns whether it was
 /// clicked.
@@ -462,7 +456,13 @@ fn button(ui: &mut Ui, painter: &egui::Painter, b: Rect, label: &str) -> bool {
     painter.text(
         b.center(),
         Align2::CENTER_CENTER,
-        label,
+        match label {
+            "Image Size" => "图像大小",
+            "Crop" => "裁剪",
+            "Trim" => "修边",
+            "Rotate" => "旋转",
+            _ => label,
+        },
         theme::body(),
         VALUE,
     );
@@ -669,7 +669,7 @@ fn empty(ui: &mut Ui) {
     ui.painter().text(
         ui.max_rect().center(),
         Align2::CENTER_CENTER,
-        "No Properties",
+        "无属性",
         theme::small(),
         color::TEXT_DISABLED,
     );

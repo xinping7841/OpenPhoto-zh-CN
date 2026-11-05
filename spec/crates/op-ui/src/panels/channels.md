@@ -52,3 +52,12 @@ The Channels tab of the third panel group (`mod.md`). It lists the composite (RG
 - ⌘2 targets all channels again;
 - ⌘-click on Red loads a selection, recorded as "Load Selection";
 - screenshot `channels_panel.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+The red, green and blue channel rows use Simplified Chinese names. RGB and the four shortcut strings are unchanged, as are channel indices and the Load Selection history identifier.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

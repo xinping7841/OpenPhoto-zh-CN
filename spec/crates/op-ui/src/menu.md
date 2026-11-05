@@ -1,5 +1,12 @@
 # menu.rs: macOS native menu bar
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+Dynamic Undo, Redo, Fade and Last Filter labels translate the stored operation through `state::display_name`; command IDs and `TransformIn` operation identifiers are not localized. Native Services, Hide Others and Show All items receive explicit Chinese labels.
+
+
 ## Responsibilities
 
 Creates the native menu bar on macOS with muda, structured after Photoshop 2026. Compiled only on macOS.

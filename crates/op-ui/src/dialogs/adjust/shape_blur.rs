@@ -43,7 +43,7 @@ impl AdjustDialog {
     pub(super) fn shape_blur_ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Shape Blur", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "形状模糊", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         self.legacy_preview(ui, frame, 261.0);
         let buttons = self.legacy_buttons(ui, frame, 267.0);
@@ -68,7 +68,7 @@ impl AdjustDialog {
             ui,
             at(268.0, 172.0),
             Align2::LEFT_CENTER,
-            "Shape:",
+            "形状:",
             appkit::TEXT,
         );
         let swatch = r(268.5, 196.5, 330.0, 231.5);
@@ -83,10 +83,10 @@ impl AdjustDialog {
 
         // Radius
         let row = Row {
-            label: "Radius:",
+            label: "半径:",
             label_right: 0.0,
             field: [65.5, 288.0, 125.0, 305.5],
-            unit: Some(("Pixels", 129.5)),
+            unit: Some(("像素", 129.5)),
             track: (20.5, 207.0, 312.5),
             scale: Scale::Linear,
         };
@@ -95,7 +95,7 @@ impl AdjustDialog {
             ui,
             at(19.5, 296.75),
             Align2::LEFT_CENTER,
-            "Radius:",
+            "半径:",
             appkit::TEXT,
         );
         self.legacy_row(ui, frame, RADIUS, &Row { label: "", ..row }, true, true);
@@ -134,7 +134,7 @@ impl AdjustDialog {
                 ui,
                 at(LIST[0] + 43.5, top + ROW_H / 2.0 - 0.5),
                 Align2::LEFT_CENTER,
-                shape.label(),
+                common::display_label(shape.label()),
                 appkit::TEXT,
             );
             if response.clicked() {

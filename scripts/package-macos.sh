@@ -13,7 +13,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
-DIST=dist
+DIST=${DIST:-dist}
 APP="$DIST/OpenPhoto.app"
 export MACOSX_DEPLOYMENT_TARGET=11.0
 
@@ -22,7 +22,10 @@ for target in aarch64-apple-darwin x86_64-apple-darwin; do
   cargo build --release --target "$target" -p openphoto -p op-mcp
 done
 
-rm -rf "$APP"
+if [ -e "$APP" ]; then
+  echo "Refusing to overwrite existing app bundle: $(pwd)/$APP" >&2
+  exit 1
+fi
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 for bin in openphoto op-mcp; do
   lipo -create -output "$APP/Contents/MacOS/$bin" \
@@ -32,6 +35,10 @@ for bin in openphoto op-mcp; do
 done
 sed "s/@VERSION@/$VERSION/g" packaging/macos/Info.plist > "$APP/Contents/Info.plist"
 cp packaging/macos/OpenPhoto.icns "$APP/Contents/Resources/"
+mkdir -p "$APP/Contents/Resources/Licenses"
+cp LICENSE-MIT LICENSE-APACHE "$APP/Contents/Resources/Licenses/"
+cp crates/op-ui/assets/fonts/OFL.txt "$APP/Contents/Resources/Licenses/SourceSans3-OFL.txt"
+cp crates/op-ui/assets/fonts/NotoSansCJK-LICENSE.txt "$APP/Contents/Resources/Licenses/"
 
 # Sign the helper first, then the bundle around it
 if [ -n "${SIGN_IDENTITY:-}" ]; then
@@ -44,15 +51,23 @@ fi
 "${sign[@]}" "$APP"
 codesign --verify --deep --strict "$APP"
 
-ZIP="$DIST/OpenPhoto-$VERSION-macos-universal.zip"
-rm -f "$ZIP"
+ZIP="$DIST/OpenPhoto-$VERSION-zh-CN-macos-universal.zip"
+if [ -e "$ZIP" ]; then
+  echo "Refusing to overwrite existing archive: $(pwd)/$ZIP" >&2
+  exit 1
+fi
 ditto -c -k --keepParent "$APP" "$ZIP"
 
 if [ -n "${NOTARY_PROFILE:-}" ]; then
   xcrun notarytool submit "$ZIP" --keychain-profile "$NOTARY_PROFILE" --wait
   xcrun stapler staple "$APP"
   spctl --assess --type execute --verbose "$APP"
-  rm -f "$ZIP"
-  ditto -c -k --keepParent "$APP" "$ZIP"
+  NOTARIZED_ZIP="$DIST/OpenPhoto-$VERSION-zh-CN-macos-universal-notarized.zip"
+  if [ -e "$NOTARIZED_ZIP" ]; then
+    echo "Refusing to overwrite existing notarized archive: $(pwd)/$NOTARIZED_ZIP" >&2
+    exit 1
+  fi
+  ditto -c -k --keepParent "$APP" "$NOTARIZED_ZIP"
+  ZIP="$NOTARIZED_ZIP"
 fi
 shasum -a 256 "$ZIP"

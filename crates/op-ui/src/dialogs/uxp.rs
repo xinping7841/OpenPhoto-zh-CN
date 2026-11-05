@@ -298,11 +298,11 @@ pub fn buttons(
     };
     let bold = theme::uxp_bold(pt(12.0));
     let ok = if ok_focused && ok_enabled {
-        common::ps_focused_button(ui, at(0.0), "OK", bold.clone())
+        common::ps_focused_button(ui, at(0.0), "确定", bold.clone())
     } else {
-        common::ps_button_with(ui, at(0.0), "OK", true, ok_enabled, bold.clone())
+        common::ps_button_with(ui, at(0.0), "确定", true, ok_enabled, bold.clone())
     };
-    let cancel = common::ps_button_with(ui, at(1.0), "Cancel", false, true, bold.clone());
+    let cancel = common::ps_button_with(ui, at(1.0), "取消", false, true, bold.clone());
     let third = third
         .map(|(label, enabled)| common::ps_button_with(ui, at(2.0), label, false, enabled, bold));
     if cancel.clicked() {
@@ -321,7 +321,7 @@ pub fn preview(ui: &mut Ui, min: Pos2, preview: &mut bool) {
     if ui.input_mut(|i| i.consume_key(egui::Modifiers::ALT, Key::P)) {
         *preview = !*preview;
     }
-    checkbox(ui, min, "Preview (Opt+P)", preview);
+    checkbox(ui, min, "预览 (Opt+P)", preview);
 }
 
 /// A 12 pt checkbox with its label 9.5 pt to the right.

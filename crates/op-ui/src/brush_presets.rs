@@ -14,6 +14,22 @@ pub struct Preset {
     pub pressure: Pressure,
 }
 
+impl Preset {
+    pub fn display_name(&self) -> &'static str {
+        match self.name {
+            "Soft Round" => "柔边圆",
+            "Hard Round" => "硬边圆",
+            "Soft Round Pressure Size" => "柔边圆 压力大小",
+            "Hard Round Pressure Size" => "硬边圆 压力大小",
+            "Soft Round Pressure Opacity" => "柔边圆 压力不透明度",
+            "Hard Round Pressure Opacity" => "硬边圆 压力不透明度",
+            "Soft Round Pressure Opacity and Flow" => "柔边圆 压力不透明度和流量",
+            "Hard Round Pressure Opacity and Flow" => "硬边圆 压力不透明度和流量",
+            name => name,
+        }
+    }
+}
+
 const fn preset(
     name: &'static str,
     hardness: f32,
@@ -78,7 +94,7 @@ pub fn picker_ui(ui: &mut Ui, options: &mut PaintOptions, hardness: bool) {
     ui.set_min_width(260.0);
     ui.spacing_mut().slider_width = 180.0;
     ui.horizontal(|ui| {
-        ui.label("Size:");
+        ui.label("大小：");
         ui.add(
             egui::Slider::new(&mut options.size, 1.0..=PaintOptions::MAX_SIZE)
                 .logarithmic(true)
@@ -88,7 +104,7 @@ pub fn picker_ui(ui: &mut Ui, options: &mut PaintOptions, hardness: bool) {
     });
     if hardness {
         ui.horizontal(|ui| {
-            ui.label("Hardness:");
+            ui.label("硬度：");
             let mut pct = options.hardness * 100.0;
             if ui
                 .add(
@@ -107,7 +123,7 @@ pub fn picker_ui(ui: &mut Ui, options: &mut PaintOptions, hardness: bool) {
         tip_dial(ui, options);
         ui.vertical(|ui| {
             ui.horizontal(|ui| {
-                ui.label("Angle:");
+                ui.label("角度：");
                 ui.add(
                     egui::DragValue::new(&mut options.angle)
                         .range(-180.0..=180.0)
@@ -116,7 +132,7 @@ pub fn picker_ui(ui: &mut Ui, options: &mut PaintOptions, hardness: bool) {
                 );
             });
             ui.horizontal(|ui| {
-                ui.label("Roundness:");
+                ui.label("圆度：");
                 let mut pct = options.roundness * 100.0;
                 if ui
                     .add(
@@ -133,13 +149,13 @@ pub fn picker_ui(ui: &mut Ui, options: &mut PaintOptions, hardness: bool) {
         });
     });
     ui.separator();
-    ui.label("General Brushes");
+    ui.label("常规画笔");
     for (k, p) in GENERAL.iter().enumerate() {
         let chosen = options.preset == Some(k);
         let row = ui.horizontal(|ui| {
             let (rect, _) = ui.allocate_exact_size(vec2(28.0, 22.0), Sense::hover());
             thumbnail(ui, rect, p);
-            ui.selectable_label(chosen, p.name)
+            ui.selectable_label(chosen, p.display_name())
         });
         if row.inner.clicked() {
             apply(options, k);
@@ -223,5 +239,6 @@ mod tests {
         assert_eq!((o.angle, o.roundness), (0.0, 1.0));
         assert_eq!(o.preset, Some(3));
         assert_eq!(GENERAL[7].name, "Hard Round Pressure Opacity and Flow");
+        assert_eq!(GENERAL[7].display_name(), "硬边圆 压力不透明度和流量");
     }
 }

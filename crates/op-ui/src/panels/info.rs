@@ -17,7 +17,7 @@ const WIDTH: f32 = pt(214.0);
 /// The second column's offset from the first.
 const COLUMN: f32 = pt(106.0);
 const LINE: f32 = pt(13.25);
-/// The readouts' first line (cap-height center), "8-bit" four lines on.
+/// The readouts' first line (cap-height center), "8 位" four lines on.
 const READOUT_Y: f32 = pt(19.75);
 const READOUTS_END: f32 = pt(85.0);
 const POSITION_END: f32 = pt(125.0);
@@ -53,10 +53,7 @@ pub fn height(app: &AppState) -> f32 {
 /// hints measured from Photoshop 2026 are known).
 pub fn tool_hint(tool: op_tools::Tool) -> Option<[&'static str; 2]> {
     match tool {
-        op_tools::Tool::ColorSampler => Some([
-            "Click image to place new color sampler.",
-            "Use Cmd for additional options.",
-        ]),
+        op_tools::Tool::ColorSampler => Some(["单击图像放置颜色取样器。", "按 Cmd 显示更多选项。"]),
         _ => None,
     }
 }
@@ -249,7 +246,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
             pair(label, value, x + COLON, READOUT_Y + i as f32 * LINE);
         }
         text(
-            "8-bit",
+            "8 位",
             x + COLON + pt(0.5),
             READOUT_Y + 4.0 * LINE,
             Align2::RIGHT_CENTER,
@@ -277,7 +274,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
     // The crosshair's triangle picks the mouse coordinates' unit
     let entries: Vec<Entry> = RulerUnit::ALL
         .iter()
-        .map(|u| Entry::item(u.label(), *u == unit))
+        .map(|u| Entry::item(super::localized_label(u.label()), *u == unit))
         .collect();
     if let Some(i) = icon_menu(ui, at(pt(14.5), pt(106.5)), ("info-units", 0), &entries) {
         picked.units = Some(RulerUnit::ALL[i]);

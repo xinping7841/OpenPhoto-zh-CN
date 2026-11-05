@@ -61,11 +61,8 @@ impl GridSizeDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Custom Grid Size", theme::dialog_bold(pt(13.0)));
-        for (k, (label, y)) in [("Rows:", 47.5), ("Columns:", 81.5)]
-            .into_iter()
-            .enumerate()
-        {
+        common::frame(ui, frame, "自定网格大小", theme::dialog_bold(pt(13.0)));
+        for (k, (label, y)) in [("行:", 47.5), ("列:", 81.5)].into_iter().enumerate() {
             appkit::text(ui, at(90.0, y), Align2::RIGHT_CENTER, label, appkit::TEXT);
             let (text, id) = if k == 0 {
                 (&mut self.rows, "grid-rows")
@@ -84,8 +81,14 @@ impl GridSizeDialog {
             );
         }
         let size = parse(&self.columns).zip(parse(&self.rows));
-        let ok = appkit::button(ui, r(220.0, 38.5, 288.0, 64.5), "OK", true, size.is_some());
-        let cancel = appkit::button(ui, r(220.0, 73.5, 288.0, 99.5), "Cancel", false, true);
+        let ok = appkit::button(
+            ui,
+            r(220.0, 38.5, 288.0, 64.5),
+            "确定",
+            true,
+            size.is_some(),
+        );
+        let cancel = appkit::button(ui, r(220.0, 73.5, 288.0, 99.5), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

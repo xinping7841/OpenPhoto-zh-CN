@@ -69,7 +69,7 @@ impl AdjustDialog {
     pub(super) fn smart_sharpen_ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Smart Sharpen", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "智能锐化", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         let open = self.extra.ss_open;
         self.legacy_preview(ui, frame, if open { 471.5 } else { 257.5 });
@@ -82,44 +82,30 @@ impl AdjustDialog {
             ui,
             at(372.5, 83.5),
             Align2::RIGHT_CENTER,
-            "Preset:",
+            "预设:",
             appkit::TEXT,
         );
         self.preset_popup(ui, r(379.0, 73.5, 579.0, 93.5));
 
         // Amount, Radius, and Reduce Noise (More Accurate in Legacy)
-        self.legacy_row(ui, frame, AMOUNT, &row("Amount:", 116.5, "%"), true, true);
+        self.legacy_row(ui, frame, AMOUNT, &row("数量:", 116.5, "%"), true, true);
         self.legacy_row(
             ui,
             frame,
             AMOUNT + 1,
             &Row {
                 scale: RADIUS_SCALE,
-                ..row("Radius:", 143.5, "px")
+                ..row("半径:", 143.5, "px")
             },
             true,
             false,
         );
         if self.value(LEGACY) == Some(1.0) {
             let mut on = self.value(MORE_ACCURATE) == Some(1.0);
-            appkit::checkbox_with(
-                ui,
-                at(386.5, 164.5),
-                (12.0, 9.5),
-                "More Accurate",
-                &mut on,
-                true,
-            );
+            appkit::checkbox_with(ui, at(386.5, 164.5), (12.0, 9.5), "较准确", &mut on, true);
             self.values[MORE_ACCURATE] = (on as u8).to_string();
         } else {
-            self.legacy_row(
-                ui,
-                frame,
-                NOISE,
-                &row("Reduce Noise:", 170.5, "%"),
-                true,
-                false,
-            );
+            self.legacy_row(ui, frame, NOISE, &row("减少杂色:", 170.5, "%"), true, false);
         }
 
         // Remove, with Motion Blur's angle
@@ -127,7 +113,7 @@ impl AdjustDialog {
             ui,
             at(372.5, 206.5),
             Align2::RIGHT_CENTER,
-            "Remove:",
+            "移去:",
             appkit::TEXT,
         );
         let remove = self.value(REMOVE).unwrap_or(1.0) as usize;
@@ -190,9 +176,9 @@ impl AdjustDialog {
         let bold = theme::dialog_bold(pt(13.0));
         let header = r(285.0, 245.0, 598.5, 266.0);
         let (title, title_y) = if open {
-            ("Shadows", 253.0)
+            ("阴影", 253.0)
         } else {
-            ("Shadows / Highlights", 257.5)
+            ("阴影 / 高光", 257.5)
         };
         if open {
             painter.line_segment(
@@ -222,13 +208,9 @@ impl AdjustDialog {
             self.pane = None;
         }
         if open {
-            for (k, (label, unit)) in [
-                ("Fade Amount:", "%"),
-                ("Tonal Width:", "%"),
-                ("Radius:", "px"),
-            ]
-            .into_iter()
-            .enumerate()
+            for (k, (label, unit)) in [("渐隐量:", "%"), ("色调宽度:", "%"), ("半径:", "px")]
+                .into_iter()
+                .enumerate()
             {
                 self.legacy_row(
                     ui,
@@ -246,17 +228,13 @@ impl AdjustDialog {
             painter.text(
                 at(295.0, 374.0),
                 Align2::LEFT_CENTER,
-                "Highlights",
+                "高光",
                 bold,
                 appkit::TEXT,
             );
-            for (k, (label, unit)) in [
-                ("Fade Amount:", "%"),
-                ("Tonal Width:", "%"),
-                ("Radius:", "px"),
-            ]
-            .into_iter()
-            .enumerate()
+            for (k, (label, unit)) in [("渐隐量:", "%"), ("色调宽度:", "%"), ("半径:", "px")]
+                .into_iter()
+                .enumerate()
             {
                 self.legacy_row(
                     ui,
@@ -287,20 +265,20 @@ impl AdjustDialog {
             .id(ui.id().with("ss-gear-menu"))
             .show(|ui| {
                 let check = if legacy {
-                    "✓ Use Legacy"
+                    "✓ 使用旧版"
                 } else {
-                    "Use Legacy"
+                    "使用旧版"
                 };
                 if ui.button(check).clicked() {
                     pick = Some(0);
                 }
-                if ui.button("Save Preset...").clicked() {
+                if ui.button("保存预设...").clicked() {
                     pick = Some(1);
                 }
                 if ui
                     .add_enabled(
                         self.extra.ss_preset.is_some(),
-                        egui::Button::new("Delete Preset"),
+                        egui::Button::new("删除预设"),
                     )
                     .clicked()
                 {
@@ -311,7 +289,7 @@ impl AdjustDialog {
             Some(0) => self.values[LEGACY] = (!legacy as u8).to_string(),
             Some(1) => {
                 let mut saved = SAVED.lock().expect("presets");
-                let name = format!("Preset {}", saved.len() + 1);
+                let name = format!("预设 {}", saved.len() + 1);
                 saved.push((name.clone(), self.values.clone()));
                 self.extra.ss_preset = Some(name);
             }
@@ -327,7 +305,7 @@ impl AdjustDialog {
     /// Preset: Default (Photoshop's values), then the saved presets.
     fn preset_popup(&mut self, ui: &mut Ui, rect: Rect) {
         let saved = SAVED.lock().expect("presets").clone();
-        let names: Vec<&str> = std::iter::once("Default")
+        let names: Vec<&str> = std::iter::once("默认")
             .chain(saved.iter().map(|(n, _)| n.as_str()))
             .collect();
         let chosen = self

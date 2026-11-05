@@ -18,21 +18,21 @@ pub const DITHER: usize = 2;
 
 /// The radios' rows (their centers' y) and the pop-ups' tops.
 const ROWS: [(f32, f32, &str, &str); 3] = [
-    (59.75, 48.0, "3DLUT File", ""),
-    (88.75, 77.0, "Abstract", "Load Abstract Profile..."),
-    (117.75, 106.0, "Device Link", "Load DeviceLink Profile..."),
+    (59.75, 48.0, "3DLUT 文件", ""),
+    (88.75, 77.0, "抽象", "载入抽象配置文件..."),
+    (117.75, 106.0, "设备链接", "载入设备链接配置文件..."),
 ];
 
 impl AdjustDialog {
     pub(super) fn color_lookup_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Color Lookup", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "颜色查找", theme::dialog_bold(pt(13.0)));
         let source = self.value(SOURCE).unwrap_or(0.0) as usize;
         let labels = self
             .extra
             .labels(self.kind, FILE, None)
-            .unwrap_or_else(|| vec!["Load 3D LUT...".to_owned()]);
+            .unwrap_or_else(|| vec!["载入 3D LUT...".to_owned()]);
         let file = self.value(FILE).unwrap_or(0.0) as usize;
         let mut picked = None;
         for (k, (cy, top, name, load)) in ROWS.into_iter().enumerate() {
@@ -102,7 +102,7 @@ impl AdjustDialog {
             self.pick(FILE, i);
         }
         let mut dither = self.value(DITHER) != Some(0.0);
-        uxp::checkbox(ui, at(20.0, 148.0), "Dither", &mut dither);
+        uxp::checkbox(ui, at(20.0, 148.0), "仿色", &mut dither);
         self.values[DITHER] = (dither as u8).to_string();
 
         // OK is always on (and focused), as in Photoshop: with nothing to

@@ -1,5 +1,12 @@
 # status_info.rs: What the status bar shows
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+The status menu uses Chinese item names. Status text localizes document/scratch prefixes, profile and compositing descriptions, efficiency, timing units, exposure notices, missing/changed counts, byte units and layer/group counters while preserving calculations and significant digits. Technical units `px`, `ppi`, RGB and Metal remain unchanged.
+
+
 ## Responsibilities
 
 The items of the menu behind the status bar's arrow, in Photoshop 2026's order, and the text the status bar shows for each. Labels and formats are Photoshop's own (its `$$$/Menu/Status/…` and `$$$/StatusBox/…` strings); the texts were compared one by one with Photoshop's status bar on the same 64 × 72 document.

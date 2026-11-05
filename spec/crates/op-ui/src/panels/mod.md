@@ -75,3 +75,12 @@ Window › Workspace lists Photoshop's items:
 
 - Panels dock only as tabs of an existing group (no new groups or columns, no docking beside the toolbar). The collapsed buttons show initials, not Photoshop's icons, and the floating frames have a fixed size. The layout is not saved across launches.
 - The panel menu (the three lines at the top right) has no content.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Panel tabs, flyout headings, placeholders and History/Comments tooltips use Simplified Chinese. IDs are derived from stable English names, independently of displayed titles. Collapsed panel initials stay English as icon-like data. A display-only label adapter translates known blend modes, color modes, bit depths, units, status labels without changing their source values; unknown labels pass through unchanged. Scoped regression tests verify localized titles, stable IDs, complete blend-mode display coverage and unknown-label passthrough. Brush labels use the brush-preset module's dedicated display API, keeping canonical preset names intact.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

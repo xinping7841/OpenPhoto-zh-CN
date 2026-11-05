@@ -41,7 +41,7 @@ The toolbar's "slots" from top to bottom. Each slot is a group of tools sharing 
 
 ### `Tool::name()`, `Tool::shortcut()`, `Tool::slot()`
 
-- `name()`: the full English name, the same as Photoshop's, for example `"Elliptical Marquee Tool"`.
+- `name()`: the full Simplified Chinese display name. This Chinese-only fork overrides English Photoshop wording parity; enum identities, toolbar grouping and single-key shortcuts remain unchanged.
 - `shortcut()`: the single-key shortcut, matching Photoshop. Tools in the same group share the group's letter (V, M, L, W, C, K, I, J, B, S, Y, E, G, O, P, T, A, U, H, Z); Rotate View uses R on its own. Single Row/Column Marquee, the Blur group, Add/Delete Anchor Point, Convert Point, and Adjustment Brush have no shortcut; the Selection Brush shares the Lasso group's L, as in Photoshop 2026.
 - `slot()`: the slot the tool is in.
 - `default_in_group(group)`: the tool a slot shows before another is picked: the group's first, except the Lasso in its group (Photoshop 2026 lists the Selection Brush first but shows the Lasso).

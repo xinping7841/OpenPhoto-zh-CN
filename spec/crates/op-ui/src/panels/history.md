@@ -42,3 +42,12 @@ All sizes are points (pt) measured 1:1 in Photoshop 2026:
 - The source marker in a state row reuses the snapshot row's brush icon; its exact look in Photoshop has not been measured.
 - Snapshots cannot be created, and documents cannot be created from a state.
 - The panel menu has no content; the Comments page has no content.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+The History and Comments tabs, Comments placeholder, collapse tooltip and footer tooltips use Simplified Chinese. Tab IDs retain the original English labels. Document names remain verbatim. Stored history-operation keys are translated for display through the shared state display adapter; the history data itself remains unchanged.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

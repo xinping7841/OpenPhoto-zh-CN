@@ -18,8 +18,8 @@ pub enum SaveChoice {
 /// The prompt's alert for the document titled `title`.
 pub fn alert(title: &str) -> Alert {
     Alert::choose(
-        format!("Save changes to the OpenPhoto document “{title}” before closing?"),
-        &["Save", "Don’t Save", "Cancel"],
+        format!("关闭前是否保存对 OpenPhoto 文档“{title}”的更改？"),
+        &["保存", "不保存", "取消"],
     )
 }
 

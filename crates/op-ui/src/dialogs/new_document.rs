@@ -54,10 +54,10 @@ impl Contents {
 
     fn label(self) -> &'static str {
         match self {
-            Self::White => "White",
-            Self::Black => "Black",
-            Self::BackgroundColor => "Background Color",
-            Self::Transparent => "Transparent",
+            Self::White => "白色",
+            Self::Black => "黑色",
+            Self::BackgroundColor => "背景色",
+            Self::Transparent => "透明",
         }
     }
 }
@@ -79,14 +79,14 @@ pub enum Outcome {
 /// The tabs and their text's left edges: Recent, Saved, then the preset
 /// categories (`document_presets::category`).
 const TABS: [(&str, f32); 8] = [
-    ("Recent", 49.5),
-    ("Saved", 112.5),
-    ("Photo", 172.0),
-    ("Print", 230.0),
-    ("Art & Illustration", 280.0),
-    ("Web", 398.0),
-    ("Mobile", 448.5),
-    ("Film & Video", 513.0),
+    ("最近使用", 49.5),
+    ("已保存", 112.5),
+    ("照片", 172.0),
+    ("打印", 230.0),
+    ("图稿与插图", 280.0),
+    ("网页", 398.0),
+    ("移动设备", 448.5),
+    ("电影与视频", 513.0),
 ];
 
 pub struct NewDocumentDialog {
@@ -257,7 +257,7 @@ impl NewDocumentDialog {
             height,
             resolution,
             contents: self.contents,
-            preset: self.preset("Custom")?,
+            preset: self.preset("自定")?,
         })
     }
 
@@ -350,11 +350,11 @@ impl NewDocumentDialog {
         self.details(ui, frame);
 
         let values = self.values();
-        let close = pill(ui, r(900.0, 658.0, 972.0, 690.0), "Close", false, true);
+        let close = pill(ui, r(900.0, 658.0, 972.0, 690.0), "关闭", false, true);
         let create_button = pill(
             ui,
             r(988.0, 658.0, 1060.0, 690.0),
-            "Create",
+            "创建",
             true,
             values.is_some(),
         );
@@ -412,15 +412,9 @@ impl NewDocumentDialog {
                         close_welcome = true;
                     }
                     let (title, lines) = if welcome {
-                        (
-                            "Let’s start something new.",
-                            "Start with your own document settings or from a range of",
-                        )
+                        ("开始创建新作品吧。", "使用自己的文档设置，或选择")
                     } else {
-                        (
-                            "You can always find it here.",
-                            "This is where you’ll find your saved",
-                        )
+                        ("您随时可以在这里找到它。", "在这里查找已保存的")
                     };
                     painter.text(
                         at(377.0, 147.0),
@@ -433,9 +427,8 @@ impl NewDocumentDialog {
                         // "...range of document presets to / get working quickly."
                         let font = theme::uxp(pt(16.0));
                         let a = painter.layout_no_wrap(format!("{lines} "), font.clone(), TEXT);
-                        let l =
-                            painter.layout_no_wrap("document presets".into(), font.clone(), LINK);
-                        let b = painter.layout_no_wrap(" to".into(), font.clone(), TEXT);
+                        let l = painter.layout_no_wrap("文档预设".into(), font.clone(), LINK);
+                        let b = painter.layout_no_wrap("以便".into(), font.clone(), TEXT);
                         let total = a.size().x + l.size().x + b.size().x;
                         let y = at(0.0, 187.0).y - a.size().y / 2.0;
                         let mut x = at(377.0, 0.0).x - total / 2.0;
@@ -460,17 +453,14 @@ impl NewDocumentDialog {
                         painter.text(
                             at(377.0, 211.0),
                             Align2::CENTER_CENTER,
-                            "get working quickly.",
+                            "快速开始创作。",
                             font,
                             TEXT,
                         );
                     } else {
-                        for (k, line) in [
-                            "This is where you’ll find your saved presets",
-                            "that you’ve saved with the icon next to the name.",
-                        ]
-                        .into_iter()
-                        .enumerate()
+                        for (k, line) in ["这里显示您保存的预设，", "可通过名称旁的图标保存。"]
+                            .into_iter()
+                            .enumerate()
                         {
                             painter.text(
                                 at(377.0, 187.0 + 24.0 * k as f32),
@@ -486,9 +476,9 @@ impl NewDocumentDialog {
                     return;
                 }
                 let heading = match self.tab {
-                    0 => "YOUR RECENT ITEMS",
-                    1 => "YOUR SAVED PRESETS",
-                    _ => "BLANK DOCUMENT PRESETS",
+                    0 => "最近使用的项目",
+                    1 => "已保存的预设",
+                    _ => "空白文档预设",
                 };
                 let header_y = if welcome { 286.0 } else { 103.0 };
                 let h = painter.text(
@@ -591,7 +581,7 @@ impl NewDocumentDialog {
         painter.text(
             at(791.0, 100.75),
             Align2::LEFT_CENTER,
-            "PRESET DETAILS",
+            "预设详细信息",
             theme::uxp(pt(12.5)),
             LABEL,
         );
@@ -620,14 +610,14 @@ impl NewDocumentDialog {
                 TEXT
             },
         );
-        if save_r.on_hover_text("Save Preset").clicked()
+        if save_r.on_hover_text("保存预设").clicked()
             && let Some(p) = self.preset(self.name.trim())
         {
             self.saved.push(p.clone());
             self.new_saved.push(p);
         }
 
-        label(791.0, 168.5, "Width");
+        label(791.0, 168.5, "宽度");
         field(
             ui,
             r(790.0, 180.5, 862.0, 212.5),
@@ -651,9 +641,9 @@ impl NewDocumentDialog {
             self.set_unit(unit);
         }
 
-        label(791.0, 232.0, "Height");
-        label(874.5, 231.0, "Orientation");
-        label(944.0, 231.0, "Artboards");
+        label(791.0, 232.0, "高度");
+        label(874.5, 231.0, "方向");
+        label(944.0, 231.0, "画板");
         field(
             ui,
             r(790.0, 243.5, 862.0, 275.5),
@@ -689,7 +679,7 @@ impl NewDocumentDialog {
             StrokeKind::Inside,
         );
 
-        label(791.0, 292.0, "Resolution");
+        label(791.0, 292.0, "分辨率");
         field(
             ui,
             r(790.0, 304.0, 862.0, 336.0),
@@ -698,9 +688,9 @@ impl NewDocumentDialog {
         );
         let mut per_cm = self.per_cm;
         let res_label = if per_cm {
-            "Pixels/Centimeter"
+            "像素/厘米"
         } else {
-            "Pixels/Inch"
+            "像素/英寸"
         };
         popup(
             ui,
@@ -709,8 +699,8 @@ impl NewDocumentDialog {
             res_label,
             true,
             |ui| {
-                ui.selectable_value(&mut per_cm, false, "Pixels/Inch");
-                ui.selectable_value(&mut per_cm, true, "Pixels/Centimeter");
+                ui.selectable_value(&mut per_cm, false, "像素/英寸");
+                ui.selectable_value(&mut per_cm, true, "像素/厘米");
             },
         );
         if per_cm != self.per_cm {
@@ -721,20 +711,20 @@ impl NewDocumentDialog {
             self.per_cm = per_cm;
         }
 
-        label(791.0, 354.5, "Color Mode");
+        label(791.0, 354.5, "颜色模式");
         popup(
             ui,
             r(790.0, 367.0, 957.5, 399.0),
             "nd-mode",
-            "RGB Color",
+            "RGB 颜色",
             true,
             |ui| {
                 for (m, on) in [
-                    ("Bitmap", false),
-                    ("Grayscale", false),
-                    ("RGB Color", true),
-                    ("CMYK Color", false),
-                    ("Lab Color", false),
+                    ("位图", false),
+                    ("灰度", false),
+                    ("RGB 颜色", true),
+                    ("CMYK 颜色", false),
+                    ("Lab 颜色", false),
                 ] {
                     ui.add_enabled_ui(on, |ui| {
                         let _ = ui.selectable_label(on, m);
@@ -746,10 +736,10 @@ impl NewDocumentDialog {
             ui,
             r(969.5, 367.0, 1060.0, 399.0),
             "nd-bits",
-            "8 bit",
+            "8 位",
             true,
             |ui| {
-                for (b, on) in [("8 bit", true), ("16 bit", false), ("32 bit", false)] {
+                for (b, on) in [("8 位", true), ("16 位", false), ("32 位", false)] {
                     ui.add_enabled_ui(on, |ui| {
                         let _ = ui.selectable_label(on, b);
                     });
@@ -757,7 +747,7 @@ impl NewDocumentDialog {
             },
         );
 
-        label(791.0, 415.5, "Background Contents");
+        label(791.0, 415.5, "背景内容");
         let mut contents = self.contents;
         popup(
             ui,
@@ -770,7 +760,7 @@ impl NewDocumentDialog {
                     ui.selectable_value(&mut contents, c, c.label());
                 }
                 ui.add_enabled_ui(false, |ui| {
-                    let _ = ui.selectable_label(false, "Custom...");
+                    let _ = ui.selectable_label(false, "自定...");
                 });
             },
         );
@@ -806,34 +796,34 @@ impl NewDocumentDialog {
         painter.text(
             at(805.0, 478.75),
             Align2::LEFT_CENTER,
-            "Advanced Options",
+            "高级选项",
             theme::uxp(pt(12.0)),
             LABEL,
         );
         if self.advanced {
-            label(791.0, 507.5, "Color Profile");
+            label(791.0, 507.5, "颜色配置文件");
             popup(
                 ui,
                 r(790.0, 519.5, 1060.0, 551.5),
                 "nd-profile",
-                "Working RGB: sRGB IEC61966-2.1",
+                "工作 RGB: sRGB IEC61966-2.1",
                 true,
                 |ui| {
-                    let _ = ui.selectable_label(true, "Working RGB: sRGB IEC61966-2.1");
+                    let _ = ui.selectable_label(true, "工作 RGB: sRGB IEC61966-2.1");
                     ui.add_enabled_ui(false, |ui| {
-                        let _ = ui.selectable_label(false, "Don't Color Manage this Document");
+                        let _ = ui.selectable_label(false, "不对此文档进行色彩管理");
                     });
                 },
             );
-            label(791.0, 568.0, "Pixel Aspect Ratio");
+            label(791.0, 568.0, "像素长宽比");
             popup(
                 ui,
                 r(790.0, 580.5, 1060.0, 612.5),
                 "nd-aspect",
-                "Square Pixels",
+                "方形像素",
                 true,
                 |ui| {
-                    let _ = ui.selectable_label(true, "Square Pixels");
+                    let _ = ui.selectable_label(true, "方形像素");
                 },
             );
         }
@@ -843,7 +833,7 @@ impl NewDocumentDialog {
 /// A preset for the settings entered by hand.
 fn custom(w: f64, h: f64, unit: Unit, ppi: f64) -> Preset {
     Preset {
-        name: "Custom".into(),
+        name: "自定".into(),
         width: w,
         height: h,
         unit,
@@ -884,7 +874,7 @@ fn window(painter: &egui::Painter, frame: Rect) {
     painter.text(
         bar.center(),
         Align2::CENTER_CENTER,
-        "New Document",
+        "新建文档",
         theme::dialog_bold(pt(13.0)),
         Color32::from_gray(0x3c),
     );
@@ -1045,7 +1035,7 @@ fn pill(ui: &mut Ui, rect: Rect, label: &str, primary: bool, enabled: bool) -> e
 /// The search field's placeholder. Photoshop's names Adobe Stock; the app
 /// uses no Adobe service and shows no Adobe brand, so it says only what
 /// the field is for.
-const SEARCH_PLACEHOLDER: &str = "Search for an image or template";
+const SEARCH_PLACEHOLDER: &str = "搜索图像或模板";
 
 /// The template search under the list, where Photoshop searches Adobe
 /// Stock: this app has no template service, so it only shows.
@@ -1085,7 +1075,7 @@ fn search_bar(ui: &mut Ui, frame: Rect) {
     painter.text(
         b.center(),
         Align2::CENTER_CENTER,
-        "Search",
+        "搜索",
         theme::uxp_bold(pt(14.0)),
         Color32::from_gray(0xb0),
     );

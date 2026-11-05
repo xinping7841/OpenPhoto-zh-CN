@@ -154,7 +154,7 @@ impl Dialog {
         }
         for (label, right, x, value, id, range) in [
             (
-                "Scale:",
+                "缩放:",
                 325.5,
                 330.5,
                 &mut self.scale,
@@ -162,7 +162,7 @@ impl Dialog {
                 SCALE_RANGE,
             ),
             (
-                "Offset:",
+                "位移:",
                 429.5,
                 434.5,
                 &mut self.offset,
@@ -193,11 +193,11 @@ impl Dialog {
         let button = |ui: &mut Ui, y: f32, label: &str, default: bool, enabled: bool| {
             appkit::button(ui, r(543.5, y, 623.5, y + 26.0), label, default, enabled)
         };
-        let ok = button(ui, 38.5, "OK", true, valid);
-        let cancel = button(ui, 73.5, "Cancel", false, true);
-        let load = button(ui, 143.5, "Load...", false, true);
-        let save = button(ui, 178.5, "Save...", false, valid);
-        appkit::checkbox(ui, at(543.0, 216.5), "Preview", preview);
+        let ok = button(ui, 38.5, "确定", true, valid);
+        let cancel = button(ui, 73.5, "取消", false, true);
+        let load = button(ui, 143.5, "载入...", false, true);
+        let save = button(ui, 178.5, "保存...", false, valid);
+        appkit::checkbox(ui, at(543.0, 216.5), "预览", preview);
         let request = if load.clicked() {
             Some(Request::Load)
         } else if save.clicked() {

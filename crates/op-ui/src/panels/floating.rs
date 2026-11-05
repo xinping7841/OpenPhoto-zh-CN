@@ -34,6 +34,19 @@ impl Floating {
 
     pub fn title(self) -> &'static str {
         match self {
+            Self::Info => "信息",
+            Self::Navigator => "导航器",
+            Self::Histogram => "直方图",
+            Self::CloneSource => "仿制源",
+            Self::Brushes => "画笔",
+            Self::BrushSettings => "画笔设置",
+            Self::ToolPresets => "工具预设",
+            Self::LayerComps => "图层复合",
+        }
+    }
+
+    fn id(self) -> &'static str {
+        match self {
             Self::Info => "Info",
             Self::Navigator => "Navigator",
             Self::Histogram => "Histogram",
@@ -123,7 +136,7 @@ pub fn show(ctx: &egui::Context, app: &mut AppState, panel_column_left: f32, top
         }
         let mut close = false;
         let mut options = None;
-        egui::Area::new(egui::Id::new(("floating-panel", panel.title())))
+        egui::Area::new(egui::Id::new(("floating-panel", panel.id())))
             .default_pos(default)
             .movable(true)
             .order(egui::Order::Foreground)
@@ -163,7 +176,7 @@ pub fn show(ctx: &egui::Context, app: &mut AppState, panel_column_left: f32, top
                     Vec2::splat(pt(18.0)),
                 );
                 let close_response =
-                    ui.interact(x, ui.id().with(("close", panel.title())), Sense::click());
+                    ui.interact(x, ui.id().with(("close", panel.id())), Sense::click());
                 painter.text(
                     x.center(),
                     Align2::CENTER_CENTER,
@@ -185,7 +198,7 @@ pub fn show(ctx: &egui::Context, app: &mut AppState, panel_column_left: f32, top
                         Vec2::splat(pt(18.0)),
                     );
                     let menu_response =
-                        ui.interact(menu, ui.id().with(("menu", panel.title())), Sense::click());
+                        ui.interact(menu, ui.id().with(("menu", panel.id())), Sense::click());
                     for k in 0..4 {
                         painter.rect_filled(
                             Rect::from_center_size(
@@ -201,9 +214,9 @@ pub fn show(ctx: &egui::Context, app: &mut AppState, panel_column_left: f32, top
                         );
                     }
                     egui::Popup::menu(&menu_response)
-                        .id(ui.id().with(("panel-menu", panel.title())))
+                        .id(ui.id().with(("panel-menu", panel.id())))
                         .show(|ui| {
-                            if ui.button("Panel Options...").clicked() {
+                            if ui.button("面板选项...").clicked() {
                                 options = Some(panel);
                             }
                         });
@@ -241,14 +254,14 @@ pub fn panel_options(ctx: &egui::Context, app: &mut AppState) {
     egui::Modal::new(egui::Id::new("panel-options")).show(ctx, |ui| {
         ui.set_min_width(pt(300.0));
         let title = match panel {
-            Floating::Info => "Info Panel Options",
-            _ => "Navigator Panel Options",
+            Floating::Info => "信息面板选项",
+            _ => "导航器面板选项",
         };
         ui.heading(title);
         if panel == Floating::Info {
             super::panel_options::info_options_ui(ui, &mut info);
         } else {
-            ui.strong("Color:");
+            ui.strong("颜色：");
             egui::ComboBox::from_id_salt("navigator-box")
                 .selected_text(super::panel_options::VIEW_BOX_COLORS[view_box].0)
                 .show_ui(ui, |ui| {
@@ -258,10 +271,10 @@ pub fn panel_options(ctx: &egui::Context, app: &mut AppState) {
                 });
         }
         ui.horizontal(|ui| {
-            if ui.button("OK").clicked() {
+            if ui.button("确定").clicked() {
                 done = Some(true);
             }
-            if ui.button("Cancel").clicked() {
+            if ui.button("取消").clicked() {
                 done = Some(false);
             }
         });

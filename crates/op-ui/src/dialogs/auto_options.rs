@@ -12,11 +12,7 @@ use crate::theme::{self, pt};
 
 pub const SIZE: egui::Vec2 = vec2(pt(346.0), pt(385.0));
 /// The three target rows: label, center line.
-const TARGETS: [(&str, f32); 3] = [
-    ("Shadows:", 257.25),
-    ("Midtones:", 288.25),
-    ("Highlights:", 319.25),
-];
+const TARGETS: [(&str, f32); 3] = [("阴影:", 257.25), ("中间调:", 288.25), ("高光:", 319.25)];
 /// The target rows' labels (dimmer than the radio labels).
 const TARGET_TEXT: Color32 = Color32::from_gray(0xd6);
 
@@ -98,12 +94,7 @@ impl AutoOptionsDialog {
     fn ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(
-            ui,
-            frame,
-            "Auto Color Correction Options",
-            theme::dialog_bold(pt(13.0)),
-        );
+        common::frame(ui, frame, "自动颜色校正选项", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         // A group box, its title at x 30.5 breaking the top edge (6 pt
         // before the title, 5 after)
@@ -113,14 +104,14 @@ impl AutoOptionsDialog {
         };
 
         // Algorithms: four radios 27 pt apart, a rule, Snap Neutral Midtones
-        group(ui, r(10.75, 46.75, 259.75, 206.75), "Algorithms");
+        group(ui, r(10.75, 46.75, 259.75, 206.75), "算法");
         for (k, algorithm) in Algorithm::ALL.into_iter().enumerate() {
             let y = 71.25 + k as f32 * 27.0;
             let chosen = self.options.algorithm == algorithm;
             if appkit::radio_with(
                 ui,
                 at(27.25, y),
-                algorithm.label(),
+                crate::dialogs::common::display_label(algorithm.label()),
                 chosen,
                 (16.25, appkit::font()),
             ) {
@@ -134,17 +125,13 @@ impl AutoOptionsDialog {
             ui,
             at(20.0, 182.0),
             (12.5, 10.0),
-            "Snap Neutral Midtones",
+            "吸附中性中间调",
             &mut self.options.snap_neutral,
             options_on,
         );
 
         // Target Colors & Clipping
-        group(
-            ui,
-            r(10.75, 231.75, 259.75, 339.75),
-            "Target Colors & Clipping",
-        );
+        group(ui, r(10.75, 231.75, 259.75, 339.75), "目标颜色和修剪");
         let ink = |color: Color32| if options_on { color } else { appkit::TEXT_OFF };
         for (k, (label, y)) in TARGETS.into_iter().enumerate() {
             appkit::text(
@@ -183,7 +170,7 @@ impl AutoOptionsDialog {
                 ui,
                 at(178.0, y),
                 Align2::RIGHT_CENTER,
-                "Clip:",
+                "修剪:",
                 ink(TARGET_TEXT),
             );
             let (text, id) = if k == 0 {
@@ -227,13 +214,13 @@ impl AutoOptionsDialog {
             ui,
             at(10.0, 359.0),
             (12.5, 11.0),
-            "Save as defaults",
+            "存储为默认值",
             &mut self.save_defaults,
             true,
         );
 
-        let ok = appkit::button(ui, r(276.0, 45.0, 336.5, 71.0), "OK", true, true);
-        let cancel = appkit::button(ui, r(276.0, 80.0, 336.5, 106.0), "Cancel", false, true);
+        let ok = appkit::button(ui, r(276.0, 45.0, 336.5, 71.0), "确定", true, true);
+        let cancel = appkit::button(ui, r(276.0, 80.0, 336.5, 106.0), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

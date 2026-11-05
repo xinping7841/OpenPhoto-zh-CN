@@ -27,14 +27,14 @@ impl AdjustDialog {
     pub(super) fn wave_ui(&mut self, ui: &mut Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Wave", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "波浪", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         let text = |ui: &Ui, x: f32, y: f32, align: Align2, s: &str| {
             appkit::text(ui, at(x, y), align, s, appkit::TEXT);
         };
 
         // Number of Generators
-        text(ui, 15.5, 44.0, Align2::LEFT_CENTER, "Number of Generators:");
+        text(ui, 15.5, 44.0, Align2::LEFT_CENTER, "生成器数量:");
         self.wave_field(ui, GENERATORS, r(246.0, 35.5, 273.5, 53.5), true);
         self.wave_track(ui, GENERATORS, 62.0, false, frame);
 
@@ -42,28 +42,28 @@ impl AdjustDialog {
         // the first's slider (pin down) over the second's (pin up)
         for (label, label_y, field_y, heads, first, tracks, percent) in [
             (
-                "Wavelength:",
+                "波长:",
                 106.5,
                 96.0,
-                ["Min.", "Max."],
+                ["最小", "最大"],
                 1,
                 (140.0, 155.0),
                 false,
             ),
             (
-                "Amplitude:",
+                "波幅:",
                 205.0,
                 195.0,
-                ["Min.", "Max."],
+                ["最小", "最大"],
                 3,
                 (239.0, 254.0),
                 false,
             ),
             (
-                "Scale:",
+                "缩放:",
                 308.0,
                 296.0,
-                ["Horiz.", "Vert."],
+                ["水平", "垂直"],
                 5,
                 (337.0, 349.0),
                 true,
@@ -109,9 +109,9 @@ impl AdjustDialog {
             );
             appkit::label(ui, Pos2::new(x, rect.top() + pt(1.5)), title);
         };
-        group(ui, r(298.5, 46.0, 378.5, 117.0), "Type:", 316.0);
+        group(ui, r(298.5, 46.0, 378.5, 117.0), "类型:", 316.0);
         let kind = self.value(TYPE).unwrap_or(0.0) as usize;
-        for (k, (y, label)) in [(64.0, "Sine"), (84.0, "Triangle"), (104.0, "Square")]
+        for (k, (y, label)) in [(64.0, "正弦"), (84.0, "三角形"), (104.0, "方形")]
             .into_iter()
             .enumerate()
         {
@@ -133,7 +133,7 @@ impl AdjustDialog {
         if super::flat_button(
             ui,
             r(371.0, 291.0, 464.0, 317.0),
-            "Randomize",
+            "随机化",
             "wave-randomize",
         ) {
             self.extra.seed = self
@@ -144,9 +144,9 @@ impl AdjustDialog {
         }
 
         // Undefined Areas
-        group(ui, r(295.0, 333.5, 540.5, 386.0), "Undefined Areas:", 312.5);
+        group(ui, r(295.0, 333.5, 540.5, 386.0), "未定义区域:", 312.5);
         let undefined = self.value(UNDEFINED).unwrap_or(1.0) as usize;
-        for (k, (y, label)) in [(352.0, "Wrap Around"), (372.0, "Repeat Edge Pixels")]
+        for (k, (y, label)) in [(352.0, "折回"), (372.0, "重复边缘像素")]
             .into_iter()
             .enumerate()
         {
@@ -166,7 +166,7 @@ impl AdjustDialog {
         let ok = appkit::button_with(
             ui,
             r(392.5, 39.0, 531.0, 65.0),
-            "OK",
+            "确定",
             (true, valid),
             13.0,
             0.0,
@@ -174,7 +174,7 @@ impl AdjustDialog {
         let cancel = appkit::button_with(
             ui,
             r(392.5, 75.0, 531.0, 101.0),
-            "Cancel",
+            "取消",
             (false, true),
             13.0,
             0.0,

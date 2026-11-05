@@ -49,13 +49,13 @@ impl Unit {
 
     fn label(self) -> &'static str {
         match self {
-            Self::Pixels => "Pixels",
-            Self::Percent => "Percent",
-            Self::Inches => "Inches",
-            Self::Centimeters => "Centimeters",
-            Self::Millimeters => "Millimeters",
-            Self::Points => "Points",
-            Self::Picas => "Picas",
+            Self::Pixels => "像素",
+            Self::Percent => "百分比",
+            Self::Inches => "英寸",
+            Self::Centimeters => "厘米",
+            Self::Millimeters => "毫米",
+            Self::Points => "点",
+            Self::Picas => "派卡",
         }
     }
 
@@ -110,12 +110,12 @@ impl Extension {
 
     fn label(self) -> &'static str {
         match self {
-            Self::Foreground => "Foreground",
-            Self::Background => "Background",
-            Self::White => "White",
-            Self::Black => "Black",
-            Self::Gray => "Gray",
-            Self::Other => "Other...",
+            Self::Foreground => "前景色",
+            Self::Background => "背景色",
+            Self::White => "白色",
+            Self::Black => "黑色",
+            Self::Gray => "灰色",
+            Self::Other => "其他...",
         }
     }
 }
@@ -303,7 +303,7 @@ impl CanvasSizeDialog {
         let font = theme::uxp(FONT);
         let bold = theme::uxp_bold(FONT);
         let painter = ui.painter().clone();
-        common::frame(ui, frame, "Canvas Size", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "画布大小", theme::dialog_bold(pt(13.0)));
         let label = |right: f32, cy: f32, text: &str| {
             painter.text(
                 at(right, cy),
@@ -321,15 +321,15 @@ impl CanvasSizeDialog {
             &painter,
             at(20.0, 57.5),
             &format!(
-                "Current Size: {}",
+                "当前大小: {}",
                 self.size_label(self.width.original, self.height.original)
             ),
             &bold,
             at(RULE_END, 0.0).x,
         );
         for (text, value, cy) in [
-            ("Width", self.width.original, 81.0),
-            ("Height", self.height.original, 102.5),
+            ("宽度", self.width.original, 81.0),
+            ("高度", self.height.original, 102.5),
         ] {
             label(55.0, cy, text);
             painter.text(
@@ -348,17 +348,14 @@ impl CanvasSizeDialog {
         section(
             &painter,
             at(20.0, 130.5),
-            &format!("New Size: {new_label}"),
+            &format!("新大小: {new_label}"),
             &bold,
             at(RULE_END, 0.0).x,
         );
 
         let resolution = self.resolution;
         let first_frame = self.first_frame;
-        for (i, (text, y0)) in [("Width", 145.0), ("Height", 174.0)]
-            .into_iter()
-            .enumerate()
-        {
+        for (i, (text, y0)) in [("宽度", 145.0), ("高度", 174.0)].into_iter().enumerate() {
             label(55.0, y0 + 13.0, text);
             let dim = if i == 0 {
                 &mut self.width
@@ -405,13 +402,7 @@ impl CanvasSizeDialog {
         }
 
         let mut relative = self.relative;
-        common::ps_checkbox(
-            ui,
-            at(64.0, 216.0),
-            "Relative to current dimension",
-            &mut relative,
-            true,
-        );
+        common::ps_checkbox(ui, at(64.0, 216.0), "相对于当前尺寸", &mut relative, true);
         if relative != self.relative {
             self.width.set_relative(relative, resolution);
             self.height.set_relative(relative, resolution);
@@ -422,7 +413,7 @@ impl CanvasSizeDialog {
         painter.text(
             at(20.0, 255.0),
             Align2::LEFT_CENTER,
-            "Anchor",
+            "定位",
             font.clone(),
             TEXT,
         );
@@ -441,7 +432,7 @@ impl CanvasSizeDialog {
         painter.text(
             at(20.5, 341.0),
             Align2::LEFT_CENTER,
-            "Canvas extension color",
+            "画布扩展颜色",
             font.clone(),
             if on { TEXT } else { TEXT_OFF },
         );
@@ -512,19 +503,12 @@ impl CanvasSizeDialog {
         let ok = common::ps_button(
             ui,
             r(368.0, 48.0, 438.0, 72.0),
-            "OK",
+            "确定",
             true,
             new_size.is_some(),
             true,
         );
-        let cancel = common::ps_button(
-            ui,
-            r(368.0, 84.0, 438.0, 108.0),
-            "Cancel",
-            false,
-            true,
-            true,
-        );
+        let cancel = common::ps_button(ui, r(368.0, 84.0, 438.0, 108.0), "取消", false, true, true);
         let enter = active && ui.input(|i| i.key_pressed(Key::Enter));
         if cancel.clicked() {
             return Outcome::Cancel;

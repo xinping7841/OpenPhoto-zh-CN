@@ -11,21 +11,21 @@ use crate::state::{DocState, PaintOptions};
 /// The gear menu's Overlay Option colors, in Photoshop's order (their
 /// swatches as Photoshop draws them).
 pub const OVERLAY_COLORS: [(&str, [u8; 3]); 13] = [
-    ("Blue", [0x42, 0x7f, 0xe4]),
-    ("Green", [0x61, 0xb6, 0x93]),
-    ("Chartreuse", [0xa1, 0xdc, 0x60]),
-    ("Yellow", [0xf4, 0xdb, 0x49]),
-    ("Orange", [0xec, 0xa8, 0x54]),
-    ("Red", [0xe6, 0x76, 0x77]),
+    ("蓝色", [0x42, 0x7f, 0xe4]),
+    ("绿色", [0x61, 0xb6, 0x93]),
+    ("黄绿色", [0xa1, 0xdc, 0x60]),
+    ("黄色", [0xf4, 0xdb, 0x49]),
+    ("橙色", [0xec, 0xa8, 0x54]),
+    ("红色", [0xe6, 0x76, 0x77]),
     // The overlay Photoshop paints with its default Magenta, measured on
     // the canvas (the swatch itself is #d2559b)
-    ("Magenta", [0xe5, 0x61, 0xab]),
-    ("Purple", [0x8a, 0x59, 0xd3]),
-    ("Indigo", [0x68, 0x67, 0xe4]),
-    ("Fuchsia", [0xd4, 0x6d, 0xe8]),
-    ("Seafoam", [0x63, 0xcc, 0xd3]),
-    ("White", [0xf4, 0xf5, 0xf4]),
-    ("Black", [0x00, 0x00, 0x00]),
+    ("洋红色", [0xe5, 0x61, 0xab]),
+    ("紫色", [0x8a, 0x59, 0xd3]),
+    ("靛蓝色", [0x68, 0x67, 0xe4]),
+    ("紫红色", [0xd4, 0x6d, 0xe8]),
+    ("海绿色", [0x63, 0xcc, 0xd3]),
+    ("白色", [0xf4, 0xf5, 0xf4]),
+    ("黑色", [0x00, 0x00, 0x00]),
 ];
 /// Magenta.
 pub const DEFAULT_OVERLAY: usize = 6;
@@ -33,7 +33,7 @@ pub const DEFAULT_OVERLAY: usize = 6;
 const OVERLAY_OPACITY: f32 = 0.5;
 
 /// Photoshop's alert when the tool is used with no layer selected.
-pub const NO_LAYER: &str = "Can't use the tool because no layers are selected.";
+pub const NO_LAYER: &str = "无法使用此工具，因为未选择任何图层。";
 
 /// Press and drag to paint the selection: Add (or Subtract, also while Alt
 /// is held) with the tool's brush at its Opacity. One "Selection Brush"

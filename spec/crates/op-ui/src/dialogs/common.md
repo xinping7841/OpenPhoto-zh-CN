@@ -1,5 +1,9 @@
 # dialogs/common.rs: shared dialog parts
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork uses direct Simplified Chinese literals for dialog-owned UI copy instead of English wording parity with Photoshop. Existing English wording examples identify controls and measured layout roles, not required display strings. `display_label` translates only built-in external enum labels at UI call sites (blend modes, layer colors, resampling methods, auto-correction algorithms, gradient methods, HDR methods and blur shapes); unknown labels pass through. It is not used on document data or serialization, so user names, format keys, enum match keys and shortcuts remain unchanged. Unit tests cover representative translations and unknown-label passthrough. Chinese glyph coverage and clipping still require visual verification.
+
 ## Responsibilities
 
 Appearance parts shared by the modal dialogs, ensuring all dialogs look consistent.

@@ -14,26 +14,26 @@ const DENSITY: (f32, f32) = (1.0, 100.0);
 
 /// Photoshop's Photo Filter presets and their colors.
 pub const FILTERS: [(&str, [u8; 3]); 20] = [
-    ("Warming Filter (85)", [0xec, 0x8a, 0x00]),
-    ("Warming Filter (LBA)", [0xfa, 0x96, 0x00]),
-    ("Warming Filter (81)", [0xeb, 0xb1, 0x13]),
-    ("Cooling Filter (80)", [0x00, 0x6d, 0xff]),
-    ("Cooling Filter (LBB)", [0x00, 0x5d, 0xff]),
-    ("Cooling Filter (82)", [0x00, 0xb5, 0xff]),
-    ("Red", [0xea, 0x1a, 0x1a]),
-    ("Orange", [0xf3, 0x84, 0x17]),
-    ("Yellow", [0xf9, 0xe3, 0x1c]),
-    ("Green", [0x19, 0xc9, 0x19]),
-    ("Cyan", [0x1d, 0xcb, 0xea]),
-    ("Blue", [0x1d, 0x35, 0xea]),
-    ("Violet", [0x9b, 0x1d, 0xea]),
-    ("Magenta", [0xe3, 0x18, 0xe3]),
-    ("Sepia", [0xac, 0x7a, 0x33]),
-    ("Deep Red", [0xff, 0x00, 0x00]),
-    ("Deep Blue", [0x00, 0x22, 0xcd]),
-    ("Deep Emerald", [0x00, 0x8c, 0x00]),
-    ("Deep Yellow", [0xff, 0xd5, 0x00]),
-    ("Underwater", [0x00, 0xc1, 0xb1]),
+    ("加温滤镜 (85)", [0xec, 0x8a, 0x00]),
+    ("加温滤镜 (LBA)", [0xfa, 0x96, 0x00]),
+    ("加温滤镜 (81)", [0xeb, 0xb1, 0x13]),
+    ("冷却滤镜 (80)", [0x00, 0x6d, 0xff]),
+    ("冷却滤镜 (LBB)", [0x00, 0x5d, 0xff]),
+    ("冷却滤镜 (82)", [0x00, 0xb5, 0xff]),
+    ("红色", [0xea, 0x1a, 0x1a]),
+    ("橙色", [0xf3, 0x84, 0x17]),
+    ("黄色", [0xf9, 0xe3, 0x1c]),
+    ("绿色", [0x19, 0xc9, 0x19]),
+    ("青色", [0x1d, 0xcb, 0xea]),
+    ("蓝色", [0x1d, 0x35, 0xea]),
+    ("紫罗兰色", [0x9b, 0x1d, 0xea]),
+    ("洋红色", [0xe3, 0x18, 0xe3]),
+    ("棕褐色", [0xac, 0x7a, 0x33]),
+    ("深红色", [0xff, 0x00, 0x00]),
+    ("深蓝色", [0x00, 0x22, 0xcd]),
+    ("深翠绿色", [0x00, 0x8c, 0x00]),
+    ("深黄色", [0xff, 0xd5, 0x00]),
+    ("水下", [0x00, 0xc1, 0xb1]),
 ];
 
 #[derive(Clone)]
@@ -92,7 +92,7 @@ impl Dialog {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
 
-        if uxp::radio(ui, at(26.0, 60.5), "Filter", !self.use_color) {
+        if uxp::radio(ui, at(26.0, 60.5), "滤镜", !self.use_color) {
             self.use_color = false;
         }
         let name = FILTERS[self.filter].0;
@@ -124,7 +124,7 @@ impl Dialog {
             self.use_color = false;
         }
 
-        if uxp::radio(ui, at(26.0, 94.5), "Color", self.use_color) {
+        if uxp::radio(ui, at(26.0, 94.5), "颜色", self.use_color) {
             self.use_color = true;
         }
         // The color swatch; clicking it picks a color of one's own
@@ -145,7 +145,7 @@ impl Dialog {
             self.wants_picker = true;
         }
 
-        uxp::label(ui, at(20.0, 131.5), "Density");
+        uxp::label(ui, at(20.0, 131.5), "浓度");
         let field = r(213.0, 118.5, 260.0, 142.5);
         uxp::number_box(
             ui,
@@ -187,7 +187,7 @@ impl Dialog {
         uxp::checkbox(
             ui,
             at(20.0, 174.0),
-            "Preserve luminosity",
+            "保持明度",
             &mut self.preserve_luminosity,
         );
         uxp::preview(ui, at(272.0, 127.0), preview);

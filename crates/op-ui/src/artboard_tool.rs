@@ -443,25 +443,25 @@ pub fn paint(ui: &Ui, state: &mut DocState, _opts: Options, ppp: f32) {
         if selected && state.artboard_drag.is_none() {
             for (label, position, dx, dy) in [
                 (
-                    "Add artboard left",
+                    "在左侧添加画板",
                     rect.left_center() - Vec2::new(pt(22.0), 0.0),
                     -(b.width as i64) - 20,
                     0,
                 ),
                 (
-                    "Add artboard right",
+                    "在右侧添加画板",
                     rect.right_center() + Vec2::new(pt(22.0), 0.0),
                     b.width as i64 + 20,
                     0,
                 ),
                 (
-                    "Add artboard above",
+                    "在上方添加画板",
                     rect.center_top() - Vec2::new(0.0, pt(30.0)),
                     0,
                     -(b.height as i64) - 20,
                 ),
                 (
-                    "Add artboard below",
+                    "在下方添加画板",
                     rect.center_bottom() + Vec2::new(0.0, pt(22.0)),
                     0,
                     b.height as i64 + 20,

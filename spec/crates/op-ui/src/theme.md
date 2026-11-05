@@ -29,6 +29,8 @@ Centrally defines colors, sizes, fonts, and egui styles, with values taken from 
 
 ## Fonts
 
+The Simplified Chinese fork bundles unmodified Noto Sans CJK SC Regular from the noto-cjk project under the SIL Open Font License 1.1. Its license is retained beside the font. It is appended to proportional and monospace fallback chains before semibold and dialog families are derived, so Chinese UI copy and user-supplied Chinese names render offline in every text family without redistributing proprietary system fonts. Latin metrics and the dedicated icon font remain unchanged.
+
 - Body text 11.5 pt, small text 10.5 pt, so that the cap height matches Photoshop's panel text (8 pt). Source Sans 3 is narrower than Photoshop's Adobe Clean; the same word is about 15% narrower. Icons are 20 (reference screenshot pixels).
 - The font files are bundled with the application, and their byte data is exposed as `SOURCE_SANS_REGULAR` and `SOURCE_SANS_SEMIBOLD`; the Type tool also uses them to rasterize text.
 - The proportional font family prefers Source Sans 3 Regular; there is also a font family named `semibold` (Source Sans 3 Semibold), used for labels and titles.
@@ -41,6 +43,8 @@ Centrally defines colors, sizes, fonts, and egui styles, with values taken from 
 - Tracking: AppKit adjusts tracking by font size according to SF's `trak` table (0 at 12 pt, −12/2048 em at 13 pt, −22 at 14 pt); egui does not. `system_tracking(size)` interpolates the table to give egui's extra letter spacing, and `tracked_galley(painter, text, font, color)` lays out text with it; window titles and alert text are all drawn this way (12 pt body text does not need it).
 - Test `dialog_text_is_as_wide_as_photoshops`: the widths at 2x of nine text runs (from Image Size, Duplicate Layer, window titles, alerts, New Layer) differ from Photoshop measurements by no more than 3%; removing opsz 17, removing tracking, or using the wrong font for UXP dialogs all make it fail (verified).
 - Phosphor Regular is additionally registered on its own as the font family `phosphor-regular` (with no text font in front of it); `tool_icon(size)` returns it, and it is used only for icons in the toolbar and tool lists: at toolbar size Regular has strokes of about 1 pt, matching Photoshop's icons; the Bold used previously was about half again as thick. The icon glyphs themselves still differ from Photoshop (see the P0 gaps in the README).
+
+The `chinese_glyphs_render_in_every_text_family` regression test checks representative Simplified Chinese characters in proportional, monospace, semibold, dialog and bold-dialog families using the actual loaded font definitions.
 
 ## egui style (`apply_style`)
 

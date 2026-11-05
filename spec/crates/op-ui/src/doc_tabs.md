@@ -1,5 +1,12 @@
 # doc_tabs.rs: Document Tab Bar
 
+## Simplified Chinese fork override
+
+OpenPhoto-zh-CN displays the component's application-authored labels, operation names, prompts and errors in Simplified Chinese. The English names in the behavioral reference below identify the upstream commands, not the fork's literal display copy. Product names, format abbreviations, shortcuts, numerical formatting, internal IDs and serialization keys remain unchanged. Existing document titles, layer names, paths and other user data are never translated.
+
+Crop Preview, Quick Mask and the document-tab accessibility prefix are Chinese; document titles and the RGB/bit-depth/profile-marker format remain unchanged.
+
+
 ## Component Responsibilities
 
 The document tab bar above the canvas, with one tab per open document. Dimensions are measured 1:1 in Photoshop 2026 (pt).

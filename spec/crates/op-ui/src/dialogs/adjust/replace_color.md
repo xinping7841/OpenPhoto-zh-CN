@@ -1,5 +1,11 @@
 # dialogs/adjust/replace_color.rs: Replace Color
 
+## Simplified Chinese interface fork
+
+This Chinese-only fork renders the component's built-in user-facing dialog copy in Simplified Chinese using direct UI literals. This requirement overrides English wording parity with Photoshop, including the English copy examples below; those examples identify controls and retain the measured interaction and layout context, not a requirement to display English. Titles, labels, buttons, option names, built-in preset display names, tooltips and confirmation copy are localized where this component owns them. Keyboard shortcuts and technical names such as RGB, JPEG and ICC profile identifiers remain unchanged.
+
+Identifiers, enum variants and match keys, file extensions, preset folder paths, binary/text format keys, algorithm tables and numerical defaults are unchanged. Document titles, layer names, user-saved preset names and other supplied user data are displayed verbatim, not translated. In-scope tests assert the translated built-in display copy while preserving protocol IDs and data fixtures. Shared or host-supplied copy outside this directory is governed by its owning component; localization here does not rewrite it. The measured geometry remains unchanged, so Chinese font coverage and clipping require visual verification.
+
 ## Responsibility
 
 Image › Adjustments › Replace Color..., drawn as Photoshop 2026's dialog as part of `AdjustDialog` (`adjust.md`). Its settings (`Kind::params`): 0 Fuzziness (0–200, 40), 1–3 Hue (−180–180), Saturation and Lightness (−100–100), 4 Localized Color Clusters. The sampled colors are `Extra::replace` (`op_core::color_match::ReplaceSamples`), the chosen eyedropper `Extra::rc_tool`.

@@ -34,17 +34,12 @@ impl AdjustDialog {
     pub(super) fn shadows_highlights_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(
-            ui,
-            frame,
-            "Shadows/Highlights",
-            theme::dialog_bold(pt(13.0)),
-        );
+        common::frame(ui, frame, "阴影/高光", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
         // Row: the setting, its label, the field's top, the track's line
         for (k, (i, name, top, line)) in [
-            (SHADOWS, "Shadows", 48.0, 59.75),
-            (HIGHLIGHTS, "Highlights", 84.0, 95.75),
+            (SHADOWS, "阴影", 48.0, 59.75),
+            (HIGHLIGHTS, "高光", 84.0, 95.75),
         ]
         .into_iter()
         .enumerate()
@@ -100,7 +95,7 @@ impl AdjustDialog {
 
         // Show more options: the layout with every setting
         let mut more = false;
-        uxp::checkbox(ui, at(20.0, 126.0), "Show more options", &mut more);
+        uxp::checkbox(ui, at(20.0, 126.0), "显示更多选项", &mut more);
         if more {
             self.values[MORE] = "1".into();
         }
@@ -115,8 +110,8 @@ impl AdjustDialog {
                 vec2(pt(109.0), pt(24.0)),
             )
         };
-        let load = common::ps_button_with(ui, row(2.0), "Load...", false, true, bold.clone());
-        let save = common::ps_button_with(ui, row(3.0), "Save...", false, true, bold);
+        let load = common::ps_button_with(ui, row(2.0), "载入...", false, true, bold.clone());
+        let save = common::ps_button_with(ui, row(3.0), "保存...", false, true, bold);
         if load.clicked()
             && let Some((_, bytes)) = preset_files::SHADOWS_HIGHLIGHTS.load()
         {

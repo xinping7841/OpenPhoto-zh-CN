@@ -1650,10 +1650,10 @@ fn set_text(app: &mut AppState, key: &'static str, default: &str, typed: String)
         // Only the bundled family can be set
         "type.font" => {}
         "type.style" => {
-            if let Some(i) = FONT_STYLES
-                .iter()
-                .position(|s| s.eq_ignore_ascii_case(typed.trim()))
-            {
+            if let Some(i) = FONT_STYLES.iter().position(|s| {
+                s.eq_ignore_ascii_case(typed.trim())
+                    || crate::options_kit::display_label(s) == typed.trim()
+            }) {
                 app.type_options.semibold = i == 1;
             }
         }
@@ -1915,7 +1915,11 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                 }
                 if app.tool == Tool::Artboard {
                     response.widget_info(|| {
-                        egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tip)
+                        egui::WidgetInfo::labeled(
+                            egui::WidgetType::Button,
+                            true,
+                            crate::options_kit::display_label(tip),
+                        )
                     });
                     if response.clicked() {
                         match icon {
@@ -1930,7 +1934,7 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                         egui::Popup::from_response(&response)
                             .open_memory(response.clicked().then_some(egui::SetOpenCommand::Toggle))
                             .show(|ui| {
-                                if ui.checkbox(&mut auto_nest, "Auto-nest layers").changed() {
+                                if ui.checkbox(&mut auto_nest, "自动嵌套图层").changed() {
                                     *app.setting("artboard.auto_nest", "1") =
                                         if auto_nest { "1" } else { "0" }.into();
                                 }
@@ -1940,11 +1944,11 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                         egui::Popup::from_response(&response)
                             .open_memory(response.clicked().then_some(egui::SetOpenCommand::Toggle))
                             .show(|ui| {
-                                if ui.button("Align artboard left edges").clicked() {
+                                if ui.button("对齐画板左边缘").clicked() {
                                     crate::artboard_tool::align(app, true);
                                     ui.close();
                                 }
-                                if ui.button("Align artboard top edges").clicked() {
+                                if ui.button("对齐画板顶边缘").clicked() {
                                     crate::artboard_tool::align(app, false);
                                     ui.close();
                                 }
@@ -1990,11 +1994,11 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                     .open_memory(response.clicked().then_some(egui::SetOpenCommand::Toggle))
                     .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
                     .show(|ui| {
-                        ui.label("Smoothing Options");
-                        ui.checkbox(&mut options.pulled_string, "Pulled String Mode");
-                        ui.checkbox(&mut options.catch_up, "Stroke Catch-up");
-                        ui.checkbox(&mut options.catch_up_end, "Catch-up on Stroke End");
-                        ui.checkbox(&mut options.adjust_for_zoom, "Adjust for Zoom");
+                        ui.label("平滑选项");
+                        ui.checkbox(&mut options.pulled_string, "拉绳模式");
+                        ui.checkbox(&mut options.catch_up, "描边补齐");
+                        ui.checkbox(&mut options.catch_up_end, "描边结束时补齐");
+                        ui.checkbox(&mut options.adjust_for_zoom, "根据缩放调整");
                     });
                 set_smoothing_options(app, options);
             }
@@ -2005,12 +2009,12 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                     .open_memory(response.clicked().then_some(egui::SetOpenCommand::Toggle))
                     .close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside)
                     .show(|ui| {
-                        ui.label("Overlay Option");
+                        ui.label("叠加选项");
                         ui.horizontal(|ui| {
-                            ui.label("Color:");
+                            ui.label("颜色:");
                             let (name, _) = crate::selection_brush::OVERLAY_COLORS[index];
                             egui::ComboBox::from_id_salt("selbrush-overlay")
-                                .selected_text(name)
+                                .selected_text(crate::options_kit::display_label(name))
                                 .show_ui(ui, |ui| {
                                     for (i, (name, c)) in
                                         crate::selection_brush::OVERLAY_COLORS.iter().enumerate()
@@ -2024,7 +2028,10 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                                             egui::FontSelection::Default,
                                             egui::Align::Center,
                                         );
-                                        egui::RichText::new(*name).append_to(
+                                        egui::RichText::new(crate::options_kit::display_label(
+                                            name,
+                                        ))
+                                        .append_to(
                                             &mut job,
                                             ui.style(),
                                             egui::FontSelection::Default,
@@ -2118,7 +2125,7 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                     })
                     .unwrap_or_default();
                 if groups.is_empty() {
-                    b.popup(x0, x1, "count-group", "Count Group", false, |_| {});
+                    b.popup(x0, x1, "count-group", "计数组", false, |_| {});
                 } else {
                     let selected = app.active().and_then(|s| crate::count_tool::selected(s));
                     let mut i = groups
@@ -2127,7 +2134,7 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                         .unwrap_or(0);
                     let before = i;
                     let mut names = groups.iter().map(|g| g.1.as_str()).collect::<Vec<_>>();
-                    names.push("Rename Count Group...");
+                    names.push("重命名计数组...");
                     b.choice(x0, x1, "count-group", &names, &mut i, true);
                     if i != before
                         && let Some(s) = app.active()
@@ -2246,11 +2253,11 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
             }
             FillSwatch(x0, x1) => {
                 b.framed_swatch(x0, x1, Some(to32(app.foreground)))
-                    .on_hover_text("Set shape fill type");
+                    .on_hover_text("设置形状填充类型");
             }
             NoStroke(x0, x1) => {
                 b.framed_swatch(x0, x1, None)
-                    .on_hover_text("Set shape stroke type");
+                    .on_hover_text("设置形状描边类型");
             }
             LineStyle(x0, x1, key) => {
                 let mut i = choice(app, key).min(LINE_STYLES.len() - 1);
@@ -2279,11 +2286,7 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                 let response = b.framed_color(x0, x1, (y0, y1), fill);
                 if key == "artboard.bg" {
                     response.widget_info(|| {
-                        egui::WidgetInfo::labeled(
-                            egui::WidgetType::Button,
-                            true,
-                            "Artboard background color",
-                        )
+                        egui::WidgetInfo::labeled(egui::WidgetType::Button, true, "画板背景色")
                     });
                     if response.clicked() {
                         let [r, g, b] = crate::artboard_tool::options(app)
@@ -2309,14 +2312,14 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                                     format!("{:02x}{:02x}{:02x}", color.r(), color.g(), color.b());
                             }
                             ui.horizontal(|ui| {
-                                if ui.button("OK").clicked() {
+                                if ui.button("确定").clicked() {
                                     crate::artboard_tool::set_custom_color(
                                         app,
                                         [color.r(), color.g(), color.b()],
                                     );
                                     ui.close();
                                 }
-                                if ui.button("Cancel").clicked() {
+                                if ui.button("取消").clicked() {
                                     ui.close();
                                 }
                             });
@@ -2426,7 +2429,7 @@ pub fn show(b: &mut Bar, app: &mut AppState, items: &[Item]) {
                     .open_memory(response.clicked().then_some(egui::SetOpenCommand::Toggle))
                     .show(|ui| {
                         if names.is_empty() {
-                            ui.label("No saved shapes available");
+                            ui.label("没有可用的已保存形状");
                         }
                         let mut selected = app
                             .setting("shape.custom_path", "0")

@@ -12,7 +12,7 @@ use crate::ps_icons::{self, Icon};
 use crate::theme::{color, pt};
 
 pub const SIZE: egui::Vec2 = vec2(pt(412.0), pt(371.0));
-pub const CHANNELS: [&str; 4] = ["RGB", "Red", "Green", "Blue"];
+pub const CHANNELS: [&str; 4] = ["RGB", "红色", "绿色", "蓝色"];
 /// Input black, gamma, input white, output black, output white.
 const RANGES: [(f32, f32); 5] = [
     (0.0, 253.0),
@@ -152,12 +152,12 @@ impl Dialog {
             })
         };
         if same(&std::array::from_fn(|_| DEFAULTS.map(String::from))) {
-            return "Default";
+            return "默认";
         }
         super::adjust_presets::LEVELS
             .iter()
             .find(|(_, p)| same(&Self::preset_values(p)))
-            .map_or("Custom", |(name, _)| name)
+            .map_or("自定", |(name, _)| name)
     }
 
     /// The chosen eyedropper's click on a pixel of color `rgb` (the image
@@ -236,15 +236,15 @@ impl Dialog {
         }
 
         // Preset
-        appkit::label(ui, at(11.0, 50.0), "Preset:");
+        appkit::label(ui, at(11.0, 50.0), "预设:");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::LEVELS, encoded.as_deref());
         let preset = saved_name.as_deref().unwrap_or(self.preset());
         // Default, Custom, then Photoshop's presets, then the saved ones
         let mut entries = vec![
-            Entry::item("Default", preset == "Default"),
-            Entry::item("Custom", preset == "Custom").enabled(false),
+            Entry::item("默认", preset == "默认"),
+            Entry::item("自定", preset == "自定").enabled(false),
             Entry::Separator,
         ];
         entries.extend(
@@ -295,7 +295,7 @@ impl Dialog {
         line(at(11.0, 90.5), at(11.0, 359.5));
         line(at(295.5, 90.5), at(295.5, 359.5));
         line(at(11.0, 359.5), at(295.5, 359.5));
-        appkit::label(ui, at(30.5, 90.5), "Channel:");
+        appkit::label(ui, at(30.5, 90.5), "通道:");
         let channels: Vec<Entry> = CHANNELS
             .iter()
             .enumerate()
@@ -312,7 +312,7 @@ impl Dialog {
         }
         let c = self.channel;
 
-        appkit::label(ui, at(20.5, 118.5), "Input Levels:");
+        appkit::label(ui, at(20.5, 118.5), "输入色阶:");
         self.histogram(
             ui,
             r(HISTOGRAM[0], HISTOGRAM[1], HISTOGRAM[2], HISTOGRAM[3]),
@@ -335,7 +335,7 @@ impl Dialog {
             [at(20.0, 277.0), at(286.0, 277.0)],
             egui::Stroke::new(pt(1.0), Color32::from_gray(0x3e)),
         );
-        appkit::label(ui, at(20.5, 290.5), "Output Levels:");
+        appkit::label(ui, at(20.5, 290.5), "输出色阶:");
         let ramp = r(24.0, 302.0, 282.0, 315.0);
         let mut mesh = Mesh::default();
         mesh.colored_vertex(ramp.left_top(), Color32::BLACK);
@@ -363,10 +363,10 @@ impl Dialog {
         let button = |ui: &mut Ui, y: f32, label: &str, default: bool| {
             appkit::button(ui, r(313.5, y, 402.5, y + 26.0), label, default, true)
         };
-        let ok = button(ui, 38.5, "OK", true);
-        let cancel = button(ui, 73.5, "Cancel", false);
-        let auto = button(ui, 115.5, "Auto", false);
-        if button(ui, 157.5, "Options...", false).clicked() {
+        let ok = button(ui, 38.5, "确定", true);
+        let cancel = button(ui, 73.5, "取消", false);
+        let auto = button(ui, 115.5, "自动", false);
+        if button(ui, 157.5, "选项...", false).clicked() {
             self.wants_options = true;
         }
         for (k, (x, icon)) in [
@@ -382,7 +382,7 @@ impl Dialog {
                 self.eyedropper = (!chosen).then_some(k);
             }
         }
-        appkit::checkbox(ui, at(312.5, 243.0), "Preview", preview);
+        appkit::checkbox(ui, at(312.5, 243.0), "预览", preview);
 
         if cancel.clicked() {
             return Some(super::uxp::Button::Cancel);
@@ -499,15 +499,15 @@ mod tests {
     fn photoshops_presets() {
         let mut d = Dialog::new([[1; 256]; 3]);
         d.values = Dialog::preset_values(&super::super::adjust_presets::LEVELS[2].1);
-        assert_eq!(d.preset(), "Increase Contrast 2");
+        assert_eq!(d.preset(), "增加对比度 2");
         assert_eq!(d.values[0][0], "20");
         assert_eq!(d.values[0][1], "1.00");
         d.values[0][1] = "1.6".into();
         d.values[0][0] = "0".into();
         d.values[0][2] = "255".into();
-        assert_eq!(d.preset(), "Lighten Shadows");
+        assert_eq!(d.preset(), "提亮阴影");
         d.values[1][0] = "3".into();
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
     }
 
     #[test]
@@ -517,7 +517,7 @@ mod tests {
             d.adjustment(),
             Some(Adjustment::Levels(Levels::IDENTITY.composite()))
         );
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         d.values[1][0] = "20".into();
         d.values[0][1] = "1.50".into();
         let Some(Adjustment::Levels(l)) = d.adjustment() else {
@@ -527,7 +527,7 @@ mod tests {
             (l[0].gamma, l[1].input_black, l[2].input_black),
             (1.5, 20, 0)
         );
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         // Black too close to white
         d.values[2][0] = "250".into();
         d.values[2][2] = "251".into();

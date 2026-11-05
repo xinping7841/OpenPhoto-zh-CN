@@ -25,7 +25,7 @@ impl AdjustDialog {
     pub(super) fn replace_color_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "Replace Color", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "替换颜色", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
 
         // The eyedropper, add and subtract tools, 30 pt apart; the chosen
@@ -68,7 +68,7 @@ impl AdjustDialog {
             ui,
             at(10.0, 76.5),
             (12.0, 11.0),
-            "Localized Color Clusters",
+            "本地化颜色簇",
             &mut localized,
             true,
         );
@@ -79,7 +79,7 @@ impl AdjustDialog {
             ui,
             at(281.0, 64.25),
             Align2::RIGHT_CENTER,
-            "Color:",
+            "颜色:",
             appkit::TEXT,
         );
         let [cr, cg, cb] = self.extra.replace.shown();
@@ -96,7 +96,7 @@ impl AdjustDialog {
             ui,
             frame,
             FUZZINESS,
-            "Fuzziness:",
+            "颜色容差:",
             (287.0, 108.5),
             (89.5, 267.5, 103.0),
             true,
@@ -104,10 +104,7 @@ impl AdjustDialog {
 
         // The selection preview and Selection / Image
         self.replace_preview(ui, r(PREVIEW[0], PREVIEW[1], PREVIEW[2], PREVIEW[3]));
-        for (k, (label, x)) in [("Selection", 92.25), ("Image", 189.75)]
-            .into_iter()
-            .enumerate()
-        {
+        for (k, (label, x)) in [("选区", 92.25), ("图像", 189.75)].into_iter().enumerate() {
             let chosen = self.extra.show_image == (k == 1);
             if appkit::radio_with(ui, at(x, 354.0), label, chosen, (17.5, appkit::font())) {
                 self.extra.show_image = k == 1;
@@ -116,13 +113,9 @@ impl AdjustDialog {
         painter.rect_filled(r(10.0, 381.0, 330.0, 382.0), 0, Color32::from_gray(0x3e));
 
         // Hue, Saturation, Lightness
-        for (k, (label, y)) in [
-            ("Hue:", 400.5),
-            ("Saturation:", 427.5),
-            ("Lightness:", 454.5),
-        ]
-        .into_iter()
-        .enumerate()
+        for (k, (label, y)) in [("色相:", 400.5), ("饱和度:", 427.5), ("明度:", 454.5)]
+            .into_iter()
+            .enumerate()
         {
             self.rc_row(
                 ui,
@@ -159,7 +152,7 @@ impl AdjustDialog {
             ui,
             at(310.5, 451.25),
             Align2::CENTER_CENTER,
-            "Result",
+            "结果",
             appkit::TEXT,
         );
 
@@ -168,9 +161,9 @@ impl AdjustDialog {
             appkit::button(ui, r(346.0, y, 426.5, y + 26.0), label, default, enabled)
         };
         let valid = self.effect().is_some();
-        let ok = button(ui, 38.5, "OK", true, valid).clicked();
-        let cancel = button(ui, 73.5, "Cancel", false, true).clicked();
-        if button(ui, 108.5, "Load...", false, true).clicked()
+        let ok = button(ui, 38.5, "确定", true, valid).clicked();
+        let cancel = button(ui, 73.5, "取消", false, true).clicked();
+        if button(ui, 108.5, "载入...", false, true).clicked()
             && let Some((_, bytes)) = preset_files::REPLACE_COLOR.load()
             && let Some((fuzz, shift)) = preset_files::decode_replace_color(&bytes)
         {
@@ -179,7 +172,7 @@ impl AdjustDialog {
                 self.values[1 + k] = v.to_string();
             }
         }
-        if button(ui, 143.5, "Save...", false, valid).clicked()
+        if button(ui, 143.5, "保存...", false, valid).clicked()
             && let (Some(fuzz), Some(h), Some(s), Some(l)) =
                 (self.value(0), self.value(1), self.value(2), self.value(3))
         {
@@ -191,7 +184,7 @@ impl AdjustDialog {
             ui,
             at(345.5, 181.0),
             (12.0, 11.0),
-            "Preview",
+            "预览",
             &mut self.preview,
             true,
         );

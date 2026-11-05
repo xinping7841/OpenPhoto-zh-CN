@@ -1388,7 +1388,7 @@ pub struct QuickStroke {
 /// Eyedropper options.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct EyedropperOptions {
-    /// Side of the averaged square in pixels: 1 is "Point Sample".
+    /// Side of the averaged square in pixels: 1 is "取样点".
     pub size: u32,
     /// "Sample:": the current layer, the layers up to it, or all merged.
     pub sample: op_core::SampleScope,
@@ -1397,13 +1397,13 @@ pub struct EyedropperOptions {
 impl EyedropperOptions {
     /// Photoshop's "Sample Size" choices.
     pub const SIZES: [(u32, &'static str); 7] = [
-        (1, "Point Sample"),
-        (3, "3 by 3 Average"),
-        (5, "5 by 5 Average"),
-        (11, "11 by 11 Average"),
-        (31, "31 by 31 Average"),
-        (51, "51 by 51 Average"),
-        (101, "101 by 101 Average"),
+        (1, "取样点"),
+        (3, "3 × 3 平均"),
+        (5, "5 × 5 平均"),
+        (11, "11 × 11 平均"),
+        (31, "31 × 31 平均"),
+        (51, "51 × 51 平均"),
+        (101, "101 × 101 平均"),
     ];
 }
 
@@ -1806,7 +1806,7 @@ pub struct AppState {
     pub flatten_prompt: Option<crate::dialogs::alert::Alert>,
     /// "Don't show again" was ticked in that prompt.
     pub skip_flatten_prompt: bool,
-    /// Deleting a group with layers in it: "Group and Contents", "Group
+    /// Deleting a group with layers in it: "组及其内容", "Group
     /// Only" or Cancel.
     pub delete_group_prompt: Option<crate::dialogs::alert::Alert>,
     /// Window menu panels that float (Info, Navigator, Histogram).
@@ -2131,10 +2131,8 @@ impl AppState {
         match op_core::layer_ops::deleting_groups_with_contents(&state.doc) {
             Some(name) => {
                 self.delete_group_prompt = Some(crate::dialogs::alert::Alert::choose(
-                    format!(
-                        "Delete the group \u{201c}{name}\u{201d} and its contents or delete only the group?"
-                    ),
-                    &["Group and Contents", "Group Only", "Cancel"],
+                    format!("要删除组“{name}”及其内容，还是仅删除组？"),
+                    &["组及其内容", "仅组", "取消"],
                 ));
             }
             None => crate::panels::delete_active_layer(state),
@@ -2194,42 +2192,36 @@ impl AppState {
     }
 
     /// Opens the Color Picker for the foreground or background color, titled
-    /// like Photoshop's ("Color Picker (Foreground Color)").
+    /// like Photoshop's ("拾色器（前景色）").
     pub fn open_color_picker(&mut self, target: PickerTarget) {
         let (title, color) = match target {
-            PickerTarget::Foreground => ("Color Picker (Foreground Color)", self.foreground),
-            PickerTarget::Background => ("Color Picker (Background Color)", self.background),
-            PickerTarget::CanvasExtension => ("Color Picker", self.background),
-            PickerTarget::FillColor => ("Color Picker (Fill Color)", self.foreground),
+            PickerTarget::Foreground => ("拾色器（前景色）", self.foreground),
+            PickerTarget::Background => ("拾色器（背景色）", self.background),
+            PickerTarget::CanvasExtension => ("拾色器", self.background),
+            PickerTarget::FillColor => ("拾色器（填充颜色）", self.foreground),
             PickerTarget::AutoTarget(k, [r, g, b]) => (
                 [
-                    "Select target shadow color:",
-                    "Select target midtone color:",
-                    "Select target highlight color:",
+                    "选择目标阴影颜色：",
+                    "选择目标中间调颜色：",
+                    "选择目标高光颜色：",
                 ][k.min(2)],
                 Color::from_rgba8([r, g, b, 255]),
             ),
-            PickerTarget::GradientStop([r, g, b]) => (
-                "Color Picker (Stop Color)",
-                Color::from_rgba8([r, g, b, 255]),
-            ),
-            PickerTarget::GuideColor([r, g, b]) => (
-                "Color Picker (Guide Color)",
-                Color::from_rgba8([r, g, b, 255]),
-            ),
-            PickerTarget::PhotoFilter([r, g, b]) => (
-                "Color Picker (Photo Filter Color)",
-                Color::from_rgba8([r, g, b, 255]),
-            ),
+            PickerTarget::GradientStop([r, g, b]) => {
+                ("拾色器（色标颜色）", Color::from_rgba8([r, g, b, 255]))
+            }
+            PickerTarget::GuideColor([r, g, b]) => {
+                ("拾色器（参考线颜色）", Color::from_rgba8([r, g, b, 255]))
+            }
+            PickerTarget::PhotoFilter([r, g, b]) => {
+                ("拾色器（照片滤镜颜色）", Color::from_rgba8([r, g, b, 255]))
+            }
             PickerTarget::CropShield => {
                 let c = self
                     .crop_options
                     .shield_color
                     .unwrap_or(crate::theme::color::PASTEBOARD);
-                (
-                    "Color Picker",
-                    Color::from_rgba8([c.r(), c.g(), c.b(), 255]),
-                )
+                ("拾色器", Color::from_rgba8([c.r(), c.g(), c.b(), 255]))
             }
         };
         self.color_picker = Some(PickerSession {
@@ -2352,7 +2344,7 @@ impl ScreenMode {
 }
 
 /// Photoshop's warning on entering Full Screen Mode.
-pub const FULL_SCREEN_WARNING: &str = "In Full Screen Mode, panels are hidden. They can be accessed on the sides of the screen, or revealed by pressing Tab.\n\nWhile in Full Screen Mode, you can return to Standard Screen Mode by pressing 'F' or Esc.";
+pub const FULL_SCREEN_WARNING: &str = "在全屏模式下，面板会隐藏。您可以在屏幕两侧访问面板，或按 Tab 键显示面板。\n\n在全屏模式下，按 F 或 Esc 键可返回标准屏幕模式。";
 
 impl AppState {
     /// Switches to `mode`; Full Screen Mode asks first, unless told not to.
@@ -2360,7 +2352,7 @@ impl AppState {
         if mode == ScreenMode::Full && !self.skip_full_screen_prompt {
             let mut alert = crate::dialogs::alert::Alert::caution(FULL_SCREEN_WARNING);
             alert.icon = crate::dialogs::alert::Icon::App;
-            alert.ok_label = "Full Screen";
+            alert.ok_label = "全屏";
             self.full_screen_prompt = Some(alert);
             return;
         }
@@ -2410,4 +2402,740 @@ pub struct FadeState {
     pub dialog: crate::dialogs::FadeDialog,
     pub source: FadeSource,
     pub shown: Option<(f32, op_core::BlendMode, bool)>,
+}
+
+pub fn display_name(name: &str) -> String {
+    if let Some(edit) = name.strip_prefix("Fade ") {
+        return format!("渐隐{}", display_name(edit));
+    }
+    if let Some(tool) = name.strip_suffix(" Tool") {
+        let translated = display_name(tool);
+        if translated != tool {
+            return format!("{translated}工具");
+        }
+    }
+    if let Some((prefix, edge)) = name.split_once(' ')
+        && matches!(prefix, "Align" | "Distribute")
+    {
+        let translated = display_name(edge);
+        if translated != edge {
+            return format!("{}{translated}", display_name(prefix));
+        }
+    }
+    let label = match name {
+        "File" => "文件",
+        "Edit" => "编辑",
+        "Image" => "图像",
+        "Layer" => "图层",
+        "Type" => "文字",
+        "Select" => "选择",
+        "Filter" => "滤镜",
+        "View" => "视图",
+        "Plugins" => "增效工具",
+        "Window" => "窗口",
+        "Help" => "帮助",
+        "About OpenPhoto" => "关于 OpenPhoto",
+        "Hide OpenPhoto" => "隐藏 OpenPhoto",
+        "Quit OpenPhoto" => "退出 OpenPhoto",
+        "OpenPhoto Help" => "OpenPhoto 帮助",
+        "Open Recent" => "最近打开文件",
+        "New" => "新建",
+        "Open" => "打开",
+        "Close" => "关闭",
+        "Close All" => "关闭全部",
+        "Close Others" => "关闭其他",
+        "Save" => "保存",
+        "Save As" => "另存为",
+        "Save a Copy" => "保存副本",
+        "Revert" => "恢复",
+        "Browse in Bridge" => "在 Bridge 中浏览",
+        "Open as Smart Object" => "打开为智能对象",
+        "Close and Go to Bridge" => "关闭并转到 Bridge",
+        "Invite to Edit" => "邀请编辑",
+        "Share for Review" => "共享以供审阅",
+        "Export" => "导出",
+        "Quick Export as PNG" => "快速导出为 PNG",
+        "Export As" => "导出为",
+        "Export Preferences" => "导出首选项",
+        "Save for Web (Legacy)" => "存储为 Web 所用格式（旧版）",
+        "Artboards to Files" => "画板导出为文件",
+        "Artboards to PDF" => "画板导出为 PDF",
+        "Layer Comps to Files" => "图层复合导出为文件",
+        "Layer Comps to PDF" => "图层复合导出为 PDF",
+        "Layers to Files" => "图层导出为文件",
+        "Color Lookup Tables" => "颜色查找表",
+        "Data Sets as Files" => "数据组导出为文件",
+        "Paths to Illustrator" => "路径导出到 Illustrator",
+        "Render Video" => "渲染视频",
+        "Zoomify" => "缩放切片",
+        "Place Embedded" => "置入嵌入对象",
+        "Place Linked" => "置入链接对象",
+        "Package" => "打包",
+        "Automate" => "自动",
+        "Scripts" => "脚本",
+        "Import" => "导入",
+        "Import from iPhone or iPad" => "从 iPhone 或 iPad 导入",
+        "File Info" => "文件简介",
+        "Version History" => "版本历史记录",
+        "Print" => "打印",
+        "Print One Copy" => "打印一份",
+        "Undo" => "撤销",
+        "Redo" => "重做",
+        "Toggle Last State" => "切换上一个状态",
+        "Fade" => "渐隐",
+        "Cut" => "剪切",
+        "Copy" => "拷贝",
+        "Copy Merged" => "合并拷贝",
+        "Paste" => "粘贴",
+        "Paste Special" => "选择性粘贴",
+        "Paste in Place" => "原位粘贴",
+        "Paste Into" => "贴入",
+        "Paste Outside" => "外部粘贴",
+        "Clear" => "清除",
+        "Search" => "搜索",
+        "Check Spelling" => "拼写检查",
+        "Find and Replace Text" => "查找和替换文本",
+        "Fill" => "填充",
+        "Stroke" => "描边",
+        "Content-Aware Fill" => "内容识别填充",
+        "Content-Aware Scale" => "内容识别缩放",
+        "Puppet Warp" => "操控变形",
+        "Perspective Warp" => "透视变形",
+        "Free Transform" => "自由变换",
+        "Transform" => "变换",
+        "Again" => "再次",
+        "Scale" => "缩放",
+        "Rotate" => "旋转",
+        "Skew" => "斜切",
+        "Distort" => "扭曲",
+        "Perspective" => "透视",
+        "Warp" => "变形",
+        "Split Warp Horizontally" => "水平拆分变形",
+        "Split Warp Vertically" => "垂直拆分变形",
+        "Split Warp Crosswise" => "交叉拆分变形",
+        "Remove Warp Split" => "移除变形拆分",
+        "Convert warp anchor point" => "转换变形锚点",
+        "Toggle Guides" => "切换参考线",
+        "Rotate 180°" => "旋转 180°",
+        "Rotate 90° Clockwise" => "顺时针旋转 90°",
+        "Rotate 90° Counter Clockwise" => "逆时针旋转 90°",
+        "Flip Horizontal" => "水平翻转",
+        "Flip Vertical" => "垂直翻转",
+        "Auto-Align Layers" => "自动对齐图层",
+        "Auto-Blend Layers" => "自动混合图层",
+        "Define Brush Preset" => "定义画笔预设",
+        "Define Pattern" => "定义图案",
+        "Define Custom Shape" => "定义自定形状",
+        "Purge" => "清理",
+        "Color Settings" => "颜色设置",
+        "Assign Profile" => "指定配置文件",
+        "Convert to Profile" => "转换为配置文件",
+        "Keyboard Shortcuts" => "键盘快捷键",
+        "Menus" => "菜单",
+        "Toolbar" => "工具栏",
+        "Mode" => "模式",
+        "Adjustments" => "调整",
+        "Brightness/Contrast" => "亮度/对比度",
+        "Levels" => "色阶",
+        "Curves" => "曲线",
+        "Exposure" => "曝光度",
+        "Vibrance" => "自然饱和度",
+        "Hue/Saturation" => "色相/饱和度",
+        "Color Balance" => "色彩平衡",
+        "Black & White" => "黑白",
+        "Photo Filter" => "照片滤镜",
+        "Channel Mixer" => "通道混合器",
+        "Color Lookup" => "颜色查找",
+        "Invert" => "反相",
+        "Posterize" => "色调分离",
+        "Threshold" => "阈值",
+        "Gradient Map" => "渐变映射",
+        "Selective Color" => "可选颜色",
+        "Shadows/Highlights" => "阴影/高光",
+        "HDR Toning" => "HDR 色调",
+        "Desaturate" => "去色",
+        "Match Color" => "匹配颜色",
+        "Replace Color" => "替换颜色",
+        "Equalize" => "色调均化",
+        "Auto Tone" => "自动色调",
+        "Auto Contrast" => "自动对比度",
+        "Auto Color" => "自动颜色",
+        "Image Size" => "图像大小",
+        "Generative Upscale" => "生成式放大",
+        "Canvas Size" => "画布大小",
+        "Image Rotation" => "图像旋转",
+        "90° Clockwise" => "顺时针 90°",
+        "90° Counter Clockwise" => "逆时针 90°",
+        "Arbitrary" => "任意角度",
+        "Flip Canvas Horizontal" => "水平翻转画布",
+        "Flip Canvas Vertical" => "垂直翻转画布",
+        "Crop" => "裁剪",
+        "Trim" => "修边",
+        "Reveal All" => "显示全部",
+        "Duplicate" => "复制",
+        "Apply Image" => "应用图像",
+        "Calculations" => "计算",
+        "Variables" => "变量",
+        "Apply Data Set" => "应用数据组",
+        "Trap" => "陷印",
+        "Analysis" => "分析",
+        "Layer from Background" => "背景图层转为普通图层",
+        "Group" => "组",
+        "Group from Layers" => "从图层新建组",
+        "Artboard" => "画板",
+        "Artboard from Group" => "从组新建画板",
+        "Artboard from Layers" => "从图层新建画板",
+        "Frame from Layers" => "从图层新建框架",
+        "Convert to Frame" => "转换为框架",
+        "Layer Via Copy" => "通过拷贝的图层",
+        "Layer Via Cut" => "通过剪切的图层",
+        "Copy CSS" => "拷贝 CSS",
+        "Copy SVG" => "拷贝 SVG",
+        "Duplicate Layer" => "复制图层",
+        "Delete" => "删除",
+        "Hidden Layers" => "隐藏图层",
+        "Rename Layer" => "重命名图层",
+        "Layer Style" => "图层样式",
+        "Smart Filter" => "智能滤镜",
+        "New Fill Layer" => "新建填充图层",
+        "New Adjustment Layer" => "新建调整图层",
+        "Harmonize" => "协调",
+        "Layer Content Options" => "图层内容选项",
+        "Layer Mask" => "图层蒙版",
+        "Hide All" => "隐藏全部",
+        "Reveal Selection" => "显示选区",
+        "Hide Selection" => "隐藏选区",
+        "From Transparency" => "从透明区域",
+        "Apply" => "应用",
+        "Disable" => "停用",
+        "Enable" => "启用",
+        "Link" => "链接",
+        "Vector Mask" => "矢量蒙版",
+        "Create Clipping Mask" => "创建剪贴蒙版",
+        "Mask All Objects" => "为所有对象添加蒙版",
+        "Smart Objects" => "智能对象",
+        "Video Layers" => "视频图层",
+        "Rasterize" => "栅格化",
+        "New Layer Based Slice" => "新建基于图层的切片",
+        "Group Layers" => "编组图层",
+        "Ungroup Layers" => "取消图层编组",
+        "Hide Layers" => "隐藏图层",
+        "Show Layers" => "显示图层",
+        "Arrange" => "排列",
+        "Bring to Front" => "置为顶层",
+        "Bring Forward" => "前移一层",
+        "Send Backward" => "后移一层",
+        "Send to Back" => "置为底层",
+        "Reverse" => "反向",
+        "Combine Shapes" => "合并形状",
+        "Align" => "对齐",
+        "Top Edges" => "顶边",
+        "Vertical Centers" => "垂直居中",
+        "Bottom Edges" => "底边",
+        "Left Edges" => "左边",
+        "Horizontal Centers" => "水平居中",
+        "Right Edges" => "右边",
+        "Distribute" => "分布",
+        "Horizontally" => "水平",
+        "Vertically" => "垂直",
+        "Lock Layers" => "锁定图层",
+        "Link Layers" => "链接图层",
+        "Unlink Layers" => "取消链接图层",
+        "Select Linked Layers" => "选择链接图层",
+        "Merge Down" => "向下合并",
+        "Merge Layers" => "合并图层",
+        "Merge Group" => "合并组",
+        "Merge Visible" => "合并可见图层",
+        "Flatten Image" => "拼合图像",
+        "Matting" => "修边处理",
+        "All" => "全部",
+        "None" => "无",
+        "Deselect" => "取消选择",
+        "Reselect" => "重新选择",
+        "Inverse" => "反选",
+        "All Layers" => "所有图层",
+        "Deselect Layers" => "取消选择图层",
+        "Find Layers" => "查找图层",
+        "Isolate Layers" => "隔离图层",
+        "Color Range" => "色彩范围",
+        "Focus Area" => "焦点区域",
+        "Subject" => "主体",
+        "Sky" => "天空",
+        "Select and Mask" => "选择并遮住",
+        "Modify" => "修改",
+        "Border" => "边界",
+        "Smooth" => "平滑",
+        "Expand" => "扩展",
+        "Contract" => "收缩",
+        "Feather" => "羽化",
+        "Grow" => "扩大选取",
+        "Similar" => "选取相似",
+        "Transform Selection" => "变换选区",
+        "Edit in Quick Mask Mode" => "以快速蒙版模式编辑",
+        "Load Selection" => "载入选区",
+        "Save Selection" => "存储选区",
+        "Panels" => "面板",
+        "Anti-Alias" => "消除锯齿",
+        "Orientation" => "方向",
+        "Create Work Path" => "创建工作路径",
+        "Convert to Shape" => "转换为形状",
+        "Rasterize Type Layer" => "栅格化文字图层",
+        "Convert to Paragraph Text" => "转换为段落文本",
+        "Convert to Dynamic Text" => "转换为动态文本",
+        "Warp Text" => "文字变形",
+        "Match Font" => "匹配字体",
+        "Font Preview Size" => "字体预览大小",
+        "Language Options" => "语言选项",
+        "Update All Text Layers" => "更新所有文字图层",
+        "Manage Missing Fonts" => "管理缺失字体",
+        "Paste Lorem Ipsum" => "粘贴占位文本",
+        "Load Default Type Styles" => "载入默认文字样式",
+        "Save Default Type Styles" => "存储默认文字样式",
+        "Last Filter" => "上次滤镜",
+        "Convert for Smart Filters" => "转换为智能滤镜",
+        "Neural Filters" => "神经网络滤镜",
+        "Filter Gallery" => "滤镜库",
+        "Adaptive Wide Angle" => "自适应广角",
+        "Camera Raw Filter" => "Camera Raw 滤镜",
+        "AI Denoise" => "AI 降噪",
+        "AI Sharpen" => "AI 锐化",
+        "Lens Correction" => "镜头校正",
+        "Liquify" => "液化",
+        "Vanishing Point" => "消失点",
+        "Blur" => "模糊",
+        "Average" => "平均",
+        "Blur More" => "进一步模糊",
+        "Box Blur" => "方框模糊",
+        "Gaussian Blur" => "高斯模糊",
+        "Lens Blur" => "镜头模糊",
+        "Motion Blur" => "动感模糊",
+        "Radial Blur" => "径向模糊",
+        "Shape Blur" => "形状模糊",
+        "Smart Blur" => "特殊模糊",
+        "Surface Blur" => "表面模糊",
+        "Blur Gallery" => "模糊画廊",
+        "Displace" => "置换",
+        "Pinch" => "挤压",
+        "Polar Coordinates" => "极坐标",
+        "Ripple" => "波纹",
+        "Shear" => "切变",
+        "Spherize" => "球面化",
+        "Twirl" => "旋转扭曲",
+        "Wave" => "波浪",
+        "ZigZag" => "水波",
+        "Noise" => "杂色",
+        "Add Noise" => "添加杂色",
+        "Despeckle" => "去斑",
+        "Dust & Scratches" => "蒙尘与划痕",
+        "Median" => "中间值",
+        "Reduce Noise" => "减少杂色",
+        "Pixelate" => "像素化",
+        "Color Halftone" => "彩色半调",
+        "Crystallize" => "晶格化",
+        "Facet" => "彩块化",
+        "Fragment" => "碎片",
+        "Mezzotint" => "铜版雕刻",
+        "Mosaic" => "马赛克",
+        "Pointillize" => "点状化",
+        "Render" => "渲染",
+        "Flame" => "火焰",
+        "Picture Frame" => "图片框",
+        "Tree" => "树",
+        "Clouds" => "云彩",
+        "Difference Clouds" => "分层云彩",
+        "Fibers" => "纤维",
+        "Lens Flare" => "镜头光晕",
+        "Sharpen" => "锐化",
+        "Sharpen Edges" => "锐化边缘",
+        "Sharpen More" => "进一步锐化",
+        "Smart Sharpen" => "智能锐化",
+        "Unsharp Mask" => "USM 锐化",
+        "Stylize" => "风格化",
+        "Diffuse" => "扩散",
+        "Emboss" => "浮雕效果",
+        "Extrude" => "凸出",
+        "Find Edges" => "查找边缘",
+        "Oil Paint" => "油画",
+        "Solarize" => "曝光过度",
+        "Tiles" => "拼贴",
+        "Trace Contour" => "等高线",
+        "Wind" => "风",
+        "Video" => "视频",
+        "Other" => "其他",
+        "Custom" => "自定",
+        "High Pass" => "高反差保留",
+        "Maximum" => "最大值",
+        "Minimum" => "最小值",
+        "Offset" => "位移",
+        "Plugins Panel" => "增效工具面板",
+        "Manage Plugins" => "管理增效工具",
+        "Proof Setup" => "校样设置",
+        "Proof Colors" => "校样颜色",
+        "Gamut Warning" => "色域警告",
+        "Pixel Aspect Ratio" => "像素长宽比",
+        "Pixel Aspect Ratio Correction" => "像素长宽比校正",
+        "32-bit Preview Options" => "32 位预览选项",
+        "Zoom In" => "放大",
+        "Zoom Out" => "缩小",
+        "Fit on Screen" => "适合屏幕",
+        "Fit Layer(s) on Screen" => "图层适合屏幕",
+        "Fit Artboard on Screen" => "画板适合屏幕",
+        "Print Size" => "打印尺寸",
+        "Actual Size" => "实际大小",
+        "Pattern Preview" => "图案预览",
+        "Screen Mode" => "屏幕模式",
+        "Standard Screen Mode" => "标准屏幕模式",
+        "Full Screen Mode With Menu Bar" => "带菜单栏的全屏模式",
+        "Full Screen Mode" => "全屏模式",
+        "Extras" => "额外内容",
+        "Show" => "显示",
+        "Layer Edges" => "图层边缘",
+        "Selection Edges" => "选区边缘",
+        "Target Path" => "目标路径",
+        "Grid" => "网格",
+        "Guides" => "参考线",
+        "Canvas Guides" => "画布参考线",
+        "Artboard Guides" => "画板参考线",
+        "Artboard Names" => "画板名称",
+        "Count" => "计数",
+        "Smart Guides" => "智能参考线",
+        "Slices" => "切片",
+        "Notes" => "注释",
+        "Pixel Grid" => "像素网格",
+        "Pattern Preview Tile Bounds" => "图案预览拼贴边界",
+        "Mesh" => "网格线",
+        "Edit Pins" => "编辑图钉",
+        "Show Extras Options" => "显示额外内容选项",
+        "Rulers" => "标尺",
+        "Snap" => "对齐",
+        "Snap To" => "对齐到",
+        "Layers" => "图层",
+        "Document Bounds" => "文档边界",
+        "Edit Selected Guides" => "编辑所选参考线",
+        "Lock Guides" => "锁定参考线",
+        "Clear Guides" => "清除参考线",
+        "Clear Selected Guides" => "清除所选参考线",
+        "Clear Selected Artboard Guides" => "清除所选画板参考线",
+        "Clear Canvas Guides" => "清除画布参考线",
+        "New Guide" => "新建参考线",
+        "New Guide Layout" => "新建参考线版面",
+        "New Guides From Shape" => "从形状新建参考线",
+        "Lock Slices" => "锁定切片",
+        "Clear Slices" => "清除切片",
+        "Workspace" => "工作区",
+        "Essentials (Default)" => "基本功能（默认）",
+        "Graphic and Web" => "图形和 Web",
+        "Motion" => "动感",
+        "Painting" => "绘画",
+        "Photography" => "摄影",
+        "Reset Essentials" => "复位基本功能",
+        "New Workspace" => "新建工作区",
+        "Delete Workspace" => "删除工作区",
+        "Keyboard Shortcuts & Menus" => "键盘快捷键和菜单",
+        "Lock Workspace" => "锁定工作区",
+        "Actions" => "动作",
+        "Brush Settings" => "画笔设置",
+        "Brushes" => "画笔",
+        "Channels" => "通道",
+        "Character" => "字符",
+        "Character Styles" => "字符样式",
+        "Clone Source" => "仿制源",
+        "Color" => "颜色",
+        "Comments" => "评论",
+        "Content Credentials (Beta)" => "内容凭据（测试版）",
+        "Glyphs" => "字形",
+        "Gradients" => "渐变",
+        "Histogram" => "直方图",
+        "History" => "历史记录",
+        "Info" => "信息",
+        "Layer Comps" => "图层复合",
+        "Libraries" => "库",
+        "Materials" => "材质",
+        "Measurement Log" => "测量记录",
+        "Navigator" => "导航器",
+        "Paragraph" => "段落",
+        "Paragraph Styles" => "段落样式",
+        "Paths" => "路径",
+        "Patterns" => "图案",
+        "Properties" => "属性",
+        "Shapes" => "形状",
+        "Styles" => "样式",
+        "Swatches" => "色板",
+        "Timeline" => "时间轴",
+        "Tool Presets" => "工具预设",
+        "Application Frame" => "应用程序框架",
+        "Options" => "选项",
+        "Tools" => "工具",
+        "Contextual Task Bar" => "上下文任务栏",
+        "Clear Recent File List" => "清除最近使用的文件列表",
+        "Quick Mask" => "快速蒙版",
+        "Crop Preview, " => "裁剪预览，",
+        "Point Sample" => "取样点",
+        "3 by 3 Average" => "3 × 3 平均",
+        "5 by 5 Average" => "5 × 5 平均",
+        "11 by 11 Average" => "11 × 11 平均",
+        "31 by 31 Average" => "31 × 31 平均",
+        "51 by 51 Average" => "51 × 51 平均",
+        "101 by 101 Average" => "101 × 101 平均",
+        "Color Picker" => "拾色器",
+        "Color Picker (Foreground Color)" => "拾色器（前景色）",
+        "Color Picker (Background Color)" => "拾色器（背景色）",
+        "Color Picker (Fill Color)" => "拾色器（填充颜色）",
+        "Color Picker (Stop Color)" => "拾色器（色标颜色）",
+        "Color Picker (Guide Color)" => "拾色器（参考线颜色）",
+        "Color Picker (Photo Filter Color)" => "拾色器（照片滤镜颜色）",
+        "Select target shadow color:" => "选择目标阴影颜色：",
+        "Select target midtone color:" => "选择目标中间调颜色：",
+        "Select target highlight color:" => "选择目标高光颜色：",
+        "Group and Contents" => "组及其内容",
+        "Group Only" => "仅组",
+        "Cancel" => "取消",
+        "Full Screen" => "全屏",
+        "Merged" => "合并结果",
+        "Pattern Name" => "图案名称",
+        "Discard hidden layers?" => "要丢弃隐藏图层吗？",
+        "Pixels" => "像素",
+        "Inches" => "英寸",
+        "Centimeters" => "厘米",
+        "Millimeters" => "毫米",
+        "Points" => "点",
+        "Picas" => "派卡",
+        "Percent" => "百分比",
+        "Document Sizes" => "文档大小",
+        "Document Profile" => "文档配置文件",
+        "Document Dimensions" => "文档尺寸",
+        "GPU Mode" => "GPU 模式",
+        "Compositing Mode" => "合成模式",
+        "Measurement Scale" => "测量比例",
+        "Scratch Sizes" => "暂存盘大小",
+        "Efficiency" => "效率",
+        "Timing" => "计时",
+        "Current Tool" => "当前工具",
+        "32-bit Exposure" => "32 位曝光度",
+        "Save Progress" => "保存进度",
+        "Download Progress" => "下载进度",
+        "Layer Count" => "图层计数",
+        "Classic" => "经典",
+        "New Layer" => "新建图层",
+        "Delete Layer" => "删除图层",
+        "Layer From Background" => "背景图层转为普通图层",
+        "Delete Hidden Layers" => "删除隐藏图层",
+        "Layer Order" => "图层顺序",
+        "Select All" => "全选",
+        "Select Inverse" => "反选",
+        "Add Layer Mask" => "添加图层蒙版",
+        "Delete Layer Mask" => "删除图层蒙版",
+        "Apply Layer Mask" => "应用图层蒙版",
+        "Enable Layer Mask" => "启用图层蒙版",
+        "Disable Layer Mask" => "停用图层蒙版",
+        "Lock Layer" => "锁定图层",
+        "Unlock Layer" => "解锁图层",
+        "Rotate Canvas" => "旋转画布",
+        "Transform Again" => "再次变换",
+        "Move" => "移动",
+        "Nudge" => "微移",
+        "Drag Layer" => "拖移图层",
+        "Move Selection" => "移动选区",
+        "Rectangular Marquee" => "矩形选框",
+        "Elliptical Marquee" => "椭圆选框",
+        "Single Row Marquee" => "单行选框",
+        "Single Column Marquee" => "单列选框",
+        "Lasso" => "套索",
+        "Polygonal Lasso" => "多边形套索",
+        "Magnetic Lasso" => "磁性套索",
+        "Magic Wand" => "魔棒",
+        "Quick Selection" => "快速选择",
+        "Object Selection" => "对象选择",
+        "Magic Eraser" => "魔术橡皮擦",
+        "Red Eye" => "红眼",
+        "Paint Bucket" => "油漆桶",
+        "Gradient" => "渐变",
+        "Rectangle Tool" => "矩形工具",
+        "Ellipse Tool" => "椭圆工具",
+        "Triangle Tool" => "三角形工具",
+        "Polygon Tool" => "多边形工具",
+        "Line Tool" => "直线工具",
+        "Custom Shape Tool" => "自定形状工具",
+        "Brush Tool" => "画笔工具",
+        "Pencil" => "铅笔",
+        "Eraser" => "橡皮擦",
+        "Dodge Tool" => "减淡工具",
+        "Burn Tool" => "加深工具",
+        "Sponge Tool" => "海绵工具",
+        "Blur Tool" => "模糊工具",
+        "Sharpen Tool" => "锐化工具",
+        "Clone Stamp" => "仿制图章",
+        "History Brush" => "历史记录画笔",
+        "Smudge Tool" => "涂抹工具",
+        "Pattern Stamp" => "图案图章",
+        "Background Eraser" => "背景橡皮擦",
+        "Color Replacement Tool" => "颜色替换工具",
+        "Healing Brush" => "修复画笔",
+        "Spot Healing Brush" => "污点修复画笔",
+        "Mixer Brush Tool" => "混合器画笔工具",
+        "Art History Brush" => "历史记录艺术画笔",
+        "Patch Tool" => "修补工具",
+        "Content-Aware Move" => "内容识别移动",
+        "Place Frame Content" => "置入框架内容",
+        "Move Guide" => "移动参考线",
+        "Delete Guide" => "删除参考线",
+        "Edit Guide" => "编辑参考线",
+        "Remove Tool" => "移除工具",
+        "Remove" => "移除",
+        "Move Artboard" => "移动画板",
+        "New Artboard" => "新建画板",
+        "Resize Artboard" => "调整画板大小",
+        "New Slice" => "新建切片",
+        "Move Slice" => "移动切片",
+        "Resize Slice" => "调整切片大小",
+        "Delete Slice" => "删除切片",
+        "New Frame" => "新建框架",
+        "Move Frame" => "移动框架",
+        "Resize Frame" => "调整框架大小",
+        "New Note" => "新建注释",
+        "Move Note" => "移动注释",
+        "Delete Note" => "删除注释",
+        "Edit Note" => "编辑注释",
+        "Count Tool" => "计数工具",
+        "Type Tool" => "文字工具",
+        "Horizontal Type Tool" => "横排文字工具",
+        "Vertical Type Tool" => "直排文字工具",
+        "Horizontal Type Mask Tool" => "横排文字蒙版工具",
+        "Vertical Type Mask Tool" => "直排文字蒙版工具",
+        "Pen Tool" => "钢笔工具",
+        "Freeform Pen Tool" => "自由钢笔工具",
+        "Curvature Pen Tool" => "弯度钢笔工具",
+        "Add Anchor Point Tool" => "添加锚点工具",
+        "Delete Anchor Point Tool" => "删除锚点工具",
+        "Convert Point Tool" => "转换点工具",
+        "Path Selection Tool" => "路径选择工具",
+        "Direct Selection Tool" => "直接选择工具",
+        "Adjustment Brush Tool" => "调整画笔工具",
+        "Hand Tool" => "抓手工具",
+        "Zoom Tool" => "缩放工具",
+        "Rotate View Tool" => "旋转视图工具",
+        "Eyedropper Tool" => "吸管工具",
+        "Color Sampler Tool" => "颜色取样器工具",
+        "Ruler Tool" => "标尺工具",
+        "Note Tool" => "注释工具",
+        "Slice Tool" => "切片工具",
+        "Slice Select Tool" => "切片选择工具",
+        "Frame Tool" => "框架工具",
+        "Artboard Tool" => "画板工具",
+        "Selection Brush Tool" => "选区画笔工具",
+        "Crop Tool" => "裁剪工具",
+        "Perspective Crop Tool" => "透视裁剪工具",
+        _ => name,
+    };
+    label.to_owned()
+}
+
+pub fn display_error(message: &str) -> String {
+    let exact = match message {
+        "Remove requires a visible, unlocked pixel layer; mask editing is unsupported." => {
+            Some("移除工具需要可见且未锁定的像素图层；不支持编辑蒙版。")
+        }
+        "The removal area does not match the document dimensions." => {
+            Some("移除区域与文档尺寸不匹配。")
+        }
+        "There is not enough unmarked image context to fill this area." => {
+            Some("没有足够的未标记图像内容来填充此区域。")
+        }
+        "This removal area exceeds the offline processing limit." => {
+            Some("此移除区域超出离线处理限制。")
+        }
+        _ => None,
+    };
+    if let Some(translated) = exact {
+        return translated.to_owned();
+    }
+    if let Some(rest) = message.strip_prefix("Could not complete the ")
+        && let Some((operation, reason)) = rest.split_once(" command because ")
+    {
+        return format!(
+            "无法完成“{}”命令，因为{}",
+            display_name(operation),
+            display_error_reason(reason)
+        );
+    }
+    if let Some(rest) = message.strip_prefix("Could not use the ")
+        && let Some((tool, reason)) = rest.split_once(" because ")
+    {
+        let tool = tool
+            .split_whitespace()
+            .map(|word| {
+                let mut chars = word.chars();
+                chars.next().map_or_else(String::new, |first| {
+                    first.to_uppercase().collect::<String>() + chars.as_str()
+                })
+            })
+            .collect::<Vec<_>>()
+            .join(" ");
+        return format!(
+            "无法使用{}，因为{}",
+            display_name(&tool),
+            display_error_reason(reason)
+        );
+    }
+    message.to_owned()
+}
+
+fn display_error_reason(reason: &str) -> &str {
+    match reason {
+        "the target layer is hidden." => "目标图层已隐藏。",
+        "the layer is locked." | "the target layer is locked." => "目标图层已锁定。",
+        "the pixels in the layer are locked." | "the target layer's pixels are locked." => {
+            "目标图层的像素已锁定。"
+        }
+        "no layers are selected."
+        | "there is no selected layer."
+        | "there is no layer."
+        | "there is no layer to paint on." => "未选择任何图层。",
+        "the selected area is empty." => "所选区域为空。",
+        "the target layer is a group." => "目标图层是一个组。",
+        "the layer is a background layer." => "该图层是背景图层。",
+        "the history state does not contain a corresponding layer." => {
+            "历史记录状态不包含对应的图层。"
+        }
+        "the area to clone has not been defined (option-click to define a source point)." => {
+            "尚未定义仿制源区域（按住 Option 键单击以定义源点）。"
+        }
+        "the area to heal has not been defined (option-click to define a source point)." => {
+            "尚未定义修复源区域（按住 Option 键单击以定义源点）。"
+        }
+        _ => reason,
+    }
+}
+
+#[cfg(test)]
+mod chinese_display_tests {
+    #[test]
+    fn operation_display_preserves_raw_names_and_user_data() {
+        assert_eq!(super::display_name("Gaussian Blur"), "高斯模糊");
+        assert_eq!(super::display_name("Fade Gaussian Blur"), "渐隐高斯模糊");
+        assert_eq!(super::display_name("Align Left Edges"), "对齐左边");
+        assert_eq!(super::display_name("客户文件.png"), "客户文件.png");
+        assert_eq!(
+            super::display_name("My custom operation"),
+            "My custom operation"
+        );
+    }
+
+    #[test]
+    fn error_display_localizes_known_templates() {
+        assert_eq!(
+            super::display_error(
+                "Could not complete the Gaussian Blur command because the target layer is hidden."
+            ),
+            "无法完成“高斯模糊”命令，因为目标图层已隐藏。"
+        );
+        assert_eq!(
+            super::display_error("Could not use the move tool because there is no layer."),
+            "无法使用移动工具，因为未选择任何图层。"
+        );
+        assert_eq!(
+            super::display_error("/Users/图片/My Photo.png"),
+            "/Users/图片/My Photo.png"
+        );
+    }
 }

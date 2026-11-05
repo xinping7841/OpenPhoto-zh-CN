@@ -11,3 +11,7 @@ Switching away from Remove discards pending marks without editing pixels or hist
 Pending Remove strokes have local undo/redo snapshots; document history/pixels are unaffected. Mark history is bounded to 32 strokes and 16777216 snapshot pixels. Applied output uses ordinary document undo/redo.
 
 Remove draws a pressure-scaled circular cursor outline and hides the arrow. Unimplemented distraction detection/additional-options controls are disabled rather than presenting working actions. Cursor/overlay native styling remains unmeasured.
+
+## Chinese-only display wording
+
+This fork displays Simplified Chinese labels, tooltips and local alerts, overriding English Photoshop wording parity. Internal setting keys, history action keys, parser units, preset lookup names and user-provided names remain unchanged; localization applies at display boundaries.

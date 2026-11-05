@@ -93,7 +93,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         let small_mountains =
             egui::Button::new(egui::RichText::new(icons::MOUNTAINS).font(theme::icon(pt(10.0))))
                 .frame(false);
-        if ui.add(small_mountains).on_hover_text("Zoom Out").clicked() {
+        if ui.add(small_mountains).on_hover_text("缩小").clicked() {
             document_view::zoom_step(state, false, ppp);
         }
         // Logarithmic slider over Photoshop's zoom range
@@ -105,7 +105,7 @@ pub fn show(ui: &mut Ui, app: &mut AppState) {
         let big_mountains =
             egui::Button::new(egui::RichText::new(icons::MOUNTAINS).font(theme::icon(pt(15.0))))
                 .frame(false);
-        if ui.add(big_mountains).on_hover_text("Zoom In").clicked() {
+        if ui.add(big_mountains).on_hover_text("放大").clicked() {
             document_view::zoom_step(state, true, ppp);
         }
     });

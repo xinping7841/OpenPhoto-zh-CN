@@ -23,3 +23,12 @@ The Info and Navigator headers have a panel menu icon (four lines, 22 pt left of
 
 - Panels cannot be docked into the panel column, collapsed to icons, or grouped with other panels into tab groups; there is no panel menu.
 - The open state is not remembered after the application closes.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Panel titles, Panel Options entry, option-dialog titles, color label and confirmation buttons use Simplified Chinese. Floating panel IDs continue to use their original English salts, independently of the displayed title.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.

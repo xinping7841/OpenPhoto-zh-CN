@@ -13,7 +13,7 @@ use crate::ps_icons::{self, Icon};
 use crate::theme::{color, pt};
 
 pub const SIZE: egui::Vec2 = vec2(pt(658.0), pt(445.0));
-const CHANNELS: [&str; 4] = ["RGB", "Red", "Green", "Blue"];
+const CHANNELS: [&str; 4] = ["RGB", "红色", "绿色", "蓝色"];
 const CHANNEL_COLORS: [Color32; 4] = [
     Color32::WHITE,
     Color32::from_rgb(0xff, 0x45, 0x45),
@@ -22,12 +22,7 @@ const CHANNEL_COLORS: [Color32; 4] = [
 ];
 /// The graph (Photoshop points).
 const GRAPH: [f32; 4] = [89.0, 108.0, 346.0, 365.0];
-const SHOW: [&str; 4] = [
-    "Channel Overlays",
-    "Histogram",
-    "Baseline",
-    "Intersection Line",
-];
+const SHOW: [&str; 4] = ["通道叠加", "直方图", "基线", "交叉线"];
 
 #[derive(Clone)]
 pub struct Dialog {
@@ -220,12 +215,12 @@ impl Dialog {
     /// "Default" or the preset the curves match, else "Custom".
     fn preset(&self) -> &'static str {
         if self.points.iter().all(|p| *p == identity()) {
-            return "Default";
+            return "默认";
         }
         super::adjust_presets::CURVES
             .iter()
             .find(|(_, p)| self.points == Self::preset_points(p))
-            .map_or("Custom", |(name, _)| name)
+            .map_or("自定", |(name, _)| name)
     }
 
     /// Picks the pencil (the curves become tables to draw on) or the point
@@ -432,15 +427,15 @@ impl Dialog {
         }
 
         // Preset
-        appkit::label(ui, at(11.0, 56.25), "Preset:");
+        appkit::label(ui, at(11.0, 56.25), "预设:");
         use super::preset_files as files;
         let encoded = self.encoded();
         let saved_name = files::shown(files::CURVES, Some(&encoded));
         let preset = saved_name.as_deref().unwrap_or(self.preset());
         // Default, Custom, then Photoshop's presets
         let mut entries = vec![
-            Entry::item("Default", preset == "Default"),
-            Entry::item("Custom", preset == "Custom").enabled(false),
+            Entry::item("默认", preset == "默认"),
+            Entry::item("自定", preset == "自定").enabled(false),
             Entry::Separator,
         ];
         entries.extend(
@@ -491,7 +486,7 @@ impl Dialog {
             r(11.0, 87.5, 368.0, 434.5),
             (at(25.5, 0.0).x, at(172.5, 0.0).x),
         );
-        appkit::label(ui, at(30.5, 86.75), "Channel:");
+        appkit::label(ui, at(30.5, 86.75), "通道:");
         let channels: Vec<Entry> = CHANNELS
             .iter()
             .enumerate()
@@ -549,8 +544,8 @@ impl Dialog {
             .selected
             .and_then(|i| self.points[self.channel].get(i).copied())
             .or(self.hover);
-        appkit::label(ui, at(20.5, 339.75), "Output:");
-        appkit::label(ui, at(90.0, 389.75), "Input:");
+        appkit::label(ui, at(20.5, 339.75), "输出:");
+        appkit::label(ui, at(90.0, 389.75), "输入:");
         // A selected point's values can be typed
         let selected = self
             .selected
@@ -656,12 +651,7 @@ impl Dialog {
                 self.targeting = false;
             }
         }
-        appkit::checkbox(
-            ui,
-            at(240.5, 404.5),
-            "Show Clipping",
-            &mut self.show_clipping,
-        );
+        appkit::checkbox(ui, at(240.5, 404.5), "显示修剪", &mut self.show_clipping);
 
         // Display options
         appkit::group(
@@ -669,11 +659,11 @@ impl Dialog {
             r(394.0, 46.5, 547.0, 122.5),
             (at(406.0, 0.0).x, at(511.0, 0.0).x),
         );
-        appkit::label(ui, at(413.5, 45.25), "Show Amount of:");
-        if appkit::radio(ui, at(410.0, 71.25), "Light  (0-255)", !self.pigment) {
+        appkit::label(ui, at(413.5, 45.25), "显示量:");
+        if appkit::radio(ui, at(410.0, 71.25), "光 (0-255)", !self.pigment) {
             self.pigment = false;
         }
-        if appkit::radio(ui, at(410.0, 105.25), "Pigment/Ink %", self.pigment) {
+        if appkit::radio(ui, at(410.0, 105.25), "颜料/油墨 %", self.pigment) {
             self.pigment = true;
         }
         appkit::group(
@@ -681,7 +671,7 @@ impl Dialog {
             r(394.0, 147.5, 547.0, 203.5),
             (at(406.0, 0.0).x, at(468.0, 0.0).x),
         );
-        appkit::label(ui, at(413.5, 146.25), "Grid size:");
+        appkit::label(ui, at(413.5, 146.25), "网格大小:");
         for (k, (cx, icon)) in [(416.0, Icon::GridQuarters), (442.0, Icon::GridTenths)]
             .into_iter()
             .enumerate()
@@ -715,7 +705,7 @@ impl Dialog {
             r(394.0, 228.0, 547.0, 351.0),
             (at(406.0, 0.0).x, at(450.0, 0.0).x),
         );
-        appkit::label(ui, at(413.5, 226.75), "Show:");
+        appkit::label(ui, at(413.5, 226.75), "显示:");
         for (k, y) in [246.0, 272.75, 299.5, 326.25].into_iter().enumerate() {
             appkit::checkbox(ui, at(402.5, y), SHOW[k], &mut self.show[k]);
         }
@@ -724,16 +714,16 @@ impl Dialog {
         let button = |ui: &mut Ui, y: f32, label: &str, default: bool, enabled: bool| {
             appkit::button(ui, r(563.5, y, 647.5, y + 26.0), label, default, enabled)
         };
-        let ok = button(ui, 45.0, "OK", true, true);
-        let cancel = button(ui, 80.0, "Cancel", false, true);
-        if button(ui, 122.0, "Smooth", false, self.tables.is_some()).clicked() {
+        let ok = button(ui, 45.0, "确定", true, true);
+        let cancel = button(ui, 80.0, "取消", false, true);
+        if button(ui, 122.0, "平滑", false, self.tables.is_some()).clicked() {
             self.smooth();
         }
-        let auto = button(ui, 164.0, "Auto", false, true);
-        if button(ui, 199.0, "Options...", false, true).clicked() {
+        let auto = button(ui, 164.0, "自动", false, true);
+        if button(ui, 199.0, "选项...", false, true).clicked() {
             self.wants_options = true;
         }
-        appkit::checkbox(ui, at(563.5, 243.5), "Preview", preview);
+        appkit::checkbox(ui, at(563.5, 243.5), "预览", preview);
 
         if cancel.clicked() {
             return Some(Button::Cancel);
@@ -1202,13 +1192,13 @@ mod tests {
         let mut d = Dialog::new([[0; 256]; 3]);
         let negative = super::super::adjust_presets::CURVES
             .iter()
-            .find(|(n, _)| *n == "Negative")
+            .find(|(n, _)| *n == "负片")
             .unwrap();
         d.points = Dialog::preset_points(&negative.1);
-        assert_eq!(d.preset(), "Negative");
+        assert_eq!(d.preset(), "负片");
         assert_eq!(d.points[0], vec![(0.0, 255.0), (255.0, 0.0)]);
         d.points[0][0].1 = 250.0;
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
     }
 
     #[test]
@@ -1218,9 +1208,9 @@ mod tests {
             d.adjustment(),
             Adjustment::curves_per_channel([&[], &[], &[], &[]])
         );
-        assert_eq!(d.preset(), "Default");
+        assert_eq!(d.preset(), "默认");
         d.points[2].insert(1, (64.0, 128.0));
-        assert_eq!(d.preset(), "Custom");
+        assert_eq!(d.preset(), "自定");
         assert_eq!(
             d.adjustment(),
             Adjustment::curves_per_channel([&[], &[], &[(0, 0), (64, 128), (255, 255)], &[]])

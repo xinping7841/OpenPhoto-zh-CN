@@ -28,10 +28,10 @@ const EXPOSURE_GAMMA: usize = 0;
 /// box's bottom) and the step to the next title when open (Photoshop's
 /// titles sit at 115.5, 215.5, 318.25 and 446).
 const SECTIONS: [(&str, f32, f32); 4] = [
-    ("Edge Glow", 87.25, 100.0),
-    ("Tone and Detail", 90.25, 102.75),
-    ("Advanced", 115.5, 127.75),
-    ("Toning Curve and Histogram", 334.75, 347.5),
+    ("边缘光", 87.25, 100.0),
+    ("色调和细节", 90.25, 102.75),
+    ("高级", 115.5, 127.75),
+    ("色调曲线和直方图", 334.75, 347.5),
 ];
 
 /// HDR Toning's state beyond its fields: the Toning Curve, the point
@@ -100,7 +100,7 @@ impl AdjustDialog {
     pub(super) fn hdr_toning_ui(&mut self, ui: &mut egui::Ui, frame: Rect) -> Outcome {
         let at = |x: f32, y: f32| frame.min + vec2(pt(x), pt(y));
         let r = |x0: f32, y0: f32, x1: f32, y1: f32| Rect::from_min_max(at(x0, y0), at(x1, y1));
-        common::frame(ui, frame, "HDR Toning", theme::dialog_bold(pt(13.0)));
+        common::frame(ui, frame, "HDR 色调", theme::dialog_bold(pt(13.0)));
         let painter = ui.painter().clone();
 
         self.hdr_presets(ui, frame);
@@ -112,10 +112,11 @@ impl AdjustDialog {
             ui,
             at(71.0, 89.0),
             Align2::RIGHT_CENTER,
-            "Method:",
+            "方法:",
             appkit::TEXT,
         );
-        let labels = op_core::tone::HdrMethod::ALL.map(|m| m.label());
+        let labels =
+            op_core::tone::HdrMethod::ALL.map(|m| crate::dialogs::common::display_label(m.label()));
         let entries: Vec<Entry> = labels
             .iter()
             .enumerate()
@@ -137,8 +138,8 @@ impl AdjustDialog {
         );
 
         if method == EXPOSURE_GAMMA {
-            self.hdr_row(ui, frame, GAMMA, "Gamma:", 121.0, None, true);
-            self.hdr_row(ui, frame, EXPOSURE, "Exposure:", 146.0, None, false);
+            self.hdr_row(ui, frame, GAMMA, "灰度系数:", 121.0, None, true);
+            self.hdr_row(ui, frame, EXPOSURE, "曝光度:", 146.0, None, false);
         }
         if method == LOCAL {
             for (k, (title, height, _)) in SECTIONS.into_iter().enumerate() {
@@ -197,14 +198,14 @@ impl AdjustDialog {
                 }
                 match k {
                     0 => {
-                        self.hdr_row(ui, frame, RADIUS, "Radius:", y + 23.5, Some("px"), true);
-                        self.hdr_row(ui, frame, STRENGTH, "Strength:", y + 48.5, None, false);
+                        self.hdr_row(ui, frame, RADIUS, "半径:", y + 23.5, Some("px"), true);
+                        self.hdr_row(ui, frame, STRENGTH, "强度:", y + 48.5, None, false);
                         let mut on = self.value(SMOOTH_EDGES) == Some(1.0);
                         appkit::checkbox_with(
                             ui,
                             at(123.5, y + 67.5),
                             (10.5, 8.0),
-                            "Smooth Edges",
+                            "平滑边缘",
                             &mut on,
                             true,
                         );
@@ -212,9 +213,9 @@ impl AdjustDialog {
                     }
                     1 => {
                         for (j, (i, label, unit)) in [
-                            (GAMMA, "Gamma:", None),
-                            (EXPOSURE, "Exposure:", None),
-                            (DETAIL, "Detail:", Some("%")),
+                            (GAMMA, "灰度系数:", None),
+                            (EXPOSURE, "曝光度:", None),
+                            (DETAIL, "细节:", Some("%")),
                         ]
                         .into_iter()
                         .enumerate()
@@ -231,7 +232,7 @@ impl AdjustDialog {
                         }
                     }
                     2 => {
-                        for (j, label) in ["Shadow:", "Highlight:", "Vibrance:", "Saturation:"]
+                        for (j, label) in ["阴影:", "高光:", "自然饱和度:", "饱和度:"]
                             .into_iter()
                             .enumerate()
                         {
@@ -253,14 +254,13 @@ impl AdjustDialog {
 
         // OK, Cancel and Preview
         let valid = self.effect().is_some();
-        let ok = appkit::button(ui, r(351.0, 38.5, 430.0, 64.0), "OK", true, valid).clicked();
-        let cancel =
-            appkit::button(ui, r(351.0, 73.5, 430.0, 99.0), "Cancel", false, true).clicked();
+        let ok = appkit::button(ui, r(351.0, 38.5, 430.0, 64.0), "确定", true, valid).clicked();
+        let cancel = appkit::button(ui, r(351.0, 73.5, 430.0, 99.0), "取消", false, true).clicked();
         appkit::checkbox_with(
             ui,
             at(350.0, 118.5),
             (12.0, 10.0),
-            "Preview",
+            "预览",
             &mut self.preview,
             true,
         );
@@ -314,7 +314,7 @@ impl AdjustDialog {
             ui,
             at(44.5, 49.5),
             Align2::RIGHT_CENTER,
-            "Preset:",
+            "预设:",
             appkit::TEXT,
         );
         use preset_files as files;
@@ -324,17 +324,17 @@ impl AdjustDialog {
             self.values == self.default_values() && self.extra.hdr.curve == [(0, 0), (255, 255)];
         let name = shown.unwrap_or_else(|| {
             if default {
-                "Default".into()
+                "默认".into()
             } else {
-                "Custom".into()
+                "自定".into()
             }
         });
         let photoshop = files::HDR_TONING.saved_in(std::path::Path::new(
             "/Applications/Adobe Photoshop 2026/Presets/HDR Toning",
         ));
         let mut entries = vec![
-            Entry::item("Default", name == "Default"),
-            Entry::item("Custom", name == "Custom").enabled(false),
+            Entry::item("默认", name == "默认"),
+            Entry::item("自定", name == "自定").enabled(false),
         ];
         if !photoshop.is_empty() {
             entries.push(Entry::Separator);
@@ -634,14 +634,14 @@ impl AdjustDialog {
             ui,
             at(40.0, row),
             Align2::LEFT_CENTER,
-            "Input:",
+            "输入:",
             appkit::TEXT,
         );
         appkit::text(
             ui,
             at(138.0, row),
             Align2::LEFT_CENTER,
-            "Output:",
+            "输出:",
             appkit::TEXT,
         );
         appkit::text(ui, at(120.0, row), Align2::LEFT_CENTER, "%", ink);
@@ -705,7 +705,7 @@ impl AdjustDialog {
             ui,
             at(232.0, row - 4.5),
             (9.0, 9.0),
-            "Corner",
+            "角点",
             &mut corner,
             on,
         );

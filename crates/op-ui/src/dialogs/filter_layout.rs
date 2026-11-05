@@ -183,10 +183,10 @@ const RADIUS_TALL: Layout = Layout {
     preview_y: 111.5,
     pane: true,
     rows: &[number(
-        "Radius:",
+        "半径:",
         60.0,
         [65.0, 280.0, 125.5, 299.0],
-        "Pixels",
+        "像素",
         134.5,
         Some((21.0, 207.0, 310.0)),
         RADIUS_1000,
@@ -199,10 +199,10 @@ const RADIUS: Layout = Layout {
     preview_y: 118.5,
     pane: true,
     rows: &[number(
-        "Radius:",
+        "半径:",
         60.0,
         [65.0, 287.0, 125.5, 306.0],
-        "Pixels",
+        "像素",
         134.5,
         Some((21.0, 207.0, 317.0)),
         RANGE_500,
@@ -215,10 +215,10 @@ const BOX: Layout = Layout {
     preview_y: 118.5,
     pane: true,
     rows: &[number(
-        "Radius:",
+        "半径:",
         60.0,
         [65.0, 287.0, 125.5, 306.0],
-        "Pixels",
+        "像素",
         134.5,
         Some((21.0, 207.0, 317.0)),
         RANGE_2000,
@@ -232,16 +232,16 @@ const RANK: Layout = Layout {
     pane: true,
     rows: &[
         number(
-            "Radius:",
+            "半径:",
             60.0,
             [65.0, 287.0, 125.5, 306.0],
-            "Pixels",
+            "像素",
             134.5,
             Some((21.0, 207.0, 317.0)),
             RANGE_500,
         ),
         Row::Popup {
-            label: "Preserve:",
+            label: "保留:",
             label_right: 62.5,
             rect: [68.5, 347.0, 159.0, 368.0],
         },
@@ -262,7 +262,7 @@ pub const UNSHARP_MASK: &Layout = &Layout {
     pane: true,
     rows: &[
         number(
-            "Amount:",
+            "数量:",
             78.0,
             [83.0, 287.0, 143.5, 306.0],
             "%",
@@ -271,19 +271,19 @@ pub const UNSHARP_MASK: &Layout = &Layout {
             RANGE_500,
         ),
         number(
-            "Radius:",
+            "半径:",
             78.0,
             [83.0, 336.0, 143.5, 355.0],
-            "Pixels",
+            "像素",
             148.5,
             Some((21.0, 303.0, 362.0)),
             RADIUS_1000,
         ),
         number(
-            "Threshold:",
+            "阈值:",
             78.0,
             [83.0, 385.0, 143.5, 404.0],
-            "levels",
+            "色阶",
             148.5,
             Some((21.0, 303.0, 411.0)),
             LEVELS_255,
@@ -298,7 +298,7 @@ pub const ADD_NOISE: &Layout = &Layout {
     pane: true,
     rows: &[
         number(
-            "Amount:",
+            "数量:",
             66.0,
             [71.0, 287.0, 131.5, 306.0],
             "%",
@@ -307,12 +307,12 @@ pub const ADD_NOISE: &Layout = &Layout {
             Scale::Linear,
         ),
         Row::Radios {
-            title: "Distribution",
+            title: "分布",
             group: [10.5, 344.5, 314.0, 413.5],
             ys: &[369.5, 396.5],
         },
         Row::Check {
-            label: "Monochromatic",
+            label: "单色",
             min: (10.0, 426.0),
         },
     ],
@@ -324,10 +324,10 @@ pub const MOSAIC: &Layout = &Layout {
     preview_y: 118.5,
     pane: true,
     rows: &[number(
-        "Cell Size:",
+        "单元格大小:",
         145.5,
         [150.5, 287.0, 196.0, 306.0],
-        "square",
+        "方形",
         200.5,
         Some((21.0, 188.0, 313.0)),
         Scale::Linear,
@@ -341,7 +341,7 @@ pub const MOTION_BLUR: &Layout = &Layout {
     pane: true,
     rows: &[
         Row::Number {
-            label: "Angle:",
+            label: "角度:",
             label_right: 71.5,
             field: [76.5, 295.5, 137.0, 314.5],
             unit: "°",
@@ -351,10 +351,10 @@ pub const MOTION_BLUR: &Layout = &Layout {
             dial: Some((178.25, 304.75, 17.25)),
         },
         number(
-            "Distance:",
+            "距离:",
             141.0,
             [146.5, 338.0, 207.0, 357.0],
-            "Pixels",
+            "像素",
             212.0,
             Some((21.0, 188.0, 364.0)),
             RANGE_2000,
@@ -369,7 +369,7 @@ pub const EMBOSS: &Layout = &Layout {
     pane: true,
     rows: &[
         Row::Number {
-            label: "Angle:",
+            label: "角度:",
             label_right: 66.0,
             field: [71.0, 295.5, 116.5, 314.5],
             unit: "°",
@@ -379,16 +379,16 @@ pub const EMBOSS: &Layout = &Layout {
             dial: Some((152.0, 304.75, 17.25)),
         },
         number(
-            "Height:",
+            "高度:",
             66.0,
             [71.0, 331.0, 116.5, 350.0],
-            "Pixels",
+            "像素",
             121.5,
             Some((21.0, 303.0, 357.0)),
             Scale::Linear,
         ),
         number(
-            "Amount:",
+            "数量:",
             66.0,
             [71.0, 380.0, 116.5, 399.0],
             "%",
@@ -406,19 +406,19 @@ pub const SURFACE_BLUR: &Layout = &Layout {
     pane: true,
     rows: &[
         number(
-            "Radius:",
+            "半径:",
             78.0,
             [83.0, 287.0, 143.5, 306.0],
-            "Pixels",
+            "像素",
             152.5,
             Some((21.0, 207.0, 317.0)),
             Scale::Linear,
         ),
         number(
-            "Threshold:",
+            "阈值:",
             78.0,
             [83.0, 340.0, 143.5, 359.0],
-            "levels",
+            "色阶",
             152.5,
             Some((21.0, 207.0, 370.0)),
             Scale::Linear,
@@ -433,19 +433,19 @@ pub const DUST_AND_SCRATCHES: &Layout = &Layout {
     pane: true,
     rows: &[
         number(
-            "Radius:",
+            "半径:",
             78.0,
             [83.0, 287.0, 128.5, 306.0],
-            "Pixels",
+            "像素",
             133.5,
             Some((21.0, 303.0, 313.0)),
             RANGE_500,
         ),
         number(
-            "Threshold:",
+            "阈值:",
             78.0,
             [83.0, 336.0, 128.5, 355.0],
-            "levels",
+            "色阶",
             133.5,
             Some((21.0, 303.0, 362.0)),
             LEVELS_255,
@@ -460,7 +460,7 @@ pub const TRACE_CONTOUR: &Layout = &Layout {
     pane: true,
     rows: &[
         number(
-            "Level:",
+            "色阶:",
             52.0,
             [57.0, 287.0, 102.5, 306.0],
             "",
@@ -469,7 +469,7 @@ pub const TRACE_CONTOUR: &Layout = &Layout {
             LEVELS_255,
         ),
         Row::Radios {
-            title: "Edge",
+            title: "边缘",
             group: [10.5, 344.5, 314.0, 413.5],
             ys: &[369.5, 396.5],
         },
@@ -483,7 +483,7 @@ pub const DIFFUSE: &Layout = &Layout {
     preview_y: 118.5,
     pane: true,
     rows: &[Row::Radios {
-        title: "Mode",
+        title: "模式",
         group: [10.5, 295.5, 314.0, 419.0],
         ys: &[320.0, 347.0, 374.0, 401.0],
     }],
@@ -496,25 +496,25 @@ pub const OFFSET: &Layout = &Layout {
     pane: false,
     rows: &[
         number(
-            "Horizontal:",
+            "水平:",
             80.0,
             [85.0, 38.0, 146.0, 57.0],
-            "pixels right",
+            "像素向右",
             152.0,
             Some((21.0, 206.0, 64.0)),
             Scale::Linear,
         ),
         number(
-            "Vertical:",
+            "垂直:",
             80.0,
             [85.0, 87.0, 146.0, 106.0],
-            "pixels down",
+            "像素向下",
             152.0,
             Some((21.0, 206.0, 113.0)),
             Scale::Linear,
         ),
         Row::Radios {
-            title: "Undefined Areas",
+            title: "未定义区域",
             group: [10.5, 146.5, 314.0, 243.5],
             ys: &[172.0, 199.0, 225.5],
         },
@@ -528,7 +528,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
     pane: false,
     rows: &[
         number(
-            "Shadows Amount:",
+            "阴影数量:",
             135.0,
             [140.0, 38.0, 200.5, 57.0],
             "%",
@@ -537,7 +537,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Shadows Tone:",
+            "阴影色调:",
             135.0,
             [140.0, 87.0, 200.5, 106.0],
             "%",
@@ -546,7 +546,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Shadows Radius:",
+            "阴影半径:",
             135.0,
             [140.0, 136.0, 200.5, 155.0],
             "px",
@@ -555,7 +555,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Highlights Amount:",
+            "高光数量:",
             135.0,
             [140.0, 185.0, 200.5, 204.0],
             "%",
@@ -564,7 +564,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Highlights Tone:",
+            "高光色调:",
             135.0,
             [140.0, 234.0, 200.5, 253.0],
             "%",
@@ -573,7 +573,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Highlights Radius:",
+            "高光半径:",
             135.0,
             [140.0, 283.0, 200.5, 302.0],
             "px",
@@ -582,7 +582,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Color:",
+            "颜色:",
             135.0,
             [140.0, 332.0, 200.5, 351.0],
             "",
@@ -591,7 +591,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Midtone:",
+            "中间调:",
             135.0,
             [140.0, 381.0, 200.5, 400.0],
             "",
@@ -600,7 +600,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "Black Clip:",
+            "黑色修剪:",
             135.0,
             [140.0, 430.0, 200.5, 449.0],
             "%",
@@ -609,7 +609,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         number(
-            "White Clip:",
+            "白色修剪:",
             135.0,
             [140.0, 479.0, 200.5, 498.0],
             "%",
@@ -618,7 +618,7 @@ pub const SHADOWS_HIGHLIGHTS: &Layout = &Layout {
             Scale::Linear,
         ),
         Row::Check {
-            label: "Show More Options",
+            label: "显示更多选项",
             min: (21.0, 530.0),
         },
     ],

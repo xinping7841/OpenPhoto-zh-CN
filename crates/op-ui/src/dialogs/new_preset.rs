@@ -56,7 +56,7 @@ impl NewPresetDialog {
             ui,
             at(55.5, 47.5),
             Align2::RIGHT_CENTER,
-            "Name:",
+            "名称:",
             appkit::TEXT,
         );
         ui.painter().rect(
@@ -76,8 +76,8 @@ impl NewPresetDialog {
             self.first_frame,
         );
         let valid = !self.name.trim().is_empty();
-        let ok = appkit::button(ui, r(377.5, 38.5, 438.5, 64.5), "OK", true, valid);
-        let cancel = appkit::button(ui, r(377.5, 73.5, 438.5, 99.5), "Cancel", false, true);
+        let ok = appkit::button(ui, r(377.5, 38.5, 438.5, 64.5), "确定", true, valid);
+        let cancel = appkit::button(ui, r(377.5, 73.5, 438.5, 99.5), "取消", false, true);
         if cancel.clicked() {
             return Outcome::Cancel;
         }

@@ -47,3 +47,12 @@ The overlay is drawn by `document_view.md` (`clone_overlay`).
   - at 200% a one-pixel column clones two pixels wide;
   - a second slot starts empty and switching back restores the first source;
   - screenshot `clone_source_panel.png`.
+
+
+## Simplified Chinese fork wording
+
+This Chinese-only fork uses direct Simplified Chinese UI literals. This wording overrides the upstream English copy and English-parity descriptions above; those English names identify the same controls and behavior, not a requirement to render English. Specifications remain in English.
+
+Source tooltips, offset, aspect-ratio help, reset, overlay and opacity controls use Simplified Chinese. Coordinates, W/H, pixel units, source-slot markers and all transform values remain unchanged.
+
+The localization does not change shortcuts, algorithm keys, user-entered data or icon artwork. Layout dimensions remain upstream-derived; Chinese font coverage and clipping require visual verification in the application. Tests outside this panel subtree are not updated by this scoped change.
