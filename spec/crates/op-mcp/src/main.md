@@ -1,5 +1,9 @@
 # crates/op-mcp/src/main.rs: OpenPhoto's MCP server
 
+## Windows regression portability
+
+The canvas/layer export round-trip regression writes a uniquely named PNG in `std::env::temp_dir()`, reopens it to assert exported dimensions, and removes its own output. It does not assume a Unix `/tmp` directory. Runtime MCP contracts and serialization remain unchanged.
+
 ## Responsibilities
 
 Lets AI agents edit images through MCP (Model Context Protocol). `op-mcp` is a standalone executable (binary name `op-mcp`) that speaks JSON-RPC 2.0 over standard input and output, one message per line. It has no interface and does not connect to a running OpenPhoto window: documents exist only in this process's memory and disappear when the process exits (`save_image` / `export_composite` must be called first).

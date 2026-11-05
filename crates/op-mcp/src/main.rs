@@ -3393,17 +3393,18 @@ mod tests {
         let info = h_get_document_info(&mut s, &d()).unwrap();
         assert_eq!(info.get("width").and_then(|v| v.as_u64()), Some(20));
         h_merge_visible(&mut s, &d()).unwrap();
-        h_export_composite(
-            &mut s,
-            &args(&[
-                ("doc", json!(doc)),
-                (
-                    "path",
-                    json!(format!("/tmp/op-mcp-test-{}.png", std::process::id())),
-                ),
-            ]),
-        )
-        .unwrap();
+        let path = std::env::temp_dir().join(format!(
+            "op-mcp-test-{}-{}.png",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        h_export_composite(&mut s, &args(&[("doc", json!(doc)), ("path", json!(path))])).unwrap();
+        let reopened = op_io::open(&path).unwrap();
+        assert_eq!((reopened.width, reopened.height), (20, 20));
+        std::fs::remove_file(&path).unwrap();
     }
 
     #[test]
