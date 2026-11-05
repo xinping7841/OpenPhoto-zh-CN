@@ -39,7 +39,7 @@
     <StandardDirectory Id="ProgramMenuFolder">
       <Directory Id="ApplicationProgramsFolder" Name="OpenPhoto-zh-CN">
         <Component Id="StartMenuShortcut" Guid="*">
-          <Shortcut Id="OpenPhotoShortcut" Name="OpenPhoto 简体中文版" Target="[#OpenPhotoExecutable]" WorkingDirectory="INSTALLFOLDER" />
+          <Shortcut Id="OpenPhotoShortcut" Name="OpenPhoto 简体中文版" Advertise="no" Target="[#OpenPhotoExecutable]" WorkingDirectory="INSTALLFOLDER" />
           <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
           <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
         </Component>
