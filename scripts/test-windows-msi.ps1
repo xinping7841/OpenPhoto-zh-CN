@@ -62,8 +62,13 @@ try {
     $shell = New-Object -ComObject WScript.Shell
     try {
         $shortcut = $shell.CreateShortcut($shortcutPath)
-        if ($shortcut.TargetPath -ne (Join-Path $installDirectory 'openphoto.exe') -or $shortcut.WorkingDirectory -ne $installDirectory) {
-            throw 'Start Menu shortcut has the wrong target or working directory.'
+        $target = [IO.Path]::GetFullPath($shortcut.TargetPath)
+        $expectedTarget = [IO.Path]::GetFullPath((Join-Path $installDirectory 'openphoto.exe'))
+        $working = [IO.Path]::TrimEndingDirectorySeparator([IO.Path]::GetFullPath($shortcut.WorkingDirectory))
+        $expectedWorking = [IO.Path]::TrimEndingDirectorySeparator([IO.Path]::GetFullPath($installDirectory))
+        Write-Host "Shortcut target: $target; working directory: $working"
+        if (-not [StringComparer]::OrdinalIgnoreCase.Equals($target, $expectedTarget) -or -not [StringComparer]::OrdinalIgnoreCase.Equals($working, $expectedWorking)) {
+            throw "Start Menu shortcut mismatch: target=$target expected=$expectedTarget; working=$working expected=$expectedWorking"
         }
     }
     finally { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($shell) }
