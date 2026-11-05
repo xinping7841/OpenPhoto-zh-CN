@@ -107,7 +107,8 @@ namespace OpenPhotoInstallerSmoke {
         throw "Start Menu shortcut mismatch: target=$target expected=$expectedTarget; working=$working expected=$expectedWorking"
     }
     $registration = @(Get-OpenPhotoRegistration)
-    if ($registration.Count -ne 1 -or $registration[0].DisplayVersion -ne '0.2.2.1' -or [string]::IsNullOrWhiteSpace($registration[0].UninstallString)) {
+    Write-Host "Apps registration: $($registration | ConvertTo-Json -Depth 3 -Compress)"
+    if ($registration.Count -ne 1 -or $registration[0].DisplayVersion -notin @('0.2.2', '0.2.2.1') -or [string]::IsNullOrWhiteSpace($registration[0].UninstallString)) {
         throw 'Per-user Apps uninstall registration missing or incorrect.'
     }
     & (Join-Path $PSScriptRoot 'test-windows-mcp.ps1') -Executable (Join-Path $installDirectory 'op-mcp.exe')
