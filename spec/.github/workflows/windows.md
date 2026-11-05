@@ -2,6 +2,8 @@
 
 `.github/workflows/windows.yml` runs on `windows-latest` for manual workflow dispatch, pushes to branch `windows-zh-CN`, and pushes of tags matching `windows*`. It uses only read access to repository contents, disables persisted checkout credentials, and requires no secrets. Checkout and artifact upload actions are pinned to full commit SHAs. New runs for the same ref cancel older runs; the job has a 60-minute timeout.
 
+Installer-only changes and documentation are ignored by this Rust build workflow; MSI packaging has a separate verified-binary workflow. Changes to this workflow itself still trigger the Rust validation run.
+
 The job validates the repository pin and installs Rust 1.99.0, rustfmt, clippy and the x86_64-pc-windows-msvc target. Every Cargo command explicitly selects 1.99.0. Build, lint and test commands that resolve dependencies use `--locked`. RUSTFLAGS requests the statically linked MSVC runtime.
 
 Required checks execute real commands and fail the job on errors:

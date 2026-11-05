@@ -5,6 +5,13 @@ on:
   push:
     branches: [windows-zh-CN]
     tags: ['windows*']
+    paths-ignore:
+      - '.github/workflows/windows-msi.yml'
+      - 'packaging/windows/installer.wxs'
+      - 'scripts/package-windows-msi.ps1'
+      - 'scripts/test-windows-msi.ps1'
+      - 'spec/**'
+      - '**/*.md'
 
 permissions:
   contents: read

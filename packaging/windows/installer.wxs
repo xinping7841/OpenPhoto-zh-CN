@@ -1,0 +1,56 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="OpenPhoto 简体中文版" Manufacturer="OpenPhoto zh-CN contributors"
+           Version="$(var.ProductVersion)" Language="2052" Codepage="65001"
+           UpgradeCode="1A5791B8-62CD-45BD-AD90-F6D146FC0180" Scope="perUser">
+    <SummaryInformation Description="OpenPhoto 简体中文版 Windows x64 安装包" />
+    <MajorUpgrade DowngradeErrorMessage="已安装较新版本的 OpenPhoto 简体中文版。请先卸载较新版本。" />
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/xinping7841/OpenPhoto-zh-CN/tree/windows-zh-CN" />
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsDirectory" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="OpenPhoto-zh-CN">
+          <Component Id="Application" Guid="*">
+            <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
+            <File Id="OpenPhotoExecutable" Source="$(var.PackageSource)\openphoto.exe" />
+            <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="Application" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          <Component Id="McpServer" Guid="*">
+            <File Source="$(var.PackageSource)\op-mcp.exe" />
+            <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="McpServer" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          <Component Id="UsageDocument" Guid="*">
+            <File Source="$(var.PackageSource)\README-zh-CN.md" />
+            <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="UsageDocument" Type="integer" Value="1" KeyPath="yes" />
+          </Component>
+          <Directory Id="LicensesDirectory" Name="Licenses">
+            <Component Id="LicenseTexts" Guid="*">
+              <RemoveFolder Id="RemoveLicensesFolder" Directory="LicensesDirectory" On="uninstall" />
+              <File Source="$(var.PackageSource)\Licenses\LICENSE-MIT" />
+              <File Source="$(var.PackageSource)\Licenses\LICENSE-APACHE" />
+              <File Source="$(var.PackageSource)\Licenses\SourceSans3-OFL.txt" />
+              <File Source="$(var.PackageSource)\Licenses\NotoSansCJK-LICENSE.txt" />
+              <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="LicenseTexts" Type="integer" Value="1" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="OpenPhoto-zh-CN">
+        <Component Id="StartMenuShortcut" Guid="*">
+          <Shortcut Id="OpenPhotoShortcut" Name="OpenPhoto 简体中文版" Target="[#OpenPhotoExecutable]" WorkingDirectory="INSTALLFOLDER" />
+          <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+          <RegistryValue Root="HKCU" Key="Software\OpenPhoto-zh-CN\Installer" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+    <Feature Id="Complete" Title="OpenPhoto 简体中文版" Level="1">
+      <ComponentRef Id="Application" />
+      <ComponentRef Id="McpServer" />
+      <ComponentRef Id="UsageDocument" />
+      <ComponentRef Id="LicenseTexts" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+  </Package>
+</Wix>

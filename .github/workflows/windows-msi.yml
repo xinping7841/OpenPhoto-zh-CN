@@ -1,0 +1,75 @@
+name: Windows Chinese MSI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [windows-zh-CN]
+    paths:
+      - '.github/workflows/windows-msi.yml'
+      - 'packaging/windows/installer.wxs'
+      - 'scripts/package-windows-msi.ps1'
+      - 'scripts/test-windows-msi.ps1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-msi-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out installer source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Download verified Windows application
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release download win-v0.2.2-zh-CN.1 --repo $env:GITHUB_REPOSITORY --pattern OpenPhoto-0.2.2-zh-CN-windows-x64.zip --dir input
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $zip = 'input/OpenPhoto-0.2.2-zh-CN-windows-x64.zip'
+          $expected = 'f232091fc8374f3c4a753635f0133674f9451b5270c52689ece366ae693d5c45'
+          if ((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) { throw 'Application release checksum mismatch.' }
+          Expand-Archive -LiteralPath $zip -DestinationPath input/extracted
+
+      - name: Install pinned WiX toolset
+        run: |
+          dotnet tool install --global wix --version 4.0.6
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          wix --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build Chinese per-user MSI
+        run: ./scripts/package-windows-msi.ps1 -SourceDirectory input/extracted/OpenPhoto-0.2.2-zh-CN-windows-x64
+
+      - name: Verify install MCP shortcut and uninstall
+        run: ./scripts/test-windows-msi.ps1 -MsiPath dist/OpenPhoto-0.2.2.1-zh-CN-windows-x64.msi -SourceDirectory input/extracted/OpenPhoto-0.2.2-zh-CN-windows-x64
+
+      - name: Upload verified MSI and checksum
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: OpenPhoto-zh-CN-windows-x64-msi
+          path: |
+            dist/*.msi
+            dist/*.msi.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Preserve installer verification logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Windows-MSI-verification-logs
+          path: dist/msi-test-logs/*.log
+          if-no-files-found: ignore
+          retention-days: 7

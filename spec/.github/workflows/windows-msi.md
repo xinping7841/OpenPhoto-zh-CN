@@ -1,0 +1,5 @@
+# Windows MSI packaging CI
+
+The Windows MSI workflow runs manually or when installer source, scripts or its workflow changes on windows-zh-CN. It downloads the existing release win-v0.2.2-zh-CN.1 and verifies its ZIP against the pinned SHA-256 f232091fc8374f3c4a753635f0133674f9451b5270c52689ece366ae693d5c45 before extracting. It never silently substitutes unverified binaries or recompiles Rust for repackaging.
+
+WiX 4.0.6 is installed as a pinned dotnet tool on windows-latest. The workflow builds an unsigned per-user Chinese x64 MSI, invokes actual Windows Installer installation and removal verification plus installed-file hashes, Start Menu shortcut checks and MCP protocol smoke. Only successful verification uploads MSI/checksum with 14-day retention. Installer logs are retained even on failure for seven days. Contents access is read-only; release downloading uses the job token, no external secrets. Interactive GUI/rendering acceptance is not established by MSI tests. Application binaries come from the explicitly pinned prior release commit; installer definitions come from the workflow checkout.
